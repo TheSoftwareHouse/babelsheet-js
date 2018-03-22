@@ -1,0 +1,13 @@
+  {
+    "compilerOptions": {
+      "target": "esnext",
+      "module": "commonjs",
+      "strict": true,
+      "allowSyntheticDefaultImports": false,
+      "outDir": "build"
+    },
+    "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+    ]
+  }

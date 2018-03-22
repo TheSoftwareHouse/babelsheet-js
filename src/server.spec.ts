@@ -22,20 +22,14 @@ container.register({
 });
 
 describe("Server endpoint test", () => {
-  it("return hello world", done => {
+  it("return hello world", () => {
     const server = container.resolve<Server>("server").getApp();
 
     request(server)
       .get("/api")
       .expect(200)
-      .end((err: any, res: any) => {
-        if (err) {
-          throw err;
-        }
-
+      .then(res => {
         expect(res.body).toEqual({ hello: "world" });
-
-        done();
       });
   });
 });

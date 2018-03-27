@@ -2,9 +2,8 @@ import { Application, NextFunction, Request, Response, Router } from "express";
 import * as express from "express";
 import * as cors from "cors";
 import * as morgan from "morgan";
-import HttpError from "../shared/error/http";
-import { errorHandler } from "../shared/error/handler";
 import TranslationsStorage from "../shared/translations";
+import AppError from "../shared/error/app";
 
 export default class Server {
   private app: Application;
@@ -35,10 +34,10 @@ export default class Server {
     this.app.use("/api", router);
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      next(new HttpError("Not found", 404));
+      next(new AppError("Not found", 404));
     });
 
-    this.app.use(errorHandler);
+    this.app.use(opts.errorHandler.handle);
 
     opts.logger.info("Created server");
   }

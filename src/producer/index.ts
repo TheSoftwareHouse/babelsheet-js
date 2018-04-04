@@ -3,6 +3,7 @@ import * as dotenv from "dotenv";
 import createContainer from "./container";
 import { LoggerInstance } from "winston";
 import GoogleSheets from "./google/sheets";
+import * as schedule from "node-schedule";
 
 dotenv.config();
 
@@ -29,3 +30,5 @@ async function main() {
 }
 
 main();
+
+schedule.scheduleJob("* * * * *", main);

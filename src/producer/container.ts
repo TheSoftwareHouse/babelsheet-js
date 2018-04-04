@@ -6,6 +6,7 @@ import { AwilixContainer, ContainerOptions, NameAndRegistrationPair } from "awil
 import GoogleAuth from "./google/auth";
 import GoogleSheets from "./google/sheets";
 import TokenStorage from "./tokenStorage";
+import ToJsonTransformer from "./transformer/toJson.transformer";
 
 export default function createContainer(
   options?: ContainerOptions,
@@ -24,6 +25,7 @@ export default function createContainer(
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),
     tokenStorage: awilix.asClass(TokenStorage),
+    transformer: awilix.asClass(ToJsonTransformer),
     ...registrations
   });
 

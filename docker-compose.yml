@@ -1,6 +1,24 @@
 version: '3'
 services:
-  node:
-    image: ${IMAGE}
+  api:
+    build:
+      context: .
+      dockerfile: api.Dockerfile
     ports:
       - "3000:3000"
+    links:
+      - "redis:db"
+    env_file:
+      - .env
+
+  producer:
+    build:
+      context: .
+      dockerfile: producer.Dockerfile
+    links:
+      - "redis:db"
+    env_file:
+      - .env
+
+  redis:
+    image: redis

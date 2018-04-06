@@ -1,12 +1,12 @@
 import { OAuth2Client } from "google-auth-library";
+import { Credentials } from "google-auth-library/build/src/auth/credentials";
 import * as http from "http";
 import { IncomingMessage, ServerResponse } from "http";
-import * as url from "url";
-import * as querystring from "querystring";
 import opn = require("opn");
-import { Credentials } from "google-auth-library/build/src/auth/credentials";
+import * as querystring from "querystring";
 import destroyer = require("server-destroy");
-import TokenStorage from "../tokenStorage";
+import * as url from "url";
+import TokenStorage from "../token/token";
 
 export default class GoogleAuth {
   private logger: any;
@@ -19,7 +19,7 @@ export default class GoogleAuth {
     this.tokenStorage = opts.tokenStorage;
   }
 
-  async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
+  public async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
     return new Promise<Credentials>((resolve, reject) => {
       const authorizeUrl = oAuth2Client.generateAuthUrl({
         access_type: "offline",
@@ -57,45 +57,45 @@ export default class GoogleAuth {
     });
   }
 
-  getOAuth2Client(): OAuth2Client {
+  public getOAuth2Client(): OAuth2Client {
     const clientSecret = process.env.CLIENT_SECRET;
     const clientId = process.env.CLIENT_ID;
     const redirectUrl = process.env.REDIRECT_URI;
-
-    // TODO: handle case when there are no envs
 
     const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
 
     return oAuth2Client;
   }
 
-  async getAuthenticatedClient(): Promise<OAuth2Client> {
+  public async getAuthenticatedClient(): Promise<OAuth2Client> {
     const oAuth2Client = this.getOAuth2Client();
 
-    if (this.tokenStorage.token.access_token) {
+    const token = await this.tokenStorage.getToken();
+
+    if (token.access_token) {
       this.logger.info("Using token from storage.");
-      oAuth2Client.setCredentials(this.tokenStorage.token);
+      oAuth2Client.setCredentials(token);
 
       const newToken = await oAuth2Client.getAccessToken();
 
-      if (this.tokenStorage.token.access_token !== newToken.token) {
-        this.tokenStorage.token = {
-          ...this.tokenStorage.token,
+      if (token.access_token !== newToken.token) {
+        await this.tokenStorage.setToken({
+          ...token,
           access_token: newToken.token,
           expiry_date: new Date().getTime() + 1000 * 60 * 60 * 24
-        };
+        });
 
         this.logger.info("Storing refreshed access token.");
-        oAuth2Client.setCredentials(this.tokenStorage.token);
+        oAuth2Client.setCredentials(await this.tokenStorage.getToken());
       }
     } else {
-      const token = await this.getTokens(oAuth2Client);
+      const tokens = await this.getTokens(oAuth2Client);
 
-      this.tokenStorage.token = token;
+      this.tokenStorage.setToken(tokens);
 
       this.logger.info("Token is stored.");
 
-      oAuth2Client.setCredentials(token);
+      oAuth2Client.setCredentials(tokens);
     }
 
     return oAuth2Client;

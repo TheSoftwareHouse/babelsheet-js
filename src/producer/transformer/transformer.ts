@@ -1,3 +1,3 @@
-export default interface Transformer {
-  transform(source: { [key: string]: string[] }): Object;
+export default interface ITransformer {
+  transform(source: { [key: string]: string[] }): object;
 };

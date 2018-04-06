@@ -10,14 +10,14 @@ export default class ErrorHandler {
     this.logger = opts.logger;
   }
 
-  handle(err: any, req: Request, res: Response, next: NextFunction) {
+  public handle(err: any, req: Request, res: Response, next: NextFunction) {
     const status = err.status || 500;
 
     this.logger.error(
       JSON.stringify({
         message: err.message,
-        status,
-        stack: err.stack
+        stack: err.stack,
+        status
       })
     );
 

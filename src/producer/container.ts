@@ -1,11 +1,12 @@
 import * as awilix from "awilix";
-import { winstonLogger } from "../shared/logger";
-import InFileStorage from "../shared/storage/inFile";
-import TranslationsStorage from "../shared/translations";
 import { AwilixContainer, ContainerOptions, NameAndRegistrationPair } from "awilix";
+import { winstonLogger } from "../shared/logger/logger";
+import InEnvStorage from "../shared/storage/inEnv";
+import InRedisStorage from "../shared/storage/inRedis";
+import TranslationsStorage from "../shared/translations/translations";
 import GoogleAuth from "./google/auth";
 import GoogleSheets from "./google/sheets";
-import TokenStorage from "./tokenStorage";
+import TokenStorage from "./token/token";
 import ToJsonTransformer from "./transformer/toJson.transformer";
 
 export default function createContainer(
@@ -18,14 +19,17 @@ export default function createContainer(
   });
 
   container.register({
-    port: awilix.asValue(process.env.PORT || 3000),
-    logger: awilix.asValue(winstonLogger),
-    storage: awilix.asClass(InFileStorage),
-    translationsStorage: awilix.asClass(TranslationsStorage),
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),
-    tokenStorage: awilix.asClass(TokenStorage),
+    inEnvStorage: awilix.asClass(InEnvStorage),
+    logger: awilix.asValue(winstonLogger),
+    port: awilix.asValue(process.env.PORT || 3000),
+    storage: awilix.asClass(InRedisStorage),
+    tokenStorage: awilix
+      .asClass(TokenStorage)
+      .inject(() => ({ storage: container.resolve<InEnvStorage>("inEnvStorage") })),
     transformer: awilix.asClass(ToJsonTransformer),
+    translationsStorage: awilix.asClass(TranslationsStorage),
     ...registrations
   });
 

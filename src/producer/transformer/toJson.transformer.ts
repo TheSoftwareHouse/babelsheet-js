@@ -1,11 +1,35 @@
-import { set, get } from "dot-prop-immutable";
-import Transformer from "./transformer";
+import { set } from "dot-prop-immutable";
 import * as ramda from "ramda";
+import ITransformer from "./transformer";
 
-export default class ToJsonTransformer implements Transformer {
+export default class ToJsonTransformer implements ITransformer {
   private readonly metaTranslationKey = ">>>";
   private readonly metaTagKey = "###";
   private readonly outputTagsKey = "tags";
+
+  public transform(source: { [key: string]: string[] }): object {
+    const sourceValues = ramda.values(source);
+    const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
+
+    if (metaIndex > -1) {
+      const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
+      const meta = sourceValues[metaIndex];
+
+      return ramda.reduce(
+        (accRow, row) => {
+          const context = this.updateContext(accRow.context, row, meta);
+          const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
+          const result = this.updateTags(withTranslations, context, row, meta);
+
+          return { result, context };
+        },
+        { result: {}, context: "" },
+        sourceRows
+      ).result;
+    }
+
+    return {};
+  }
 
   private extractTags(source: string): string[] {
     return source.split(",").map(value => value.trim());
@@ -37,7 +61,7 @@ export default class ToJsonTransformer implements Transformer {
     );
   }
 
-  private updateTranslations(source: Object, context: string, row: string[], meta: string[]): Object {
+  private updateTranslations(source: object, context: string, row: string[], meta: string[]): object {
     return ramda.addIndex(ramda.reduce)(
       (acc, element, index) => {
         if (element && index < meta.length && this.valueHasLocale(meta[index])) {
@@ -51,16 +75,16 @@ export default class ToJsonTransformer implements Transformer {
     );
   }
 
-  private updateTags(source: Object, context: string, row: string[], meta: string[]): Object {
-    return ramda.addIndex<string, Object>(ramda.reduce)(
-      (accRow, row, rowIndex) => {
-        if (row && rowIndex < meta.length && meta[rowIndex] === this.metaTagKey) {
+  private updateTags(source: object, context: string, row: string[], meta: string[]): object {
+    return ramda.addIndex<string, object>(ramda.reduce)(
+      (accRow, rowElement, rowIndex) => {
+        if (rowElement && rowIndex < meta.length && meta[rowIndex] === this.metaTagKey) {
           return ramda.reduce(
             (accTag, tag) => {
               return set(accTag, `${this.outputTagsKey}.${tag}.${context}`, null);
             },
             accRow,
-            this.extractTags(row)
+            this.extractTags(rowElement)
           );
         }
 
@@ -69,29 +93,5 @@ export default class ToJsonTransformer implements Transformer {
       ramda.clone(source),
       row
     );
-  }
-
-  transform(source: { [key: string]: string[] }): Object {
-    const sourceValues = ramda.values(source);
-    const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
-
-    if (metaIndex > -1) {
-      const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
-      const meta = sourceValues[metaIndex];
-
-      return ramda.reduce(
-        (accRow, row) => {
-          const context = this.updateContext(accRow.context, row, meta);
-          const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
-          const result = this.updateTags(withTranslations, context, row, meta);
-
-          return { result, context };
-        },
-        { result: {}, context: "" },
-        sourceRows
-      ).result;
-    }
-
-    return {};
   }
 }

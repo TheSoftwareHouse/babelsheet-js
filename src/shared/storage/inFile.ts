@@ -1,9 +1,8 @@
-import { Credentials } from "google-auth-library/build/src/auth/credentials";
 import * as fs from "fs";
-import Storage from "./index";
+import IStorage from "./storage";
 
-export default class InFileStorage implements Storage {
-  loadData() {
+export default class InFileStorage implements IStorage {
+  public loadData() {
     if (fs.existsSync("data.json")) {
       return JSON.parse(fs.readFileSync("data.json", "utf8"));
     }
@@ -11,15 +10,15 @@ export default class InFileStorage implements Storage {
     return {};
   }
 
-  saveData(data: any) {
+  public saveData(data: any) {
     fs.writeFileSync("data.json", JSON.stringify(data));
   }
 
-  set(key: string, value: any): void {
+  public async set(key: string, value: any) {
     this.saveData({ ...this.loadData(), [key]: value });
   }
 
-  get(key: string) {
-    return this.loadData()[key];
+  public async get(key: string): Promise<any> {
+    return Promise.resolve(this.loadData()[key]);
   }
 }

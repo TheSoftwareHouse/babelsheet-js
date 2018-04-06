@@ -4,7 +4,9 @@
       "module": "commonjs",
       "strict": true,
       "allowSyntheticDefaultImports": false,
-      "outDir": "build"
+      "outDir": "build",
+      "noUnusedLocals": true,
+      "noUnusedParameters": false
     },
     "exclude": [
       "node_modules",

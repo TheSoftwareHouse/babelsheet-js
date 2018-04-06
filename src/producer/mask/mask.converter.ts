@@ -1,6 +1,8 @@
-import { set } from "dot-prop-immutable";
-
 export default class MaskConverter {
+  public convert(source: { [key: string]: any }): string {
+    return this.convertMaskRecursively(source);
+  }
+
   private convertMaskRecursively(source: { [key: string]: any }): string {
     if (source !== null) {
       return Object.keys(source)
@@ -13,9 +15,5 @@ export default class MaskConverter {
     }
 
     return "";
-  }
-
-  convert(source: { [key: string]: any }): string {
-    return this.convertMaskRecursively(source);
   }
 }

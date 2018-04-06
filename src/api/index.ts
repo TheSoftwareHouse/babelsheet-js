@@ -1,7 +1,7 @@
-import Server from "./server";
-import { LoggerInstance } from "winston";
 import * as dotenv from "dotenv";
+import { LoggerInstance } from "winston";
 import createContainer from "./container";
+import Server from "./server/server";
 
 dotenv.config();
 

@@ -1,21 +1,17 @@
-import Storage from "../storage";
+import IStorage from "../storage/storage";
 
 export default class TranslationsStorage {
-  private storage: Storage;
+  private storage: IStorage;
 
   constructor(opts: any) {
     this.storage = opts.storage;
-
-    if (!this.translations) {
-      this.translations = {};
-    }
   }
 
-  set translations(translations: any) {
+  public async setTranslations(translations: object) {
     this.storage.set("translations", translations);
   }
 
-  get translations(): any {
+  public async getTranslations(): Promise<object> {
     return this.storage.get("translations");
   }
 }

@@ -1,10 +1,12 @@
 import * as awilix from "awilix";
-import Server from "./server";
-import { winstonLogger } from "../shared/logger";
-import InFileStorage from "../shared/storage/inFile";
-import TranslationsStorage from "../shared/translations";
 import { AwilixContainer, ContainerOptions, NameAndRegistrationPair } from "awilix";
 import ErrorHandler from "../shared/error/handler";
+import { winstonLogger } from "../shared/logger/logger";
+import InRedisStorage from "../shared/storage/inRedis";
+import TranslationsStorage from "../shared/translations/translations";
+import Server from "./server/server";
+import TranslationsController from "./translations/translations.controller";
+import TranslationsRouting from "./translations/translations.routing";
 
 export default function createContainer(
   options?: ContainerOptions,
@@ -16,12 +18,14 @@ export default function createContainer(
   });
 
   container.register({
-    server: awilix.asClass(Server),
+    errorHandler: awilix.asClass(ErrorHandler),
     logger: awilix.asValue(winstonLogger),
     port: awilix.asValue(process.env.PORT || 3000),
-    storage: awilix.asClass(InFileStorage),
+    server: awilix.asClass(Server),
+    storage: awilix.asClass(InRedisStorage),
+    translationsController: awilix.asClass(TranslationsController),
+    translationsRouting: awilix.asClass(TranslationsRouting),
     translationsStorage: awilix.asClass(TranslationsStorage),
-    errorHandler: awilix.asClass(ErrorHandler),
     ...registrations
   });
 

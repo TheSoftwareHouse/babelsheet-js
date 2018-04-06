@@ -1,9 +1,10 @@
-import * as awilix from "awilix";
 import * as dotenv from "dotenv";
-import createContainer from "./container";
-import { LoggerInstance } from "winston";
-import GoogleSheets from "./google/sheets";
 import * as schedule from "node-schedule";
+import { LoggerInstance } from "winston";
+import TranslationsStorage from "../shared/translations/translations";
+import createContainer from "./container";
+import GoogleSheets from "./google/sheets";
+import ITransformer from "./transformer/transformer";
 
 dotenv.config();
 
@@ -20,15 +21,13 @@ process.on("unhandledRejection", err => {
 });
 
 async function main() {
-  const logger = container.resolve<LoggerInstance>("logger");
+  const spreadsheetData = await container.resolve<GoogleSheets>("googleSheets").fetchSpreadsheet();
 
-  const data = await container.resolve<GoogleSheets>("googleSheets").fetchSpreadsheet();
+  const transformedData = await container.resolve<ITransformer>("transformer").transform(spreadsheetData);
 
-  logger.info(data);
-
-  // TODO: download, transform and save translations in storage
+  container.resolve<TranslationsStorage>("translationsStorage").setTranslations(transformedData);
 }
 
-main();
-
-schedule.scheduleJob("* * * * *", main);
+schedule.scheduleJob("* * * * *", () => {
+  main();
+});

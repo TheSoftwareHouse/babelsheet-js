@@ -1,5 +1,5 @@
-import * as mask from "json-mask";
 import { set } from "dot-prop-immutable";
+import * as mask from "json-mask";
 import ToJsonTransformer from "./toJson.transformer";
 
 describe("ToJsonTransformer", () => {

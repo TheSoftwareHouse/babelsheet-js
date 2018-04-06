@@ -1,18 +1,17 @@
-import { Credentials } from "google-auth-library/build/src/auth/credentials";
-import Storage from "./index";
+import IStorage from "./storage";
 
-export default class InMemoryStorage implements Storage {
-  private _data: any;
+export default class InMemoryStorage implements IStorage {
+  private data: any;
 
   constructor() {
-    this._data = {};
+    this.data = {};
   }
 
-  set(key: string, value: any): void {
-    this._data[key] = value;
+  public async set(key: string, value: any) {
+    this.data[key] = value;
   }
 
-  get(key: string) {
-    return this._data[key];
+  public async get(key: string): Promise<any> {
+    return Promise.resolve(this.data[key]);
   }
 }

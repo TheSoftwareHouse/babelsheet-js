@@ -1,5 +1,5 @@
-import { set } from "dot-prop-immutable";
-import * as ramda from "ramda";
+import { set } from 'dot-prop-immutable';
+import * as ramda from 'ramda';
 
 export default class MaskInput {
   public convert(source: string[]): object {

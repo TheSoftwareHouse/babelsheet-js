@@ -1,13 +1,9 @@
-import { NextFunction, Request, Response } from "express";
-import { LoggerInstance } from "winston";
+import { NextFunction, Request, Response } from 'express';
+import { LoggerInstance } from 'winston';
 
 export default class ErrorHandler {
-  private logger: LoggerInstance;
-
-  constructor(opts: any) {
+  constructor(private logger: LoggerInstance) {
     this.handle = this.handle.bind(this);
-
-    this.logger = opts.logger;
   }
 
   public handle(err: any, req: Request, res: Response, next: NextFunction) {
@@ -17,13 +13,13 @@ export default class ErrorHandler {
       JSON.stringify({
         message: err.message,
         stack: err.stack,
-        status
+        status,
       })
     );
 
     res.status(err.status || 500).json({
       message: err.message,
-      status
+      status,
     });
   }
 }

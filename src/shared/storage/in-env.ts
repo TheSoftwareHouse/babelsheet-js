@@ -1,4 +1,4 @@
-import Storage from "./storage";
+import Storage from './storage';
 
 export default class InEnvStorage implements Storage {
   private data: any;
@@ -9,6 +9,7 @@ export default class InEnvStorage implements Storage {
 
   public async set(key: string, value: any) {
     this.data[key] = value;
+    return Promise.resolve();
   }
 
   public async get(key: string) {
@@ -17,6 +18,15 @@ export default class InEnvStorage implements Storage {
     }
 
     return Promise.resolve(this.tryParse(process.env[key]));
+  }
+
+  public async has(key: string) {
+    return Promise.resolve(Boolean(await this.get(key)));
+  }
+
+  public async clear() {
+    this.data = {};
+    return Promise.resolve();
   }
 
   private tryParse(value: any) {

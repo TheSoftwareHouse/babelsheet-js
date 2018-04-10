@@ -1,4 +1,6 @@
 export default interface IStorage {
-  set(key: string, value: any): void;
-  get(key: string): any;
+  set(key: string, value: any): Promise<void>;
+  get(key: string): Promise<any>;
+  has(key: string): Promise<boolean>;
+  clear(): Promise<void>;
 };

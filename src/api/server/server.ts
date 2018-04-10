@@ -1,36 +1,39 @@
-import { errors } from "celebrate";
-import * as cors from "cors";
-import { Application, NextFunction, Request, Response } from "express";
-import * as express from "express";
-import * as helmet from "helmet";
-import * as morgan from "morgan";
-import AppError from "../../shared/error/app";
+import { errors } from 'celebrate';
+import * as cors from 'cors';
+import { Application, NextFunction, Request, Response } from 'express';
+import * as express from 'express';
+import * as helmet from 'helmet';
+import * as morgan from 'morgan';
+import { LoggerInstance } from 'winston';
+import AppError from '../../shared/error/app';
+import ErrorHandler from '../../shared/error/handler';
+import TranslationsRouting from '../translations/translations.routing';
 
 export default class Server {
   private app: Application;
 
-  constructor(opts: any) {
+  constructor(translationsRouting: TranslationsRouting, errorHandler: ErrorHandler, logger: LoggerInstance) {
     this.app = express();
 
     this.app.use(helmet());
 
-    this.app.use(morgan(process.env.NODE_ENV === "dev" ? "dev" : "combined"));
+    this.app.use(morgan(process.env.NODE_ENV === 'dev' ? 'dev' : 'combined'));
 
     this.app.use(express.json());
 
     this.app.use(cors());
 
-    this.app.use("/translations", opts.translationsRouting.getRouting());
+    this.app.use('/translations', translationsRouting.getRouting());
 
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      next(new AppError("Not found", 404));
+      next(new AppError('Not found', 404));
     });
 
     this.app.use(errors());
 
-    this.app.use(opts.errorHandler.handle);
+    this.app.use(errorHandler.handle);
 
-    opts.logger.info("Created server");
+    logger.info('Created server');
   }
 
   public getApp() {

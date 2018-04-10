@@ -1,23 +1,20 @@
-import { celebrate, Joi } from "celebrate";
-import { Router } from "express";
-import * as express from "express";
-import TranslationsController from "./translations.controller";
+import { celebrate, Joi } from 'celebrate';
+import { Router } from 'express';
+import * as express from 'express';
+import TranslationsController from './translations.controller';
 
 export default class TranslationsRouting {
   private routing: Router;
-  private translationsController: TranslationsController;
 
-  constructor(opts: any) {
-    this.translationsController = opts.translationsController;
-
+  constructor(private translationsController: TranslationsController) {
     this.routing = express.Router();
 
     this.routing.get(
-      "/",
+      '/',
       celebrate({
         query: {
-          filters: Joi.array().items(Joi.string())
-        }
+          filters: Joi.array().items(Joi.string()),
+        },
       }),
       this.translationsController.getTranslations
     );

@@ -1,50 +1,43 @@
-import { OAuth2Client } from "google-auth-library";
-import { Credentials } from "google-auth-library/build/src/auth/credentials";
-import * as http from "http";
-import { IncomingMessage, ServerResponse } from "http";
-import opn = require("opn");
-import * as querystring from "querystring";
-import destroyer = require("server-destroy");
-import * as url from "url";
-import TokenStorage from "../token/token";
+import { OAuth2Client } from 'google-auth-library';
+import { Credentials } from 'google-auth-library/build/src/auth/credentials';
+import * as http from 'http';
+import { IncomingMessage, ServerResponse } from 'http';
+import opn = require('opn');
+import * as querystring from 'querystring';
+import destroyer = require('server-destroy');
+import * as url from 'url';
+import { LoggerInstance } from 'winston';
+import TokenStorage from '../token/token';
 
 export default class GoogleAuth {
-  private logger: any;
-  private port: any;
-  private tokenStorage: TokenStorage;
-
-  constructor(opts: any) {
-    this.logger = opts.logger;
-    this.port = opts.port;
-    this.tokenStorage = opts.tokenStorage;
-  }
+  constructor(private logger: LoggerInstance, private port: number, private tokenStorage: TokenStorage) {}
 
   public async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
     return new Promise<Credentials>((resolve, reject) => {
       const authorizeUrl = oAuth2Client.generateAuthUrl({
-        access_type: "offline",
-        scope: "https://www.googleapis.com/auth/spreadsheets.readonly"
+        access_type: 'offline',
+        scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
       });
 
       this.logger.info(`Creating local server`);
 
       const server = http
         .createServer(async (req: IncomingMessage, res: ServerResponse) => {
-          const requestUrl = req.url || "";
+          const requestUrl = req.url || '';
 
-          if (requestUrl.indexOf("/oauth2callback") > -1) {
-            const parsedUrl = url.parse(requestUrl).query || "";
+          if (requestUrl.indexOf('/oauth2callback') > -1) {
+            const parsedUrl = url.parse(requestUrl).query || '';
             const parsedQueryString = querystring.parse(parsedUrl);
             const code = parsedQueryString.code.toString();
 
             this.logger.info(`Received code ${code}`);
 
-            res.end("Authentication successful! Please return to the console.");
+            res.end('Authentication successful! Please return to the console.');
             server.destroy();
 
             const tokenResponse = await oAuth2Client.getToken(code);
 
-            this.logger.info("Tokens acquired.");
+            this.logger.info('Tokens acquired.');
 
             resolve(tokenResponse.tokens);
           }
@@ -73,7 +66,7 @@ export default class GoogleAuth {
     const token = await this.tokenStorage.getToken();
 
     if (token.access_token) {
-      this.logger.info("Using token from storage.");
+      this.logger.info('Using token from storage.');
       oAuth2Client.setCredentials(token);
 
       const newToken = await oAuth2Client.getAccessToken();
@@ -82,10 +75,10 @@ export default class GoogleAuth {
         await this.tokenStorage.setToken({
           ...token,
           access_token: newToken.token,
-          expiry_date: new Date().getTime() + 1000 * 60 * 60 * 24
+          expiry_date: new Date().getTime() + 1000 * 60 * 60 * 24,
         });
 
-        this.logger.info("Storing refreshed access token.");
+        this.logger.info('Storing refreshed access token.');
         oAuth2Client.setCredentials(await this.tokenStorage.getToken());
       }
     } else {
@@ -93,7 +86,7 @@ export default class GoogleAuth {
 
       this.tokenStorage.setToken(tokens);
 
-      this.logger.info("Token is stored.");
+      this.logger.info('Token is stored.');
 
       oAuth2Client.setCredentials(tokens);
     }

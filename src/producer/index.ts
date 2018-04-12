@@ -1,33 +1,46 @@
-import * as dotenv from "dotenv";
-import * as schedule from "node-schedule";
-import { LoggerInstance } from "winston";
-import TranslationsStorage from "../shared/translations/translations";
-import createContainer from "./container";
-import GoogleSheets from "./google/sheets";
-import ITransformer from "./transformer/transformer";
+import to from 'await-to-js';
+import * as dotenv from 'dotenv';
+import * as schedule from 'node-schedule';
+import * as ramda from 'ramda';
+import { LoggerInstance } from 'winston';
+import TranslationsStorage from '../shared/translations/translations';
+import createContainer from './container';
+import GoogleSheets from './google/sheets';
+import ITransformer from './transformer/transformer';
 
 dotenv.config();
 
 const container = createContainer();
 
-process.on("uncaughtException", err => {
-  container.resolve<LoggerInstance>("logger").error(err.toString());
+process.on('uncaughtException', err => {
+  container.resolve<LoggerInstance>('logger').error(err.toString());
   process.exit(1);
 });
 
-process.on("unhandledRejection", err => {
-  container.resolve<LoggerInstance>("logger").error(err.toString());
+process.on('unhandledRejection', err => {
+  container.resolve<LoggerInstance>('logger').error(err.toString());
   process.exit(1);
 });
 
 async function main() {
-  const spreadsheetData = await container.resolve<GoogleSheets>("googleSheets").fetchSpreadsheet();
+  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
 
-  const transformedData = await container.resolve<ITransformer>("transformer").transform(spreadsheetData);
+  const transformedData = await container.resolve<ITransformer>('transformer').transform(spreadsheetData);
 
-  container.resolve<TranslationsStorage>("translationsStorage").setTranslations(transformedData);
+  const [, actualTranslations] = await to(
+    container.resolve<TranslationsStorage>('translationsStorage').getTranslations([])
+  );
+
+  if (!ramda.equals(transformedData, actualTranslations)) {
+    await container.resolve<TranslationsStorage>('translationsStorage').clearTranslations();
+    await container.resolve<TranslationsStorage>('translationsStorage').setTranslations([], transformedData);
+
+    container.resolve<LoggerInstance>('logger').info('Translations were refreshed');
+  }
 }
 
-schedule.scheduleJob("* * * * *", () => {
+const everyFiveMinutes = '*/5 * * * *';
+
+schedule.scheduleJob(everyFiveMinutes, () => {
   main();
 });

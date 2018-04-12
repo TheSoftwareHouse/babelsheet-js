@@ -1,11 +1,11 @@
-import { set } from "dot-prop-immutable";
-import * as ramda from "ramda";
-import ITransformer from "./transformer";
+import { set } from 'dot-prop-immutable';
+import * as ramda from 'ramda';
+import ITransformer from './transformer';
 
 export default class ToJsonTransformer implements ITransformer {
-  private readonly metaTranslationKey = ">>>";
-  private readonly metaTagKey = "###";
-  private readonly outputTagsKey = "tags";
+  private readonly metaTranslationKey = '>>>';
+  private readonly metaTagKey = '###';
+  private readonly outputTagsKey = 'tags';
 
   public transform(source: { [key: string]: string[] }): object {
     const sourceValues = ramda.values(source);
@@ -23,7 +23,7 @@ export default class ToJsonTransformer implements ITransformer {
 
           return { result, context };
         },
-        { result: {}, context: "" },
+        { result: {}, context: '' },
         sourceRows
       ).result;
     }
@@ -32,7 +32,7 @@ export default class ToJsonTransformer implements ITransformer {
   }
 
   private extractTags(source: string): string[] {
-    return source.split(",").map(value => value.trim());
+    return source.split(',').map(value => value.trim());
   }
 
   private valueHasLocale(value: string): boolean {
@@ -43,14 +43,14 @@ export default class ToJsonTransformer implements ITransformer {
     return ramda.addIndex<string, string>(ramda.reduce)(
       (acc, element, index) => {
         if (element && index < meta.length && meta[index] === this.metaTranslationKey) {
-          const contextSplit = acc.split(".");
+          const contextSplit = acc.split('.');
 
           if (index > contextSplit.length) {
             return `${acc}.${element}`;
           } else {
             const slicedContext = contextSplit.slice(0, index - 1);
 
-            return slicedContext.length === 0 ? element : `${slicedContext.join(".")}.${element}`;
+            return slicedContext.length === 0 ? element : `${slicedContext.join('.')}.${element}`;
           }
         }
 

@@ -1,17 +1,6 @@
-import IStorage from "../storage/storage";
-
-export default class TranslationsStorage {
-  private storage: IStorage;
-
-  constructor(opts: any) {
-    this.storage = opts.storage;
-  }
-
-  public async setTranslations(translations: object) {
-    this.storage.set("translations", translations);
-  }
-
-  public async getTranslations(): Promise<object> {
-    return this.storage.get("translations");
-  }
-}
+export default interface ITranslations {
+  hasTranslations(filters: string[]): Promise<boolean>;
+  clearTranslations(): Promise<void>;
+  setTranslations(filters: string[], translations: { [key: string]: any }): Promise<void>;
+  getTranslations(filters: string[]): Promise<{ [key: string]: any }>;
+};

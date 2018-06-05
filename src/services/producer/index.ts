@@ -1,9 +1,9 @@
 import to from 'await-to-js';
 import * as dotenv from 'dotenv';
+import { ILogger } from 'node-common';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
-import { LoggerInstance } from 'winston';
-import TranslationsStorage from '../shared/translations/translations';
+import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
 import GoogleSheets from './google/sheets';
 import ITransformer from './transformer/transformer';
@@ -13,12 +13,12 @@ dotenv.config();
 const container = createContainer();
 
 process.on('uncaughtException', err => {
-  container.resolve<LoggerInstance>('logger').error(err.toString());
+  container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
 
 process.on('unhandledRejection', err => {
-  container.resolve<LoggerInstance>('logger').error(err.toString());
+  container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
 
@@ -35,7 +35,7 @@ async function main() {
     await container.resolve<TranslationsStorage>('translationsStorage').clearTranslations();
     await container.resolve<TranslationsStorage>('translationsStorage').setTranslations([], transformedData);
 
-    container.resolve<LoggerInstance>('logger').info('Translations were refreshed');
+    container.resolve<ILogger>('logger').info('Translations were refreshed');
   }
 }
 

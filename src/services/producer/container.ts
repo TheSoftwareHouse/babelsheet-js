@@ -1,11 +1,11 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import MaskConverter from '../api/mask/mask.converter';
-import MaskInput from '../api/mask/mask.input';
-import { winstonLogger } from '../shared/logger/logger';
-import InEnvStorage from '../shared/storage/in-env';
-import InRedisStorage from '../shared/storage/in-redis';
-import MaskedTranslations from '../shared/translations/masked-translations';
+import { winstonLogger } from 'node-common';
+import InEnvStorage from '../../infrastructure/storage/in-env';
+import InRedisStorage from '../../infrastructure/storage/in-redis';
+import MaskConverter from '../../shared/mask/mask.converter';
+import MaskInput from '../../shared/mask/mask.input';
+import MaskedTranslations from '../../shared/translations/masked-translations';
 import GoogleAuth from './google/auth';
 import GoogleSheets from './google/sheets';
 import TokenStorage from './token/token';

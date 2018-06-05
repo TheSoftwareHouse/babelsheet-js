@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { LoggerInstance } from 'winston';
+import { ILogger } from 'node-common';
 import createContainer from './container';
 import Server from './server/server';
 
@@ -8,12 +8,12 @@ dotenv.config();
 const container = createContainer();
 
 process.on('uncaughtException', err => {
-  container.resolve<LoggerInstance>('logger').error(err.toString());
+  container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
 
 process.on('unhandledRejection', err => {
-  container.resolve<LoggerInstance>('logger').error(err.toString());
+  container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
 

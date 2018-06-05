@@ -1,8 +1,8 @@
 import * as awilix from 'awilix';
 import * as request from 'supertest';
-import InMemoryStorage from '../../shared/storage/in-memory';
-import MaskedTranslations from '../../shared/translations/masked-translations';
-import TranslationsStorage from '../../shared/translations/translations';
+import InMemoryStorage from '../../../infrastructure/storage/in-memory';
+import MaskedTranslations from '../../../shared/translations/masked-translations';
+import TranslationsStorage from '../../../shared/translations/translations';
 import createContainer from '../container';
 import Server from './server';
 

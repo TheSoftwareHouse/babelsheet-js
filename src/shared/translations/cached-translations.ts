@@ -1,8 +1,8 @@
 import * as ramda from 'ramda';
-import TranslationsKeyGenerator from '../../api/translations/translations.key-generator';
+import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import IStorage from '../storage/storage';
 import ITranslations from './translations';
+import TranslationsKeyGenerator from './translations.key-generator';
 
 export default class CachedTranslations implements ITranslations {
   private readonly translationsCachePrefix = 'translationsCache';

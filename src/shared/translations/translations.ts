@@ -3,4 +3,4 @@ export default interface ITranslations {
   clearTranslations(): Promise<void>;
   setTranslations(filters: string[], translations: { [key: string]: any }): Promise<void>;
   getTranslations(filters: string[]): Promise<{ [key: string]: any }>;
-};
+}

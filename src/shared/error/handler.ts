@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { LoggerInstance } from 'winston';
+import { ILogger } from 'node-common';
 
 export default class ErrorHandler {
-  constructor(private logger: LoggerInstance) {
+  constructor(private logger: ILogger) {
     this.handle = this.handle.bind(this);
   }
 

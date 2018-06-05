@@ -1,8 +1,8 @@
 import * as mask from 'json-mask';
-import MaskConverter from '../../api/mask/mask.converter';
-import MaskInput from '../../api/mask/mask.input';
+import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import IStorage from '../storage/storage';
+import MaskConverter from '../mask/mask.converter';
+import MaskInput from '../mask/mask.input';
 import ITranslations from './translations';
 
 export default class MaskedTranslations implements ITranslations {

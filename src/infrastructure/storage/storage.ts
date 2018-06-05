@@ -3,4 +3,4 @@ export default interface IStorage {
   get(key: string): Promise<any>;
   has(key: string): Promise<boolean>;
   clear(): Promise<void>;
-};
+}

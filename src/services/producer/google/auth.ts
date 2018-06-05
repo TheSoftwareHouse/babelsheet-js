@@ -2,15 +2,15 @@ import { OAuth2Client } from 'google-auth-library';
 import { Credentials } from 'google-auth-library/build/src/auth/credentials';
 import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
+import { ILogger } from 'node-common';
 import opn = require('opn');
 import * as querystring from 'querystring';
 import destroyer = require('server-destroy');
 import * as url from 'url';
-import { LoggerInstance } from 'winston';
 import TokenStorage from '../token/token';
 
 export default class GoogleAuth {
-  constructor(private logger: LoggerInstance, private port: number, private tokenStorage: TokenStorage) {}
+  constructor(private logger: ILogger, private port: number, private tokenStorage: TokenStorage) {}
 
   public async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
     return new Promise<Credentials>((resolve, reject) => {
@@ -28,7 +28,7 @@ export default class GoogleAuth {
           if (requestUrl.indexOf('/oauth2callback') > -1) {
             const parsedUrl = url.parse(requestUrl).query || '';
             const parsedQueryString = querystring.parse(parsedUrl);
-            const code = parsedQueryString.code.toString();
+            const code = (parsedQueryString.code || '').toString();
 
             this.logger.info(`Received code ${code}`);
 

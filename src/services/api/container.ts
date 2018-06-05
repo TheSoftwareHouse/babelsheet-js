@@ -1,15 +1,15 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import ErrorHandler from '../shared/error/handler';
-import { winstonLogger } from '../shared/logger/logger';
-import InRedisStorage from '../shared/storage/in-redis';
-import CachedTranslations from '../shared/translations/cached-translations';
-import MaskedTranslations from '../shared/translations/masked-translations';
-import MaskConverter from './mask/mask.converter';
-import MaskInput from './mask/mask.input';
+import { winstonLogger } from 'node-common';
+import InRedisStorage from '../../infrastructure/storage/in-redis';
+import ErrorHandler from '../../shared/error/handler';
+import MaskConverter from '../../shared/mask/mask.converter';
+import MaskInput from '../../shared/mask/mask.input';
+import CachedTranslations from '../../shared/translations/cached-translations';
+import MaskedTranslations from '../../shared/translations/masked-translations';
+import TranslationsKeyGenerator from '../../shared/translations/translations.key-generator';
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
-import TranslationsKeyGenerator from './translations/translations.key-generator';
 import TranslationsRouting from './translations/translations.routing';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {

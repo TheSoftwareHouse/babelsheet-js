@@ -8,6 +8,7 @@ pipelines:
           - node
         script:
           - npm install
-          - npm run lint
-          - npm run type-check
           - npm test
+          - npm run type-check
+          - npm run lint
+          - npm run nsp

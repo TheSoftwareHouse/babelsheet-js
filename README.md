@@ -37,6 +37,8 @@ npm run build - compiles typescript
 npm run lint - runs typescript linter
 npm run lint-fix - runs typescript linter and fixes some common mistakes
 npm run nsp - runs security check
+npm run start-producer - runs redis producer
+npm run start-api - runs api
 ```
 
 ## Usage

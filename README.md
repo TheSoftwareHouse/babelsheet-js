@@ -9,8 +9,8 @@ Babelsheet node service allows you to translate all of the UI / app content to s
 3. Run `npm i`
 4. Install pm2 with `npm i -g pm2`
 5. Run redis with `docker-compose up -d redis`
-6. Run producer with `pm2 start src/services/producer/index.ts`
-7. Run api with `pm2 start src/services/api/index.ts`
+6. Run producer with `npm run start-producer`
+7. Run api with `npm run start-api`
 
 For now services do not have proper docker files. If you want to run it on production, contact your devops.
 
@@ -20,7 +20,7 @@ Service is implemented to use redis as cache storage but can use another databas
 
 ```
 import InRedisStorage from '../../infrastructure/storage/in-redis';
-   
+
 container.register({
   storage: awilix.asClass(InRedisStorage)
 });
@@ -37,6 +37,8 @@ npm run build - compiles typescript
 npm run lint - runs typescript linter
 npm run lint-fix - runs typescript linter and fixes some common mistakes
 npm run nsp - runs security check
+npm run start-producer - runs redis producer
+npm run start-api - runs api
 ```
 
 ## Usage
@@ -94,7 +96,7 @@ Spreadsheet metadata contains symbols:
 
 ```
 import InFileStorage from '../../infrastructure/storage/in-file';
-   
+
 container.register({
     inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     tokenStorage: awilix
@@ -110,7 +112,7 @@ From:
 
 ```
 const everyFiveMinutes = '*/5 * * * *';
- 
+
 schedule.scheduleJob(everyFiveMinutes, () => {
   main();
 });

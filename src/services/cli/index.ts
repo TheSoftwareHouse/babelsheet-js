@@ -1,9 +1,13 @@
-// import { winstonLogger } from 'node-common';
-// winstonLogger.info('test2');
 import * as yargs from 'yargs';
+import { Options } from 'yargs';
+import { ILogger } from '../../../node_modules/node-common';
+import createContainer from './container';
+import Formatter from './formater';
+
+const container = createContainer();
 
 function main() {
-  const fOptions: yargs.Options = {
+  const fOptions: Options = {
     alias: 'format',
     default: 'json',
     describe: 'Format to export',
@@ -11,23 +15,8 @@ function main() {
   };
   const argv = yargs.usage('Usage: $0 generate [-f "format"]').option('f', fOptions).argv;
 
-  switch (argv.f) {
-    case 'xml':
-      formatXML();
-      break;
-    case 'json':
-    default:
-      formatJson();
-      break;
-  }
-}
-
-function formatJson() {
-  console.log('formatJson!!');
-}
-
-function formatXML() {
-  console.log('formatXML!');
+  container.resolve<Formatter>('formatter').format(argv.f);
+  container.resolve<ILogger>('logger').info('formatted!');
 }
 
 main();

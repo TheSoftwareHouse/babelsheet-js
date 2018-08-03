@@ -1,5 +1,5 @@
 import { Credentials } from 'google-auth-library/build/src/auth/credentials';
-import IStorage from '../../../infrastructure/storage/storage';
+import IStorage from '../../infrastructure/storage/storage';
 
 export default class TokenStorage {
   constructor(private storage: IStorage) {}

@@ -4,11 +4,11 @@ export default class Formatter {
   constructor(private logger: ILogger) {}
 
   private formatJson(): void {
-    console.log('formatJson!!');
+    this.logger.info('Formating JSON');
   }
 
   private formatXML(): void {
-    console.log('formatXML2!');
+    this.logger.info('Formating XML');
   }
 
   public format(formatType: string): void {

@@ -6,9 +6,9 @@ import InRedisStorage from '../../infrastructure/storage/in-redis';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
 import MaskedTranslations from '../../shared/translations/masked-translations';
-import GoogleAuth from './google/auth';
-import GoogleSheets from './google/sheets';
-import TokenStorage from './token/token';
+import GoogleAuth from '../../shared/google/auth';
+import GoogleSheets from '../../shared/google/sheets';
+import TokenStorage from '../../shared/token/token';
 import ToJsonTransformer from './transformer/to-json.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {

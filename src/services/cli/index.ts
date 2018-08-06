@@ -5,7 +5,8 @@ import { ILogger } from 'node-common';
 import createContainer from './container';
 import Formatter from './formater';
 import GoogleSheets from '../../shared/google/sheets';
-import { IFileRepository, Permission } from '../../infrastructure/repository/file-repository.types';
+import IFileRepository from '../../infrastructure/repository/file-repository.types';
+import { Permission } from '../../infrastructure/repository/file-repository.types';
 
 dotenv.config();
 

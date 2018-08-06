@@ -1,5 +1,6 @@
 import * as fs from 'fs';
-import { IFileRepository, Permission } from './file-repository.types';
+import IFileRepository from './file-repository.types';
+import { Permission } from './file-repository.types';
 import { ILogger } from 'node-common';
 
 export default class FileRepository implements IFileRepository {

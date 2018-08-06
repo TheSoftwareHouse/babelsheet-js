@@ -7,20 +7,18 @@ export default class InFileStorage implements IStorage {
 
   public async set(key: string, value: any) {
     this.saveData({ ...this.loadData(), [key]: value });
-    return Promise.resolve();
   }
 
   public async get(key: string): Promise<any> {
-    return Promise.resolve(this.loadData()[key]);
+    return this.loadData()[key];
   }
 
   public async has(key: string) {
-    return Promise.resolve(Boolean(await this.get(key)));
+    return Boolean(await this.get(key));
   }
 
   public async clear() {
     this.saveData({});
-    return Promise.resolve();
   }
 
   private loadData() {

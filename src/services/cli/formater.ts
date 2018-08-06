@@ -1,25 +1,28 @@
 import { ILogger } from 'node-common';
+import ITransformer from '../../shared/transformers/transformer';
 
 export default class Formatter {
-  constructor(private logger: ILogger) {}
+  constructor(private jsonTransformer: ITransformer, private logger: ILogger) {}
 
-  private formatJson(): void {
+  private async formatToJson(spreadsheetData: any) {
     this.logger.info('Formating JSON');
+
+    return await this.jsonTransformer.transform(spreadsheetData);
   }
 
-  private formatXML(): void {
+  private async formatToXML(spreadsheetData: any) {
     this.logger.info('Formating XML');
+
+    return await Promise.resolve('xml');
   }
 
-  public format(formatType: string): void {
+  public format(spreadsheetData: any, formatType: string) {
     switch (formatType) {
       case 'xml':
-        this.formatXML();
-        break;
+        return this.formatToXML(spreadsheetData);
       case 'json':
       default:
-        this.formatJson();
-        break;
+        return this.formatToJson(spreadsheetData);
     }
   }
 }

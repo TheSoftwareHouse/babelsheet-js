@@ -9,7 +9,7 @@ import MaskedTranslations from '../../shared/translations/masked-translations';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
-import ToJsonTransformer from './transformer/to-json.transformer';
+import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

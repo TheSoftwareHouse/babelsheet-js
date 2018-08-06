@@ -6,7 +6,7 @@ import * as ramda from 'ramda';
 import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
 import GoogleSheets from '../../shared/google/sheets';
-import ITransformer from './transformer/transformer';
+import ITransformer from '../../shared/transformers/transformer';
 
 dotenv.config();
 

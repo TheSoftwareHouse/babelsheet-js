@@ -5,7 +5,7 @@ import InEnvStorage from '../../infrastructure/storage/in-env';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
-import ToJsonTransformer from '../producer/transformer/to-json.transformer';
+import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
 import Formatter from './formater';
 import FileRepository from '../../infrastructure/repository/file.repository';
 

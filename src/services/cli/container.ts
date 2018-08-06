@@ -9,6 +9,7 @@ import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
 import Formatter from './formater';
 import FileRepository from '../../infrastructure/repository/file.repository';
 import InFileStorage from '../../infrastructure/storage/in-file';
+import ITransformer from '../../shared/transformers/transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -17,8 +18,10 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   });
 
   container.register({
-    fileRepository: awilix.asClass(FileRepository),
-    formatter: awilix.asClass(Formatter),
+    fileRepository: awilix.asClass(FileRepository, { lifetime: awilix.Lifetime.SINGLETON }),
+    formatter: awilix
+      .asClass(Formatter, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({ jsonTransformer: container.resolve<ITransformer>('jsonTransformer') })),
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),
     jsonTransformer: awilix.asClass(ToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),

@@ -15,7 +15,7 @@ export default class FileRepository implements IFileRepository {
     }
   }
 
-  public loadData(filename: string = 'data', extension: string = 'json'): any {
+  public loadData(filename: string, extension: string): any {
     const fileName = `${filename}.${extension}`;
     if (fs.existsSync(fileName)) {
       return fs.readFileSync(fileName, 'utf8');

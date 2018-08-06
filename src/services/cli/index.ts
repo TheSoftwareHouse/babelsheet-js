@@ -43,12 +43,13 @@ function configureCli(): Arguments {
 
 async function main() {
   const args = configureCli();
-  const info = container.resolve<ILogger>('logger').info;
+  const { info, error } = container.resolve<ILogger>('logger');
 
   info('Checking folder permissions...');
   const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(args.path, Permission.Write);
 
   if (!canWrite) {
+    error(`No access to '${args.path}'`);
     process.exit(1);
   }
 

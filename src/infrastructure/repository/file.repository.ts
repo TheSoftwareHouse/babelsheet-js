@@ -10,7 +10,6 @@ export default class FileRepository implements IFileRepository {
       fs.accessSync(path, permission === Permission.Read ? fs.constants.R_OK : fs.constants.W_OK);
       return true;
     } catch (err) {
-      this.logger.error(`No access to '${path}'`);
       return false;
     }
   }

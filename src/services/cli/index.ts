@@ -30,7 +30,7 @@ function configureCli(): Arguments {
     .option('f', { alias: 'format', default: 'json', describe: 'Format to export', type: 'string' })
     .option('n', {
       alias: 'filename',
-      default: 'spreadsheet-data',
+      default: 'translations',
       describe: 'Filename of result file',
       type: 'string',
     })

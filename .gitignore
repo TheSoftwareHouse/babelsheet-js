@@ -5,3 +5,4 @@ build
 data.json
 coverage
 docker-compose.yml
+translations.json

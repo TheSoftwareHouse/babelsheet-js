@@ -46,7 +46,9 @@ async function main() {
 
   const transformedData = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
 
-  container.resolve<IFileRepository>('fileRepository').saveData(JSON.stringify(transformedData));
+  container
+    .resolve<IFileRepository>('fileRepository')
+    .saveData(JSON.stringify(transformedData), args.path, args.filename, args.format);
 
   process.exit(0);
 }

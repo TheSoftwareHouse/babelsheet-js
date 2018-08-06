@@ -46,7 +46,7 @@ async function main() {
   const info = container.resolve<ILogger>('logger').info;
 
   info('Checking folder permissions...');
-  const canWrite = container.resolve<IFileRepository>('fileRepository').checkAccess(args.path, Permission.Write);
+  const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(args.path, Permission.Write);
 
   if (!canWrite) {
     process.exit(1);

@@ -1,7 +1,10 @@
 import * as fs from 'fs';
 import IStorage from './storage';
+import IFileRepository from '../repository/file-repository.types';
 
 export default class InFileStorage implements IStorage {
+  constructor(private fileRepository: IFileRepository) {}
+
   public async set(key: string, value: any) {
     this.saveData({ ...this.loadData(), [key]: value });
     return Promise.resolve();
@@ -21,14 +24,10 @@ export default class InFileStorage implements IStorage {
   }
 
   private loadData() {
-    if (fs.existsSync('data.json')) {
-      return JSON.parse(fs.readFileSync('data.json', 'utf8'));
-    }
-
-    return {};
+    return JSON.parse(this.fileRepository.loadData());
   }
 
   private saveData(data: any) {
-    fs.writeFileSync('data.json', JSON.stringify(data));
+    this.fileRepository.saveData(JSON.stringify(data));
   }
 }

@@ -5,7 +5,7 @@ import { ILogger } from 'node-common';
 import createContainer from './container';
 import Formatter from './formater';
 import GoogleSheets from '../../shared/google/sheets';
-import IFileRepository from '../../infrastructure/repository/file-repository.types';
+import { IFileRepository, Permission } from '../../infrastructure/repository/file-repository.types';
 
 dotenv.config();
 
@@ -38,13 +38,15 @@ function configureCli(): Arguments {
 async function main() {
   const args = configureCli();
 
+  const canWrite = container.resolve<IFileRepository>('fileRepository').checkAccess(args.path, Permission.Write);
+
+  !canWrite && process.exit(1);
+
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
 
   const transformedData = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
 
-  container
-    .resolve<IFileRepository>('fileRepository')
-    .saveData(JSON.stringify(transformedData), args.filename, args.format);
+  container.resolve<IFileRepository>('fileRepository').saveData(JSON.stringify(transformedData));
 
   process.exit(0);
 }

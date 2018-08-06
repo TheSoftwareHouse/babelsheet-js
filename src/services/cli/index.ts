@@ -28,7 +28,12 @@ function configureCli(): Arguments {
     .command('generate', 'Generate the file')
     .required(1, 'generate')
     .option('f', { alias: 'format', default: 'json', describe: 'Format to export', type: 'string' })
-    .option('n', { alias: 'filename', default: 'data', describe: 'Filename of result file', type: 'string' })
+    .option('n', {
+      alias: 'filename',
+      default: 'spreadsheet-data',
+      describe: 'Filename of result file',
+      type: 'string',
+    })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .help('?')
     .alias('?', 'help')
@@ -45,11 +50,9 @@ async function main() {
 
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
 
-  const transformedData = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
+  const dataToSave = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
 
-  container
-    .resolve<IFileRepository>('fileRepository')
-    .saveData(JSON.stringify(transformedData), args.path, args.filename, args.format);
+  container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, args.format, args.path);
 
   process.exit(0);
 }

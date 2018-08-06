@@ -24,10 +24,10 @@ export default class InFileStorage implements IStorage {
   }
 
   private loadData() {
-    return JSON.parse(this.fileRepository.loadData());
+    return JSON.parse(this.fileRepository.loadData('data', 'json'));
   }
 
   private saveData(data: any) {
-    this.fileRepository.saveData(JSON.stringify(data));
+    this.fileRepository.saveData(JSON.stringify(data), 'data', 'json');
   }
 }

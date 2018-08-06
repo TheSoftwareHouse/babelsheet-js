@@ -5,6 +5,6 @@ export enum Permission {
 
 export default interface IFileRepository {
   checkAccess(path: string, permission: Permission): Boolean;
-  loadData(filename?: string, extension?: string): any;
-  saveData(data: any, path?: string, filename?: string, extension?: string): void;
+  loadData(filename: string, extension: string): any;
+  saveData(data: any, filename: string, extension: string, path?: string): void;
 }

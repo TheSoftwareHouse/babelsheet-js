@@ -24,7 +24,7 @@ export default class FileRepository implements IFileRepository {
     return null;
   }
 
-  public saveData(data: any, path: string = '.', filename: string = 'data', extension: string = 'json'): void {
+  public saveData(data: any, filename: string, extension: string, path: string = '.'): void {
     fs.writeFileSync(`${path}/${filename}.${extension}`, data);
   }
 }

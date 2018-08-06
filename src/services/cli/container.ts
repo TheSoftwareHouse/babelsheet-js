@@ -8,6 +8,7 @@ import TokenStorage from '../../shared/token/token';
 import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
 import Formatter from './formater';
 import FileRepository from '../../infrastructure/repository/file.repository';
+import InFileStorage from '../../infrastructure/storage/in-file';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -22,11 +23,11 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     googleSheets: awilix.asClass(GoogleSheets),
     jsonTransformer: awilix.asClass(ToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     logger: awilix.asValue(winstonLogger),
-    inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
+    inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.PORT || 3000),
     tokenStorage: awilix
       .asClass(TokenStorage)
-      .inject(() => ({ storage: container.resolve<InEnvStorage>('inEnvStorage') })),
+      .inject(() => ({ storage: container.resolve<InFileStorage>('inFileStorage') })),
   });
 
   return container;

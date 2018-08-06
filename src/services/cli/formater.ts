@@ -7,7 +7,9 @@ export default class Formatter {
   private async formatToJson(spreadsheetData: any) {
     this.logger.info('Formating JSON');
 
-    return await this.jsonTransformer.transform(spreadsheetData);
+    const transformedData = await this.jsonTransformer.transform(spreadsheetData);
+
+    return JSON.stringify(transformedData);
   }
 
   private async formatToXML(spreadsheetData: any) {

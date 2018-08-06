@@ -43,16 +43,24 @@ function configureCli(): Arguments {
 
 async function main() {
   const args = configureCli();
+  const info = container.resolve<ILogger>('logger').info;
 
+  info('Checking folder permissions...');
   const canWrite = container.resolve<IFileRepository>('fileRepository').checkAccess(args.path, Permission.Write);
 
   !canWrite && process.exit(1);
 
+  info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
+  info('Spreadsheet successfully fetched.');
 
+  info('Formatting spreadsheet...');
   const dataToSave = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
+  info('Spreadsheet formatted.');
 
+  info(`Saving file to ${args.path}/${args.file}.${args.format}`);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, args.format, args.path);
+  info('File successfully saved.');
 
   process.exit(0);
 }

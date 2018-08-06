@@ -7,6 +7,7 @@ import createContainer from './container';
 import GoogleSheets from '../../shared/google/sheets';
 import ITransformer from '../producer/transformer/transformer';
 //import IStorage from '../../../build/infrastructure/storage/storage';
+import IFileRepository from '../../infrastructure/repository/file-repository.types';
 
 dotenv.config();
 
@@ -36,8 +37,9 @@ async function main() {
 
   const transformedData = await container.resolve<ITransformer>('jsonTransformer').transform(spreadsheetData);
 
-  //await container.resolve<IStorage>('inFileStorage').set(transformedData);
-  //container.resolve<Formatter>('formatter').format(argv.f);
+  await container.resolve<IFileRepository>('fileRepository').saveData(JSON.stringify(transformedData));
+
+  process.exit(0);
 }
 
 main();

@@ -1,15 +1,15 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
 import { winstonLogger } from 'node-common';
+import FileRepository from '../../infrastructure/repository/file.repository';
 import InEnvStorage from '../../infrastructure/storage/in-env';
+import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
 import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
-import Formatter from './formater';
-import FileRepository from '../../infrastructure/repository/file.repository';
-import InFileStorage from '../../infrastructure/storage/in-file';
 import ITransformer from '../../shared/transformers/transformer';
+import Formatter from './formater';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

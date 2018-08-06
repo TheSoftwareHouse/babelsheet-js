@@ -3,13 +3,13 @@ import { AwilixContainer, ContainerOptions } from 'awilix';
 import { winstonLogger } from 'node-common';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InRedisStorage from '../../infrastructure/storage/in-redis';
-import MaskConverter from '../../shared/mask/mask.converter';
-import MaskInput from '../../shared/mask/mask.input';
-import MaskedTranslations from '../../shared/translations/masked-translations';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
+import MaskConverter from '../../shared/mask/mask.converter';
+import MaskInput from '../../shared/mask/mask.input';
 import TokenStorage from '../../shared/token/token';
 import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
+import MaskedTranslations from '../../shared/translations/masked-translations';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

@@ -1,12 +1,12 @@
 import * as dotenv from 'dotenv';
+import { ILogger } from 'node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
-import { ILogger } from 'node-common';
-import createContainer from './container';
-import Formatter from './formater';
-import GoogleSheets from '../../shared/google/sheets';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
+import GoogleSheets from '../../shared/google/sheets';
+import createContainer from './container';
+import Formatter from './formater';
 
 dotenv.config();
 
@@ -48,7 +48,9 @@ async function main() {
   info('Checking folder permissions...');
   const canWrite = container.resolve<IFileRepository>('fileRepository').checkAccess(args.path, Permission.Write);
 
-  !canWrite && process.exit(1);
+  if (!canWrite) {
+    process.exit(1);
+  }
 
   info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();

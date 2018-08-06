@@ -4,6 +4,16 @@ import ITransformer from '../../shared/transformers/transformer';
 export default class Formatter {
   constructor(private jsonTransformer: ITransformer, private logger: ILogger) {}
 
+  public format(spreadsheetData: any, formatType: string) {
+    switch (formatType) {
+      case 'xml':
+        return this.formatToXML();
+      case 'json':
+      default:
+        return this.formatToJson(spreadsheetData);
+    }
+  }
+
   private async formatToJson(spreadsheetData: any): Promise<any> {
     this.logger.info('Formating JSON');
 
@@ -16,15 +26,5 @@ export default class Formatter {
     this.logger.info('Formating XML');
 
     return 'xml';
-  }
-
-  public format(spreadsheetData: any, formatType: string) {
-    switch (formatType) {
-      case 'xml':
-        return this.formatToXML();
-      case 'json':
-      default:
-        return this.formatToJson(spreadsheetData);
-    }
   }
 }

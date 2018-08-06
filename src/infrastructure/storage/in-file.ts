@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import IStorage from './storage';
 import IFileRepository from '../repository/file-repository.types';
+import IStorage from './storage';
 
 export default class InFileStorage implements IStorage {
   constructor(private fileRepository: IFileRepository) {}

@@ -6,22 +6,20 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
   private readonly metaTranslationKey = '>>>';
   private readonly metaTagKey = '###';
   private readonly outputTagsKey = 'tags';
-  private supportedType = 'json';
 
   public supports(type: string): boolean {
-    return type.toLowerCase() === this.supportedType;
+    return false;
   }
 
-  public transform(source: { [key: string]: string[] }): any {
+  public transform(source: { [key: string]: string[] }): object {
     const sourceValues = ramda.values(source);
     const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
-    let data = {};
 
     if (metaIndex > -1) {
       const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
       const meta = sourceValues[metaIndex];
 
-      data = ramda.reduce(
+      return ramda.reduce(
         (accRow, row) => {
           const context = this.updateContext(accRow.context, row, meta);
           const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
@@ -34,7 +32,7 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
       ).result;
     }
 
-    return data;
+    return {};
   }
 
   private extractTags(source: string): string[] {

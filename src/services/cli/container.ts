@@ -6,7 +6,8 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
-import ToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
+import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
+import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import Transformers from './transformers';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
@@ -22,11 +23,15 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     logger: awilix.asValue(winstonLogger),
     inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.PORT || 3000),
+    spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer),
+    spreadsheetToJsonStringTransformer: awilix.asClass(SpreadsheetToJsonStringTransformer).inject(() => ({
+      spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+    })),
     tokenStorage: awilix
       .asClass(TokenStorage)
       .inject(() => ({ storage: container.resolve<InFileStorage>('inFileStorage') })),
     transformers: awilix.asClass(Transformers).inject(() => ({
-      transformers: [new ToJsonTransformer()],
+      transformers: [container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer')],
     })),
   });
 

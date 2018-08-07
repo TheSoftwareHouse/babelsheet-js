@@ -1,5 +1,4 @@
 import Transformers from './transformers';
-//import SpreadsheetToJsonTransformer from '../../shared/transformers/to-json.transformer';
 
 const toJsonTransformer = {
   transform: source => 'test',

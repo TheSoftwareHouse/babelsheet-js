@@ -26,9 +26,9 @@ process.on('unhandledRejection', err => {
 function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
-    .command('generate', 'Generate the file')
+    .command('generate', 'Generate file with translations')
     .required(1, 'generate')
-    .option('f', { alias: 'format', default: 'json', describe: 'Format to export', type: 'string' })
+    .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('n', {
       alias: 'filename',

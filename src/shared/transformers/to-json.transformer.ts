@@ -15,13 +15,13 @@ export default class ToJsonTransformer implements ITransformer {
   public transform(source: { [key: string]: string[] }): any {
     const sourceValues = ramda.values(source);
     const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
-    let result = {};
+    let data = {};
 
     if (metaIndex > -1) {
       const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
       const meta = sourceValues[metaIndex];
 
-      result = ramda.reduce(
+      data = ramda.reduce(
         (accRow, row) => {
           const context = this.updateContext(accRow.context, row, meta);
           const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
@@ -34,7 +34,7 @@ export default class ToJsonTransformer implements ITransformer {
       ).result;
     }
 
-    return JSON.stringify(result);
+    return JSON.stringify(data);
   }
 
   private extractTags(source: string): string[] {

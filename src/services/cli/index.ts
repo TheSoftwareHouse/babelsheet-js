@@ -29,13 +29,13 @@ function configureCli(): Arguments {
     .command('generate', 'Generate the file')
     .required(1, 'generate')
     .option('f', { alias: 'format', default: 'json', describe: 'Format to export', type: 'string' })
+    .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('n', {
       alias: 'filename',
       default: 'translations',
       describe: 'Filename of result file',
       type: 'string',
     })
-    .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .help('?')
     .alias('?', 'help')
     .example('$0 generate -f xml -n my-data -p ./result', 'Generate my-data.xml in folder /result')

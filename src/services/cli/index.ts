@@ -63,9 +63,8 @@ function checkOptions(format: string, path: string): void {
 }
 
 async function main() {
-  const args = configureCli();
   const { info, error } = container.resolve<ILogger>('logger');
-
+  const args = configureCli();
   checkOptions(args.format, args.path);
 
   info('Fetching spreadsheet...');

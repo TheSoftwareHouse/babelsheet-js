@@ -34,7 +34,7 @@ export default class ToJsonTransformer implements ITransformer {
       ).result;
     }
 
-    return JSON.stringify(data);
+    return data;
   }
 
   private extractTags(source: string): string[] {

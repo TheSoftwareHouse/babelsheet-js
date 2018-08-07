@@ -1,8 +1,8 @@
 import { set } from 'dot-prop-immutable';
 import * as mask from 'json-mask';
-import ToJsonTransformer from './spreadsheet-to-json.transformer';
+import SpreadsheetToJsonTransformer from './spreadsheet-to-json.transformer';
 
-describe('ToJsonTransformer', () => {
+describe('SpreadsheetToJsonTransformer', () => {
   it('transforms raw translations to json format', () => {
     const source = {
       '0': [],
@@ -157,7 +157,7 @@ describe('ToJsonTransformer', () => {
       },
     };
 
-    const transformer = new ToJsonTransformer();
+    const transformer = new SpreadsheetToJsonTransformer();
 
     expect(transformer.transform(source)).toEqual(expectedResult);
   });
@@ -195,7 +195,7 @@ describe('ToJsonTransformer', () => {
       },
     };
 
-    const transformer = new ToJsonTransformer();
+    const transformer = new SpreadsheetToJsonTransformer();
 
     expect(transformer.transform(source)).toEqual(expectedResult);
   });
@@ -212,7 +212,7 @@ describe('ToJsonTransformer', () => {
 
     const expectedResult = {};
 
-    const transformer = new ToJsonTransformer();
+    const transformer = new SpreadsheetToJsonTransformer();
 
     expect(transformer.transform(source)).toEqual(expectedResult);
   });

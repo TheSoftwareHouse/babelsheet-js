@@ -6,7 +6,7 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
-import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
+import ToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import Transformers from './transformers';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {

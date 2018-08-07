@@ -1,6 +1,6 @@
 import { set } from 'dot-prop-immutable';
 import * as mask from 'json-mask';
-import ToJsonTransformer from './to-json.transformer';
+import ToJsonTransformer from './spreadsheet-to-json.transformer';
 
 describe('ToJsonTransformer', () => {
   it('transforms raw translations to json format', () => {

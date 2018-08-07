@@ -8,7 +8,7 @@ import GoogleSheets from '../../shared/google/sheets';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
 import TokenStorage from '../../shared/token/token';
-import ToJsonTransformer from '../../shared/transformers/to-json.transformer';
+import ToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import MaskedTranslations from '../../shared/translations/masked-translations';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {

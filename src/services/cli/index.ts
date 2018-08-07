@@ -6,7 +6,7 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import GoogleSheets from '../../shared/google/sheets';
 import createContainer from './container';
-import Formatter from './formater';
+import Transformers from './transformers';
 
 dotenv.config();
 
@@ -58,7 +58,14 @@ async function main() {
   info('Spreadsheet successfully fetched.');
 
   info('Formatting spreadsheet...');
-  const dataToSave = await container.resolve<Formatter>('formatter').format(spreadsheetData, args.format);
+
+  let dataToSave;
+  try {
+    dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
+  } catch (error) {
+    error(error.message);
+  }
+
   info('Spreadsheet formatted.');
 
   info(`Saving file to ${args.path}/${args.file}.${args.format}`);

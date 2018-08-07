@@ -6,16 +6,22 @@ export default class ToJsonTransformer implements ITransformer {
   private readonly metaTranslationKey = '>>>';
   private readonly metaTagKey = '###';
   private readonly outputTagsKey = 'tags';
+  private supportedType = 'json';
 
-  public transform(source: { [key: string]: string[] }): object {
+  public supports(type: string): boolean {
+    return type.toLowerCase() === this.supportedType;
+  }
+
+  public transform(source: { [key: string]: string[] }): any {
     const sourceValues = ramda.values(source);
     const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
+    let result = {};
 
     if (metaIndex > -1) {
       const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
       const meta = sourceValues[metaIndex];
 
-      return ramda.reduce(
+      result = ramda.reduce(
         (accRow, row) => {
           const context = this.updateContext(accRow.context, row, meta);
           const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
@@ -28,7 +34,7 @@ export default class ToJsonTransformer implements ITransformer {
       ).result;
     }
 
-    return {};
+    return JSON.stringify(result);
   }
 
   private extractTags(source: string): string[] {

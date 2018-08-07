@@ -42,25 +42,31 @@ function configureCli(): Arguments {
     .example('$0 generate -n my-data', 'Get file with result in json extension').argv;
 }
 
-async function main() {
-  const args = configureCli();
+function checkOptions(format: string, path: string): void {
   const { info, error } = container.resolve<ILogger>('logger');
 
   info('Checking formats...');
-  const formatExsits = doesFormatExists(args.format);
+  const formatExsits = doesFormatExists(format);
 
   if (!formatExsits) {
-    error(`Not possible to create translations for format '${args.format}'`);
+    error(`Not possible to create translations for format '${format}'`);
     process.exit(1);
   }
 
   info('Checking folder permissions...');
-  const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(args.path, Permission.Write);
+  const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(path, Permission.Write);
 
   if (!canWrite) {
-    error(`No access to '${args.path}'`);
+    error(`No access to '${path}'`);
     process.exit(1);
   }
+}
+
+async function main() {
+  const args = configureCli();
+  const { info, error } = container.resolve<ILogger>('logger');
+
+  checkOptions(args.format, args.path);
 
   info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
@@ -71,8 +77,8 @@ async function main() {
   let dataToSave;
   try {
     dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
-  } catch (error) {
-    error(error.message);
+  } catch (err) {
+    error(err.message);
   }
 
   info('Spreadsheet formatted.');

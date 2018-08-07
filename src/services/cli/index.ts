@@ -6,6 +6,7 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import GoogleSheets from '../../shared/google/sheets';
 import createContainer from './container';
+import { doesFormatExists } from './formatToExtensions';
 import Transformers from './transformers';
 
 dotenv.config();
@@ -44,6 +45,14 @@ function configureCli(): Arguments {
 async function main() {
   const args = configureCli();
   const { info, error } = container.resolve<ILogger>('logger');
+
+  info('Checking formats...');
+  const formatExsits = doesFormatExists(args.format);
+
+  if (!formatExsits) {
+    error(`Not possible to create translations for format '${args.format}'`);
+    process.exit(1);
+  }
 
   info('Checking folder permissions...');
   const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(args.path, Permission.Write);

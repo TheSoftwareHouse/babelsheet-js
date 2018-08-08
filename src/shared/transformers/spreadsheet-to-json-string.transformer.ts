@@ -1,7 +1,7 @@
 import ITransformer from './transformer';
 
 export default class SpreadsheetToJsonStringTransformer implements ITransformer {
-  private supportedType = 'json';
+  private readonly supportedType = 'json';
 
   constructor(private spreadsheetToJson: ITransformer) {}
 

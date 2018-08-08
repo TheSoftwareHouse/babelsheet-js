@@ -6,9 +6,10 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
   private readonly metaTranslationKey = '>>>';
   private readonly metaTagKey = '###';
   private readonly outputTagsKey = 'tags';
+  private readonly supportedType = 'json-obj';
 
   public supports(type: string): boolean {
-    return false;
+    return type.toLowerCase() === this.supportedType;
   }
 
   public transform(source: { [key: string]: string[] }): object {

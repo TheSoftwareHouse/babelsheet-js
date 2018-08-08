@@ -15,7 +15,7 @@
     "nsp": "nsp check",
     "start-producer": "TS_NODE_FILES=true pm2 start src/services/producer/index.ts",
     "start-api": "TS_NODE_FILES=true pm2 start src/services/api/index.ts",
-    "generate": "ts-node src/services/cli/index.ts"
+    "generate": "TS_NODE_FILES=true pm2 start src/services/cli/index.ts --no-autorestart -- generate"
   },
   "author": "The Software House",
   "license": "MIT",

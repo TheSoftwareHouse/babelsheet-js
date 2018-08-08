@@ -2,10 +2,15 @@ import { set } from 'dot-prop-immutable';
 import * as ramda from 'ramda';
 import ITransformer from './transformer';
 
-export default class ToJsonTransformer implements ITransformer {
+export default class SpreadsheetToJsonTransformer implements ITransformer {
   private readonly metaTranslationKey = '>>>';
   private readonly metaTagKey = '###';
   private readonly outputTagsKey = 'tags';
+  private readonly supportedType = 'json-obj';
+
+  public supports(type: string): boolean {
+    return type.toLowerCase() === this.supportedType;
+  }
 
   public transform(source: { [key: string]: string[] }): object {
     const sourceValues = ramda.values(source);

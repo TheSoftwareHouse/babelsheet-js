@@ -3,13 +3,13 @@ import { AwilixContainer, ContainerOptions } from 'awilix';
 import { winstonLogger } from 'node-common';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InRedisStorage from '../../infrastructure/storage/in-redis';
+import GoogleAuth from '../../shared/google/auth';
+import GoogleSheets from '../../shared/google/sheets';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
+import TokenStorage from '../../shared/token/token';
+import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import MaskedTranslations from '../../shared/translations/masked-translations';
-import GoogleAuth from './google/auth';
-import GoogleSheets from './google/sheets';
-import TokenStorage from './token/token';
-import ToJsonTransformer from './transformer/to-json.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -29,7 +29,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     tokenStorage: awilix
       .asClass(TokenStorage)
       .inject(() => ({ storage: container.resolve<InEnvStorage>('inEnvStorage') })),
-    transformer: awilix.asClass(ToJsonTransformer),
+    transformer: awilix.asClass(SpreadsheetToJsonTransformer),
     translationsStorage: awilix.asClass(MaskedTranslations),
   });
 

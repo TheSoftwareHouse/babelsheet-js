@@ -3,10 +3,10 @@ import * as dotenv from 'dotenv';
 import { ILogger } from 'node-common';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
+import GoogleSheets from '../../shared/google/sheets';
+import ITransformer from '../../shared/transformers/transformer';
 import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
-import GoogleSheets from './google/sheets';
-import ITransformer from './transformer/transformer';
 
 dotenv.config();
 

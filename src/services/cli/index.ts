@@ -63,7 +63,7 @@ function checkOptions(format: string, path: string): void {
 }
 
 async function main() {
-  const { info, error } = container.resolve<ILogger>('logger');
+  const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();
   checkOptions(args.format, args.path);
 
@@ -72,15 +72,7 @@ async function main() {
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
-
-  let dataToSave;
-  try {
-    dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
-  } catch (err) {
-    error(err.message);
-    process.exit(1);
-  }
-
+  const dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
   info('Spreadsheet formatted.');
 
   info(`Saving file to ${args.path}/${args.filename}.${args.format}`);

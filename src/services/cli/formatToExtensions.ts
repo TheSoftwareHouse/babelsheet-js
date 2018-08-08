@@ -10,6 +10,9 @@ export function formatExists(format: string): boolean {
   return !!formats.find(f => f === format);
 }
 
-export function getExtension(format: string): string {
-  return formatToExtension[format];
+export function getExtension(format: string): string | null {
+  if (formatExists(format)) {
+    return formatToExtension[format];
+  }
+  return null;
 }

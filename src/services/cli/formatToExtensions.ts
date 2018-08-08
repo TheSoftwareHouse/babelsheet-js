@@ -1,7 +1,7 @@
 const formatToExtension: { [key: string]: string } = {
   json: 'json',
-  // ios: 'ipa',
-  // android: 'cos',
+  // ios: 'strings',
+  // android: 'xml',
   // xml: 'xml'
 };
 

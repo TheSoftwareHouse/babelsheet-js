@@ -25,9 +25,9 @@ process.on('unhandledRejection', err => {
 
 function configureCli(): Arguments {
   return yargs
-    .usage('Usage: get [-f "format"] [-n "filename"] [-p "path"]')
-    .command('get', 'get file with translations')
-    .required(1, 'get')
+    .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
+    .command('generate', 'Generate file with translations')
+    .required(1, 'generate')
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('n', {
@@ -38,8 +38,8 @@ function configureCli(): Arguments {
     })
     .help('?')
     .alias('?', 'help')
-    .example('$0 get -f xml -n my-data -p ./result', 'get my-data.xml in folder /result')
-    .example('$0 get -n my-data', 'Get file with result in json extension').argv;
+    .example('$0 generate -f xml -n my-data -p ./result', 'Generate my-data.xml in folder /result')
+    .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
 
 function checkOptions(format: string, path: string): void {

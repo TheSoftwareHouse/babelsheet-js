@@ -83,12 +83,10 @@ async function main() {
 
   info('Spreadsheet formatted.');
 
-  info(`Saving file to ${args.path}/${args.file}.${args.format}`);
+  info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
   const extension = getExtension(args.format);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
   info('File successfully saved.');
-
-  process.exit(0);
 }
 
 main();

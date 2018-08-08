@@ -6,7 +6,7 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import GoogleSheets from '../../shared/google/sheets';
 import createContainer from './container';
-import { formatExists, getExtension } from './formatToExtensions';
+import { getExtension } from './formatToExtensions';
 import Transformers from './transformers';
 
 dotenv.config();
@@ -42,18 +42,9 @@ function configureCli(): Arguments {
     .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
 
-function checkOptions(format: string, path: string): void {
-  const { info, error } = container.resolve<ILogger>('logger');
+function checkFolderPermissions(format: string, path: string): void {
+  const { error } = container.resolve<ILogger>('logger');
 
-  info('Checking formats...');
-  const formatExsits = formatExists(format);
-
-  if (!formatExsits) {
-    error(`Not possible to create translations for format '${format}'`);
-    process.exit(1);
-  }
-
-  info('Checking folder permissions...');
   const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(path, Permission.Write);
 
   if (!canWrite) {
@@ -65,7 +56,12 @@ function checkOptions(format: string, path: string): void {
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();
-  checkOptions(args.format, args.path);
+
+  info('Checking formats...');
+  const extension = getExtension(args.format);
+
+  info('Checking folder permissions...');
+  checkFolderPermissions(args.format, args.path);
 
   info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
@@ -76,7 +72,6 @@ async function main() {
   info('Spreadsheet formatted.');
 
   info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
-  const extension = getExtension(args.format);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
   info('File successfully saved.');
 }

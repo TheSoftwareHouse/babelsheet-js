@@ -6,7 +6,7 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import GoogleSheets from '../../shared/google/sheets';
 import createContainer from './container';
-import { doesFormatExists, getExtension } from './formatToExtensions';
+import { formatExists, getExtension } from './formatToExtensions';
 import Transformers from './transformers';
 
 dotenv.config();
@@ -25,9 +25,9 @@ process.on('unhandledRejection', err => {
 
 function configureCli(): Arguments {
   return yargs
-    .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
-    .command('generate', 'Generate file with translations')
-    .required(1, 'generate')
+    .usage('Usage: get [-f "format"] [-n "filename"] [-p "path"]')
+    .command('get', 'get file with translations')
+    .required(1, 'get')
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('n', {
@@ -38,15 +38,15 @@ function configureCli(): Arguments {
     })
     .help('?')
     .alias('?', 'help')
-    .example('$0 generate -f xml -n my-data -p ./result', 'Generate my-data.xml in folder /result')
-    .example('$0 generate -n my-data', 'Get file with result in json extension').argv;
+    .example('$0 get -f xml -n my-data -p ./result', 'get my-data.xml in folder /result')
+    .example('$0 get -n my-data', 'Get file with result in json extension').argv;
 }
 
 function checkOptions(format: string, path: string): void {
   const { info, error } = container.resolve<ILogger>('logger');
 
   info('Checking formats...');
-  const formatExsits = doesFormatExists(format);
+  const formatExsits = formatExists(format);
 
   if (!formatExsits) {
     error(`Not possible to create translations for format '${format}'`);
@@ -69,7 +69,7 @@ async function main() {
 
   info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
-  info('Spreadsheet successfully fetched.');
+  info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
 
@@ -78,6 +78,7 @@ async function main() {
     dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
   } catch (err) {
     error(err.message);
+    process.exit(1);
   }
 
   info('Spreadsheet formatted.');

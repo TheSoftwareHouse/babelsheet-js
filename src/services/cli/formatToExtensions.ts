@@ -5,7 +5,7 @@ const formatToExtension: { [key: string]: string } = {
   // xml: 'xml'
 };
 
-export function doesFormatExists(format: string): boolean {
+export function formatExists(format: string): boolean {
   const formats = Object.keys(formatToExtension);
   return !!formats.find(f => f === format);
 }

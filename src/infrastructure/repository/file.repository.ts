@@ -5,6 +5,7 @@ import { Permission } from './file-repository.types';
 
 export default class FileRepository implements IFileRepository {
   constructor(private logger: ILogger) {}
+
   public hasAccess(path: string, permission: Permission): boolean {
     try {
       fs.accessSync(path, permission === Permission.Read ? fs.constants.R_OK : fs.constants.W_OK);
@@ -23,7 +24,7 @@ export default class FileRepository implements IFileRepository {
     return null;
   }
 
-  public saveData(data: any, filename: string, extension: string, path: string = '.'): void {
+  public saveData(data: string, filename: string, extension: string, path: string = '.'): void {
     fs.writeFileSync(`${path}/${filename}.${extension}`, data);
   }
 }

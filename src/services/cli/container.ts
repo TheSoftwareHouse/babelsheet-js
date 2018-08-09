@@ -6,9 +6,9 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
+import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
-import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from './transformers';
 
@@ -19,16 +19,20 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   });
 
   const transformersRegistry = {
-    jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer),
-    spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer),
-    spreadsheetToJsonStringTransformer: awilix.asClass(SpreadsheetToJsonStringTransformer).inject(() => ({
-      spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-    })),
-    spreadsheetToXmlTransformer: awilix.asClass(SpreadsheetToXmlTransformer).inject(() => ({
-      spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-      jsonToXml: container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
-    })),
-    transformers: awilix.asClass(Transformers).inject(() => ({
+    jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    spreadsheetToJsonStringTransformer: awilix
+      .asClass(SpreadsheetToJsonStringTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+      })),
+    spreadsheetToXmlTransformer: awilix
+      .asClass(SpreadsheetToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+        jsonToXml: container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
+      })),
+    transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
         container.resolve<SpreadsheetToXmlTransformer>('spreadsheetToXmlTransformer'),

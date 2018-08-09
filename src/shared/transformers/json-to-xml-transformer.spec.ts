@@ -41,7 +41,7 @@ describe('JsonToXmlTransformer', () => {
     const result = jsonToXmlTransformer.transform(object);
 
     expect(result).toBe(
-      `<?xml version="1.0"?><resources><string name="en_US.CORE.LABELS.YES">yes</string><string name="en_US.CORE.LABELS.NO">no</string><string name="en_US.CORE.LABELS.SAVE">save</string><string name="en_US.CORE.LABELS.CANCEL">cancel</string><string name="pl_PL.CORE.LABELS.YES">tak</string><string name="pl_PL.CORE.LABELS.NO">nie</string><string name="pl_PL.CORE.LABELS.SAVE">zapisz</string></resources>`
+      `<?xml version="1.0"?><resources><string name="en_us_core_labels_yes">yes</string><string name="en_us_core_labels_no">no</string><string name="en_us_core_labels_save">save</string><string name="en_us_core_labels_cancel">cancel</string><string name="pl_pl_core_labels_yes">tak</string><string name="pl_pl_core_labels_no">nie</string><string name="pl_pl_core_labels_save">zapisz</string></resources>`
     );
   });
 });

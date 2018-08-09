@@ -6,7 +6,7 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
-import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings';
+import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings-transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import SpreadsheetToIosStrings from '../../shared/transformers/spreadsheet-to-ios-strings';

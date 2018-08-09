@@ -9,8 +9,8 @@ export default class SpreadsheetToXmlTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }): string {
-    const json = this.spreadsheetToJson.transform(source);
+  public transform(source: { [key: string]: string[] }, langCode?: string): string {
+    const json = this.spreadsheetToJson.transform(source, langCode);
     return this.jsonToXml.transform(json);
   }
 }

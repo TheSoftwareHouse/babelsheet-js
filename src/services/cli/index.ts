@@ -30,6 +30,11 @@ function configureCli(): Arguments {
     .required(1, 'generate')
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
+    .option('l', {
+      alias: 'language',
+      describe: 'Language code for generate translations file only in given language',
+      type: 'string',
+    })
     .option('n', {
       alias: 'filename',
       default: 'translations',
@@ -38,11 +43,14 @@ function configureCli(): Arguments {
     })
     .help('?')
     .alias('?', 'help')
-    .example('$0 generate -f xml -n my-data -p ./result', 'Generate my-data.xml in folder /result')
+    .example(
+      '$0 generate -f xml -n my-data -p ./result -l en_US',
+      'Generate my-data.xml with english translations in folder /result'
+    )
     .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
 
-function checkFolderPermissions(format: string, path: string): void {
+function checkFolderPermissions(path: string): void {
   const { error } = container.resolve<ILogger>('logger');
 
   const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(path, Permission.Write);
@@ -61,14 +69,16 @@ async function main() {
   const extension = getExtension(args.format);
 
   info('Checking folder permissions...');
-  checkFolderPermissions(args.format, args.path);
+  checkFolderPermissions(args.path);
 
   info('Fetching spreadsheet...');
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
-  const dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, extension);
+  const dataToSave = await container
+    .resolve<Transformers>('transformers')
+    .transform(spreadsheetData, extension, args.language);
   info('Spreadsheet formatted.');
 
   info(`Saving file to ${args.path}/${args.filename}.${args.format}`);

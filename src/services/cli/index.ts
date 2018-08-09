@@ -68,7 +68,7 @@ async function main() {
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
-  const dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, args.format);
+  const dataToSave = await container.resolve<Transformers>('transformers').transform(spreadsheetData, extension);
   info('Spreadsheet formatted.');
 
   info(`Saving file to ${args.path}/${args.filename}.${args.format}`);

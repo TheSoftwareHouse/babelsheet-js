@@ -8,8 +8,8 @@ import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
-import JsonToXmlTransformer from './json-to-xml.transformer';
-import SpreadsheetToXmlTransformer from './spreadsheet-to-xml.transformer';
+import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
+import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from './transformers';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {

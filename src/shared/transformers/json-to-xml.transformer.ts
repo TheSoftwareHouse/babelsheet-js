@@ -1,5 +1,5 @@
 import * as xmlbuilder from 'xmlbuilder';
-import ITransformer from '../../shared/transformers/transformer';
+import ITransformer from './transformer';
 
 export default class JsonToXmlTransformer implements ITransformer {
   private readonly supportedType = 'json-xml';

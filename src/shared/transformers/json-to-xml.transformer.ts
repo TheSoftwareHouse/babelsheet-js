@@ -9,25 +9,25 @@ export default class JsonToXmlTransformer implements ITransformer {
   }
 
   public transform(source: object): string {
-    const translations = this.generateDotNotationList(source);
+    const translations = this.generateFlatTranslationsList(source);
     return this.generateXml(translations);
   }
 
-  private generateDotNotationList(source: object): Array<{ [key: string]: string }> {
+  private generateFlatTranslationsList(source: object): Array<{ [key: string]: string }> {
     const result: Array<{ [key: string]: string }> = [];
-    const generateDotNotationRecursively = (translationsObj: object, current?: string) => {
+    const generateFlatTranslationsRecursively = (translationsObj: object, current?: string) => {
       Object.keys(translationsObj).forEach(key => {
         const value = (translationsObj as any)[key];
         const newKey = current ? `${current}_${key}` : key;
         if (value && typeof value === 'object') {
-          generateDotNotationRecursively(value, newKey);
+          generateFlatTranslationsRecursively(value, newKey);
         } else {
           result.push({ name: newKey.toLowerCase(), text: value });
         }
       });
     };
 
-    generateDotNotationRecursively(source);
+    generateFlatTranslationsRecursively(source);
     return result;
   }
 

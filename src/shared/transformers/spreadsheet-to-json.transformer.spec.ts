@@ -216,4 +216,49 @@ describe('SpreadsheetToJsonTransformer', () => {
 
     expect(transformer.transform(source)).toEqual(expectedResult);
   });
+
+  it('transforms raw translations to json format in given language code', () => {
+    const langCode = 'pl_PL';
+    const source = {
+      '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', langCode],
+      '11': ['', 'CORE'],
+      '12': ['', '', 'LABELS'],
+      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
+      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
+      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
+      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+    };
+
+    const expectedResult = {
+      CORE: {
+        LABELS: {
+          YES: 'tak',
+          NO: 'nie',
+          SAVE: 'zapisz',
+        },
+      },
+    };
+
+    const transformer = new SpreadsheetToJsonTransformer();
+
+    expect(transformer.transform(source, langCode)).toEqual(expectedResult);
+  });
+
+  it('does throw exception when there are no translations in given language code', () => {
+    const langCode = 'en_US';
+    const source = {
+      '10': ['###', '>>>', '>>>', '>>>', '', 'pl_PL'],
+      '11': ['', 'CORE'],
+      '12': ['', '', 'LABELS'],
+      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues'],
+      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues'],
+      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues'],
+      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues'],
+    };
+
+    const transformer = new SpreadsheetToJsonTransformer();
+    expect(transformer.transform(source, langCode)).rejects.toMatchObject(
+      new Error(`No translations for '${langCode}' language code`)
+    );
+  });
 });

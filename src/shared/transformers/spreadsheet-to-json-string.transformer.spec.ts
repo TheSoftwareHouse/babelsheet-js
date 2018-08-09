@@ -3,7 +3,7 @@ import SpreadsheetToJsonStringTransformer from './spreadsheet-to-json-string.tra
 describe('SpreadsheetToJsonStringTransformer', () => {
   const spreadSheetToJson = {
     supports: type => false,
-    transform: source => source,
+    transform: jest.fn(source => source),
   };
 
   const spreadsheetToJsonStringTransformer = new SpreadsheetToJsonStringTransformer(spreadSheetToJson);
@@ -24,5 +24,13 @@ describe('SpreadsheetToJsonStringTransformer', () => {
     const result = spreadsheetToJsonStringTransformer.transform({ test: ['test2'] });
 
     expect(result).toBe('{"test":["test2"]}');
+  });
+
+  it('does call spreadsheetToJson.transform with two parameters', async () => {
+    const translations = { test: ['test2'] };
+    const langCode = 'en_US';
+    const result = spreadsheetToJsonStringTransformer.transform(translations, langCode);
+
+    expect(spreadSheetToJson.transform).toBeCalledWith(translations, langCode);
   });
 });

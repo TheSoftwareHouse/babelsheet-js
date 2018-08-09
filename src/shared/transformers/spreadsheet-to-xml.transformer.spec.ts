@@ -28,10 +28,11 @@ describe('SpreadsheetToXmlTransformer', () => {
 
   it('does generate xml from spreadsheet', async () => {
     const object = { test: ['test'] };
+    const langCode = 'en_US';
 
-    spreadsheetToXmlTransformer.transform(object);
+    spreadsheetToXmlTransformer.transform(object, langCode);
 
-    expect(spreeadsheetToJson.transform).toBeCalledWith(object);
+    expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
     expect(jsonToXml.transform).toBeCalledWith('spreadsheetReturn');
   });
 });

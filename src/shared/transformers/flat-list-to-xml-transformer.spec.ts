@@ -1,7 +1,13 @@
-import JsonToXmlTransformer from './json-to-xml.transformer';
+import FlatListToJsonTransformer from './flat-list-to-xml.transformer';
+import ITransformer from './transformer';
+
+const flatListToXml: ITransformer = {
+  supports: type => false,
+  transform: jest.fn(() => 'spreadsheetReturn'),
+};
 
 describe('JsonToXmlTransformer', () => {
-  const jsonToXmlTransformer = new JsonToXmlTransformer();
+  const jsonToXmlTransformer = new FlatListToJsonTransformer(flatListToXml);
 
   it('does return true if supported type', async () => {
     const result = jsonToXmlTransformer.supports('json-xml');

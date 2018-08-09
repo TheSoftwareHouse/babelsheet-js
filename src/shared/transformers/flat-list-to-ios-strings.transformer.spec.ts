@@ -1,4 +1,4 @@
-import FlatListToIosStringsTransformer from './flat-list-to-ios-strings-transformer';
+import FlatListToIosStringsTransformer from './flat-list-to-ios-strings.transformer';
 import ITransformer from './transformer';
 
 describe('FlatListToIosStringsTransformer', () => {

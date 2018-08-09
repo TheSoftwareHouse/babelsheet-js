@@ -3,6 +3,20 @@ import * as mask from 'json-mask';
 import SpreadsheetToJsonTransformer from './spreadsheet-to-json.transformer';
 
 describe('SpreadsheetToJsonTransformer', () => {
+  it('does return true if supported type', async () => {
+    const transformer = new SpreadsheetToJsonTransformer();
+    const result = transformer.supports('json-obj');
+
+    expect(result).toBeTruthy();
+  });
+
+  it('does return false if not supported type', async () => {
+    const transformer = new SpreadsheetToJsonTransformer();
+    const result = transformer.supports('xyz');
+
+    expect(result).toBeFalsy();
+  });
+
   it('transforms raw translations to json format', () => {
     const source = {
       '0': [],

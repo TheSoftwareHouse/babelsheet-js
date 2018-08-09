@@ -18,11 +18,11 @@ export default class JsonToXmlTransformer implements ITransformer {
     const generateDotNotationRecursively = (translationsObj: object, current?: string) => {
       Object.keys(translationsObj).forEach(key => {
         const value = (translationsObj as any)[key];
-        const newKey = current ? `${current}.${key}` : key;
+        const newKey = current ? `${current}_${key}` : key;
         if (value && typeof value === 'object') {
           generateDotNotationRecursively(value, newKey);
         } else {
-          result.push({ name: newKey, text: value });
+          result.push({ name: newKey.toLowerCase(), text: value });
         }
       });
     };

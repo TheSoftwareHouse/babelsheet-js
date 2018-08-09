@@ -7,11 +7,11 @@ import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
+import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from './transformers';
-import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

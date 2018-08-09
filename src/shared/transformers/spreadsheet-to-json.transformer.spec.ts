@@ -247,7 +247,7 @@ describe('SpreadsheetToJsonTransformer', () => {
   it('does throw exception when there are no translations in given language code', () => {
     const langCode = 'en_US';
     const source = {
-      '10': ['###', '>>>', '>>>', '>>>', '', 'pl_PL'],
+      '10': ['###', '>>>', '>>>', '>>>', 'pl_PL'],
       '11': ['', 'CORE'],
       '12': ['', '', 'LABELS'],
       '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues'],
@@ -257,8 +257,7 @@ describe('SpreadsheetToJsonTransformer', () => {
     };
 
     const transformer = new SpreadsheetToJsonTransformer();
-    expect(transformer.transform(source, langCode)).rejects.toMatchObject(
-      new Error(`No translations for '${langCode}' language code`)
-    );
+
+    expect(() => transformer.transform(source, langCode)).toThrow(`No translations for '${langCode}' language code`);
   });
 });

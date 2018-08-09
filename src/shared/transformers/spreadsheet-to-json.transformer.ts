@@ -20,7 +20,7 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
       const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
       const meta = sourceValues[metaIndex];
 
-      const result = ramda.reduce(
+      const translations = ramda.reduce(
         (accRow, row) => {
           const context = this.updateContext(accRow.context, row, meta);
           const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
@@ -33,10 +33,10 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
       ).result;
 
       if (langCode) {
-        return this.getLanguageTranslations(result, langCode);
+        return this.getLanguageTranslations(translations, langCode);
       }
 
-      return result;
+      return translations;
     }
 
     return {};
@@ -46,7 +46,7 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
     const langCodeWithCase = Object.keys(result).find(key => key.toLowerCase() === langCode.toLowerCase());
 
     if (!langCodeWithCase) {
-      throw Error(`No translations for '${langCode}' language code`);
+      throw new Error(`No translations for '${langCode}' language code`);
     }
 
     const languageTranslations = (result as any)[langCodeWithCase];

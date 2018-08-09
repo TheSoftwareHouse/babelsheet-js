@@ -1,6 +1,6 @@
 import ITransformer from './transformer';
 
-export default class SpreadsheetToIosStrings implements ITransformer {
+export default class SpreadsheetToIosStringsTransformer implements ITransformer {
   private readonly supportedType = 'strings';
 
   constructor(

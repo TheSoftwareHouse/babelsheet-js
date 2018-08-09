@@ -9,7 +9,7 @@ import TokenStorage from '../../shared/token/token';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings-transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
-import SpreadsheetToIosStrings from '../../shared/transformers/spreadsheet-to-ios-strings';
+import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spreadsheet-to-ios-strings-transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
@@ -27,7 +27,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToIosStringsTransformer: awilix
-      .asClass(SpreadsheetToIosStrings, { lifetime: awilix.Lifetime.SINGLETON })
+      .asClass(SpreadsheetToIosStringsTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
         spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
         jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
@@ -49,7 +49,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       transformers: [
         container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
         container.resolve<SpreadsheetToXmlTransformer>('spreadsheetToXmlTransformer'),
-        container.resolve<SpreadsheetToIosStrings>('spreadsheetToIosStringsTransformer'),
+        container.resolve<SpreadsheetToIosStringsTransformer>('spreadsheetToIosStringsTransformer'),
       ],
     })),
   };

@@ -32,7 +32,7 @@ function configureCli(): Arguments {
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('l', {
       alias: 'language',
-      describe: 'Language code for generate translations file only in given language',
+      describe: 'Language code for generating translations file only in given language',
       type: 'string',
     })
     .option('n', {

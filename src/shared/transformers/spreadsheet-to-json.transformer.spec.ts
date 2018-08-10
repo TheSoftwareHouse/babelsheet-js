@@ -3,6 +3,20 @@ import * as mask from 'json-mask';
 import SpreadsheetToJsonTransformer from './spreadsheet-to-json.transformer';
 
 describe('SpreadsheetToJsonTransformer', () => {
+  it('does return true if supported type', async () => {
+    const transformer = new SpreadsheetToJsonTransformer();
+    const result = transformer.supports('json-obj');
+
+    expect(result).toBeTruthy();
+  });
+
+  it('does return false if not supported type', async () => {
+    const transformer = new SpreadsheetToJsonTransformer();
+    const result = transformer.supports('xyz');
+
+    expect(result).toBeFalsy();
+  });
+
   it('transforms raw translations to json format', () => {
     const source = {
       '0': [],
@@ -215,5 +229,49 @@ describe('SpreadsheetToJsonTransformer', () => {
     const transformer = new SpreadsheetToJsonTransformer();
 
     expect(transformer.transform(source)).toEqual(expectedResult);
+  });
+
+  it('transforms raw translations to json format in given language code', () => {
+    const langCode = 'pl_PL';
+    const source = {
+      '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', langCode],
+      '11': ['', 'CORE'],
+      '12': ['', '', 'LABELS'],
+      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
+      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
+      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
+      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+    };
+
+    const expectedResult = {
+      CORE: {
+        LABELS: {
+          YES: 'tak',
+          NO: 'nie',
+          SAVE: 'zapisz',
+        },
+      },
+    };
+
+    const transformer = new SpreadsheetToJsonTransformer();
+
+    expect(transformer.transform(source, langCode)).toEqual(expectedResult);
+  });
+
+  it('does throw exception when there are no translations in given language code', () => {
+    const langCode = 'en_US';
+    const source = {
+      '10': ['###', '>>>', '>>>', '>>>', 'pl_PL'],
+      '11': ['', 'CORE'],
+      '12': ['', '', 'LABELS'],
+      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues'],
+      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues'],
+      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues'],
+      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues'],
+    };
+
+    const transformer = new SpreadsheetToJsonTransformer();
+
+    expect(() => transformer.transform(source, langCode)).toThrow(`No translations for '${langCode}' language code`);
   });
 });

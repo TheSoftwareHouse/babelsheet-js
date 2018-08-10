@@ -12,7 +12,7 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }): object {
+  public transform(source: { [key: string]: string[] }, langCode?: string): object {
     const sourceValues = ramda.values(source);
     const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
 
@@ -20,7 +20,7 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
       const sourceRows = sourceValues.slice(metaIndex + 1, sourceValues.length);
       const meta = sourceValues[metaIndex];
 
-      return ramda.reduce(
+      const translations = ramda.reduce(
         (accRow, row) => {
           const context = this.updateContext(accRow.context, row, meta);
           const withTranslations = this.updateTranslations(accRow.result, context, row, meta);
@@ -31,9 +31,26 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
         { result: {}, context: '' },
         sourceRows
       ).result;
+
+      if (langCode) {
+        return this.getLanguageTranslations(translations, langCode);
+      }
+
+      return translations;
     }
 
     return {};
+  }
+
+  private getLanguageTranslations(result: object, langCode: string) {
+    const langCodeWithCase = Object.keys(result).find(key => key.toLowerCase() === langCode.toLowerCase());
+
+    if (!langCodeWithCase) {
+      throw new Error(`No translations for '${langCode}' language code`);
+    }
+
+    const languageTranslations = (result as any)[langCodeWithCase];
+    return languageTranslations;
   }
 
   private extractTags(source: string): string[] {

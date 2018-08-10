@@ -1,8 +1,8 @@
 const formatToExtension: { [key: string]: string } = {
   json: 'json',
+  xml: 'xml',
+  android: 'xml',
   // ios: 'strings',
-  // android: 'xml',
-  // xml: 'xml'
 };
 
 export function getExtension(format: string): string {

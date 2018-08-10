@@ -6,8 +6,11 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenStorage from '../../shared/token/token';
+import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
+import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
+import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from './transformers';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
@@ -16,6 +19,30 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     ...options,
   });
 
+  const transformersRegistry = {
+    flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    spreadsheetToJsonStringTransformer: awilix
+      .asClass(SpreadsheetToJsonStringTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+      })),
+    spreadsheetToXmlTransformer: awilix
+      .asClass(SpreadsheetToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+        jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
+      })),
+    transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      transformers: [
+        container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
+        container.resolve<SpreadsheetToXmlTransformer>('spreadsheetToXmlTransformer'),
+      ],
+    })),
+  };
+
   container.register({
     fileRepository: awilix.asClass(FileRepository, { lifetime: awilix.Lifetime.SINGLETON }),
     googleAuth: awilix.asClass(GoogleAuth),
@@ -23,16 +50,10 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     logger: awilix.asValue(winstonLogger),
     inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.PORT || 3000),
-    spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer),
-    spreadsheetToJsonStringTransformer: awilix.asClass(SpreadsheetToJsonStringTransformer).inject(() => ({
-      spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-    })),
     tokenStorage: awilix
       .asClass(TokenStorage)
       .inject(() => ({ storage: container.resolve<InFileStorage>('inFileStorage') })),
-    transformers: awilix.asClass(Transformers).inject(() => ({
-      transformers: [container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer')],
-    })),
+    ...transformersRegistry,
   });
 
   return container;

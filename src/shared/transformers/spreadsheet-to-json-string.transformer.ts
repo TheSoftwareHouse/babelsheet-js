@@ -9,7 +9,7 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }): string {
-    return JSON.stringify(this.spreadsheetToJson.transform(source));
+  public transform(source: { [key: string]: string[] }, langCode?: string): string {
+    return JSON.stringify(this.spreadsheetToJson.transform(source, langCode));
   }
 }

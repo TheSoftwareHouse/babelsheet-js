@@ -29,27 +29,15 @@ describe('FlatListToIosStringsTransformer', () => {
 
     const result = flatListToXmlTransformer.transform(flatList);
 
-    expect(result).toBe(`
-
-/* */
-"en_us_core_labels_yes" = "yes"
-
-/* */
+    expect(result).toBe(
+      `"en_us_core_labels_yes" = "yes"
 "en_us_core_labels_no" = "no"
-
-/* */
 "en_us_core_labels_save" = "save"
-
-/* */
 "en_us_core_labels_cancel" = "cancel"
-
-/* */
 "pl_pl_core_labels_yes" = "tak"
-
-/* */
 "pl_pl_core_labels_no" = "nie"
-
-/* */
-"pl_pl_core_labels_save" = "zapisz"`);
+"pl_pl_core_labels_save" = "zapisz"
+`
+    );
   });
 });

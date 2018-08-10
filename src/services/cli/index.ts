@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as dotenv from 'dotenv';
 import { ILogger } from 'node-common';
 import * as yargs from 'yargs';

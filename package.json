@@ -16,6 +16,10 @@
     "start-producer": "TS_NODE_FILES=true pm2 start src/services/producer/index.ts",
     "start-api": "TS_NODE_FILES=true pm2 start src/services/api/index.ts"
   },
+  "bin": {
+    "babelsheet": "./build/services/cli/index.js"
+  },
+  "preferGlobal": true,
   "author": "The Software House",
   "license": "MIT",
   "dependencies": {

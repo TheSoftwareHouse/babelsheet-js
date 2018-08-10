@@ -14,8 +14,7 @@
     "lint-fix": "tslint -c tslint.json 'src/**/*.ts' --fix",
     "nsp": "nsp check",
     "start-producer": "TS_NODE_FILES=true pm2 start src/services/producer/index.ts",
-    "start-api": "TS_NODE_FILES=true pm2 start src/services/api/index.ts",
-    "generate": "TS_NODE_FILES=true pm2 start src/services/cli/index.ts --no-autorestart -- generate"
+    "start-api": "TS_NODE_FILES=true pm2 start src/services/api/index.ts"
   },
   "author": "The Software House",
   "license": "MIT",

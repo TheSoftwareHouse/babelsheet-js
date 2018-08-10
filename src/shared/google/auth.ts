@@ -65,7 +65,7 @@ export default class GoogleAuth {
 
     const token = await this.tokenStorage.getToken();
 
-    if (token.access_token) {
+    if (token && token.access_token) {
       this.logger.info('Using token from storage.');
       oAuth2Client.setCredentials(token);
 

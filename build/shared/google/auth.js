@@ -50,7 +50,7 @@ class GoogleAuth {
     async getAuthenticatedClient() {
         const oAuth2Client = this.getOAuth2Client();
         const token = await this.tokenStorage.getToken();
-        if (token.access_token) {
+        if (token && token.access_token) {
             this.logger.info('Using token from storage.');
             oAuth2Client.setCredentials(token);
             const newToken = await oAuth2Client.getAccessToken();

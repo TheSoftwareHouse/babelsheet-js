@@ -1,4 +1,4 @@
-import ITransformer from '../../shared/transformers/transformer';
+import ITransformer from './transformer';
 
 export default class Transformers implements ITransformers {
   constructor(private transformers: ITransformer[]) {}

@@ -8,8 +8,8 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import GoogleSheets from '../../shared/google/sheets';
 import createContainer from './container';
-import { getExtension } from './formatToExtensions';
-import Transformers from './transformers';
+import { getExtension } from '../../shared/formatToExtensions';
+import Transformers from '../../shared/transformers/transformers';
 
 dotenv.config();
 

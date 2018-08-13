@@ -15,12 +15,6 @@ export default class CachedTranslations implements ITranslations {
     private transformers: ITransformers
   ) {}
 
-  public async hasTranslations(filters: string[]) {
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
-
-    return this.storage.has(translationsKey);
-  }
-
   public async clearTranslations() {
     return this.storage.clear();
   }
@@ -32,8 +26,7 @@ export default class CachedTranslations implements ITranslations {
   }
 
   public async getTranslations(filters: string[], format: string): Promise<{ [key: string]: any }> {
-    const extension = getExtensionsFromJson(format);
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, extension);
+    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
 
     if (await this.storage.has(translationsKey)) {
       return await this.storage.get(translationsKey);
@@ -44,6 +37,7 @@ export default class CachedTranslations implements ITranslations {
         return Promise.reject(new NotFoundError('Translations not found'));
       }
 
+      const extension = getExtensionsFromJson(format);
       let transformedTranslations = trans;
       if (extension !== 'json') {
         transformedTranslations = await this.transformers.transform(trans, extension);

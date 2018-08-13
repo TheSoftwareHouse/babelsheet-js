@@ -10,10 +10,6 @@ export default class MaskedTranslations implements ITranslations {
 
   constructor(private storage: IStorage, private maskInput: MaskInput, private maskConverter: MaskConverter) {}
 
-  public async hasTranslations(filters: string[]) {
-    return this.storage.has(this.translationsKey);
-  }
-
   public async clearTranslations() {
     return this.storage.clear();
   }

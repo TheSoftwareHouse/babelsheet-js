@@ -10,7 +10,7 @@ export default class TranslationsController {
     const queryFilters = req.query.filters || [];
 
     return this.translationsStorage
-      .getTranslations(queryFilters)
+      .getTranslations(queryFilters, req.query.format)
       .then(trans => {
         res.status(200).json(trans);
       })

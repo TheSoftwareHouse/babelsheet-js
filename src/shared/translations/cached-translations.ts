@@ -3,6 +3,7 @@ import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
 import ITranslations from './translations';
 import TranslationsKeyGenerator from './translations.key-generator';
+import { getExtension, getExtensionsFromJson } from '../formatToExtensions';
 
 export default class CachedTranslations implements ITranslations {
   private readonly translationsCachePrefix = 'translationsCache';
@@ -10,7 +11,8 @@ export default class CachedTranslations implements ITranslations {
   constructor(
     private storage: IStorage,
     private translationsKeyGenerator: TranslationsKeyGenerator,
-    private maskedTranslations: ITranslations
+    private maskedTranslations: ITranslations,
+    private transformers: ITransformers
   ) {}
 
   public async hasTranslations(filters: string[]) {
@@ -29,11 +31,12 @@ export default class CachedTranslations implements ITranslations {
     return this.storage.set(translationsKey, translations);
   }
 
-  public async getTranslations(filters: string[]): Promise<{ [key: string]: any }> {
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
+  public async getTranslations(filters: string[], format: string): Promise<{ [key: string]: any }> {
+    const extension = getExtensionsFromJson(format);
+    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, extension);
 
     if (await this.storage.has(translationsKey)) {
-      return this.storage.get(translationsKey);
+      return await this.storage.get(translationsKey);
     }
 
     return this.maskedTranslations.getTranslations(filters).then(async trans => {
@@ -41,8 +44,13 @@ export default class CachedTranslations implements ITranslations {
         return Promise.reject(new NotFoundError('Translations not found'));
       }
 
-      await this.storage.set(translationsKey, trans);
-      return trans;
+      let transformedTranslations = trans;
+      if (extension !== 'json') {
+        transformedTranslations = await this.transformers.transform(trans, extension);
+      }
+
+      await this.storage.set(translationsKey, transformedTranslations);
+      return transformedTranslations;
     });
   }
 }

@@ -13,3 +13,14 @@ export function getExtension(format: string): string {
 
   return extension;
 }
+
+const extensionsFromJson: { [key: string]: string } = {
+  xml: 'json-xml',
+  android: 'json-xml',
+  ios: 'json-ios-strings',
+  json: 'json',
+};
+
+export function getExtensionsFromJson(format: string): string {
+  return extensionsFromJson[format];
+}

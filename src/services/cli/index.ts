@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as dotenv from 'dotenv';
 import { ILogger } from 'node-common';
 import * as yargs from 'yargs';
@@ -84,6 +86,8 @@ async function main() {
   info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
   info('File successfully saved.');
+
+  process.exit(0);
 }
 
 main();

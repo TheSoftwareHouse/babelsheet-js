@@ -15,7 +15,6 @@ export function getExtension(format: string): string {
 }
 
 const extensionsFromJson: { [key: string]: string } = {
-  xml: 'json-xml',
   android: 'json-xml',
   ios: 'json-ios-strings',
   json: 'json',

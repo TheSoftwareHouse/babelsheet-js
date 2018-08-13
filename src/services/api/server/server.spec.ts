@@ -262,7 +262,7 @@ describe('Server', () => {
 
     expect(await storage.getData()).toEqual({
       translations,
-      'translationsCache-en_us.tag1,en_us.common.sth1': {
+      'translationsCache-en_us.tag1,en_us.common.sth1-json': {
         en_US: {
           COMMON: {
             STH1: 'Some message ...',
@@ -279,13 +279,17 @@ describe('Server', () => {
     const storage = container.resolve<InMemoryStorage>('storage');
 
     await maskedTranslations.setTranslations([], {});
-    await translationsStorage.setTranslations(['en_us.tag1', 'en_us.common.sth1'], {
-      en_US: {
-        COMMON: {
-          STH1: 'Some message ...',
+    await translationsStorage.setTranslations(
+      ['en_us.tag1', 'en_us.common.sth1'],
+      {
+        en_US: {
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         },
       },
-    });
+      'json'
+    );
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&filters[]=en_US.COMMON.STH1')

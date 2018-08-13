@@ -22,5 +22,10 @@ const extensionsFromJson: { [key: string]: string } = {
 };
 
 export function getExtensionsFromJson(format: string): string {
-  return extensionsFromJson[format];
+  const extension = extensionsFromJson[format];
+  if (!extension) {
+    throw new Error(`Not possible to create translations for format '${format}'`);
+  }
+
+  return extension;
 }

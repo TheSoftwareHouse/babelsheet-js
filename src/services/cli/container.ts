@@ -13,7 +13,7 @@ import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spread
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
-import Transformers from './transformers';
+import Transformers from '../../shared/transformers/transformers';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

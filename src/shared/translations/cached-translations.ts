@@ -1,9 +1,9 @@
 import * as ramda from 'ramda';
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
+import { getExtension, getExtensionsFromJson } from '../formatToExtensions';
 import ITranslations from './translations';
 import TranslationsKeyGenerator from './translations.key-generator';
-import { getExtension, getExtensionsFromJson } from '../formatToExtensions';
 
 export default class CachedTranslations implements ITranslations {
   private readonly translationsCachePrefix = 'translationsCache';
@@ -25,8 +25,8 @@ export default class CachedTranslations implements ITranslations {
     return this.storage.clear();
   }
 
-  public async setTranslations(filters: string[], translations: { [key: string]: any }) {
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
+  public async setTranslations(filters: string[], translations: { [key: string]: any }, format?: string) {
+    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
 
     return this.storage.set(translationsKey, translations);
   }

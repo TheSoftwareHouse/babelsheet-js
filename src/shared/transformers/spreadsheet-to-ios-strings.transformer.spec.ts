@@ -1,5 +1,5 @@
 import SpreadsheetToIosStringsTransformer from './spreadsheet-to-ios-strings.transformer';
-import ITransformer from '../../shared/transformers/transformer';
+import ITransformer from './transformer';
 
 const spreeadsheetToJson: ITransformer = {
   supports: type => false,

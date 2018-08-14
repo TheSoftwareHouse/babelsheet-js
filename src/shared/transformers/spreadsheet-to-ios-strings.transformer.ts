@@ -3,11 +3,7 @@ import ITransformer from './transformer';
 export default class SpreadsheetToIosStringsTransformer implements ITransformer {
   private readonly supportedType = 'strings';
 
-  constructor(
-    private spreadsheetToJson: ITransformer,
-    private jsonToFlatList: ITransformer,
-    private flatListToIosStrings: ITransformer
-  ) {}
+  constructor(private spreadsheetToJson: ITransformer, private jsonToIosStrings: ITransformer) {}
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -15,7 +11,6 @@ export default class SpreadsheetToIosStringsTransformer implements ITransformer 
 
   public transform(source: { [key: string]: string[] }, langCode?: string): string {
     const json = this.spreadsheetToJson.transform(source, langCode);
-    const flatList = this.jsonToFlatList.transform(json);
-    return this.flatListToIosStrings.transform(flatList);
+    return this.jsonToIosStrings.transform(json);
   }
 }

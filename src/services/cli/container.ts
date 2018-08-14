@@ -14,6 +14,8 @@ import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spread
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
+import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -22,16 +24,27 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   });
 
   const transformersRegistry = {
-    flatListToIosStrings: awilix.asClass(FlatListToIosStringsTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToIosStringsTransformer: awilix.asClass(FlatListToIosStringsTransformer, {
+      lifetime: awilix.Lifetime.SINGLETON,
+    }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    jsonToIosStringsTransformer: awilix
+      .asClass(JsonToIosStringsTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
+      })),
+    jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+      flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
+    })),
     spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToIosStringsTransformer: awilix
       .asClass(SpreadsheetToIosStringsTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
         spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-        jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
-        flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStrings'),
+        jsonToIosStrings: container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
       })),
     spreadsheetToJsonStringTransformer: awilix
       .asClass(SpreadsheetToJsonStringTransformer, { lifetime: awilix.Lifetime.SINGLETON })
@@ -42,8 +55,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       .asClass(SpreadsheetToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
         spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-        jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
-        flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
+        jsonToXml: container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
       })),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [

@@ -43,10 +43,10 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
-    .option('cid', { describe: 'Client ID', type: 'string' })
-    .option('cs', { describe: 'Client secret', type: 'string' })
-    .option('sid', { describe: 'Spreadsheet ID', type: 'string' })
-    .option('sn', { describe: 'Spreadsheet name', type: 'string' })
+    .option('client_id', { describe: 'Client ID', type: 'string' })
+    .option('client_secret', { describe: 'Client secret', type: 'string' })
+    .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
+    .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
     .option('s', { alias: 'save', describe: 'Save CLI credentials to .env file', type: 'boolean' })
     .help('?')
     .alias('?', 'help')
@@ -71,14 +71,14 @@ function checkFolderPermissions(path: string): void {
 function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
   const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
   const authData = {
-    clientId: args.cid || CLIENT_ID,
-    clientSecret: args.cs || CLIENT_SECRET,
-    spreadsheetId: args.sid || SPREADSHEET_ID,
-    spreadsheetName: args.sn || SPREADSHEET_NAME,
+    clientId: args.client_id || CLIENT_ID,
+    clientSecret: args.client_secret || CLIENT_SECRET,
+    spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
+    spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
   };
 
   if (!(authData.clientId && authData.clientSecret && authData.spreadsheetId && authData.spreadsheetName)) {
-    throw new Error('Provide .env file or parameters with configuration data');
+    throw new Error('Provide .env file or parameters with spreadsheet configuration data');
   }
 
   return authData;

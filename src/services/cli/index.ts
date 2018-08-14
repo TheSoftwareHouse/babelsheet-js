@@ -24,10 +24,7 @@ process.on('unhandledRejection', err => {
   container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
-// -parametry dla spreadsheet
-// -s jako save do .env
-// jesli nie ma podanych parametrow dla spreadsheet
-// to pobierz je od uzytkownika z CLI
+
 function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
@@ -50,7 +47,7 @@ function configureCli(): Arguments {
     .option('cs', { describe: 'Client secret', type: 'string' })
     .option('sid', { describe: 'Spreadsheet ID', type: 'string' })
     .option('sn', { describe: 'Spreadsheet name', type: 'string' })
-    .option('s', { describe: 'Save CLI credentials to .env file', type: 'boolean' })
+    .option('s', { alias: 'save', describe: 'Save CLI credentials to .env file', type: 'boolean' })
     .help('?')
     .alias('?', 'help')
     .example(
@@ -71,23 +68,13 @@ function checkFolderPermissions(path: string): void {
   }
 }
 
-function checkSpreadsheetAuthData(args: Arguments): void {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
-  if (!(CLIENT_ID || args.cid)) {
-    throw new Error('Provide client ID');
-  }
-
-  if (!(CLIENT_SECRET || args.cs)) {
-    throw new Error('Provide client secret');
-  }
-
-  if (!(SPREADSHEET_ID || args.sid)) {
-    throw new Error('Provide spreadsheet ID');
-  }
-
-  if (!(SPREADSHEET_NAME || args.sn)) {
-    throw new Error('Provide spreadsheet name');
-  }
+function getCliSpreadsheetData(args: Arguments): { [key: string]: string } {
+  return {
+    clientId: args.cid,
+    clientSecret: args.cs,
+    spreadsheetId: args.sid,
+    spreadsheetName: args.sn,
+  };
 }
 
 async function main() {
@@ -95,7 +82,7 @@ async function main() {
   const args = configureCli();
 
   info('Checking auth variables...');
-  checkSpreadsheetAuthData(args);
+  const spreadsheetAuthData = getCliSpreadsheetData(args);
 
   info('Checking formats...');
   const extension = getExtension(args.format);
@@ -104,7 +91,7 @@ async function main() {
   checkFolderPermissions(args.path);
 
   info('Fetching spreadsheet...');
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
+  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');

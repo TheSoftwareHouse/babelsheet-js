@@ -50,18 +50,16 @@ export default class GoogleAuth {
     });
   }
 
-  public getOAuth2Client(credentials: { [key: string]: string }): OAuth2Client {
-    const clientSecret = credentials.clientSecret;
-    const clientId = credentials.clientId;
-    const redirectUrl = process.env.REDIRECT_URI || 'http://localhost:3000/oauth2callback';
+  public async getAuthenticatedClient({
+    clientId,
+    clientSecret,
+    redirectUri,
+  }: {
+    [key: string]: string;
+  }): Promise<OAuth2Client> {
+    let redirect = redirectUri || 'http://localhost:3000/oauth2callback';
 
-    const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
-
-    return oAuth2Client;
-  }
-
-  public async getAuthenticatedClient(credentials: { [key: string]: string }): Promise<OAuth2Client> {
-    const oAuth2Client = this.getOAuth2Client(credentials);
+    const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirect);
 
     const token = await this.tokenStorage.getToken();
 

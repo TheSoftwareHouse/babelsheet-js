@@ -47,7 +47,7 @@ function configureCli(): Arguments {
     .option('client_secret', { describe: 'Client secret', type: 'string' })
     .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
     .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
-    .option('s', { alias: 'save', describe: 'Save CLI credentials to .env file', type: 'boolean' })
+    .option('redirect_uri', { describe: 'The URI to redirect after completing the auth request' })
     .help('?')
     .alias('?', 'help')
     .example(
@@ -69,16 +69,17 @@ function checkFolderPermissions(path: string): void {
 }
 
 function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
   const authData = {
     clientId: args.client_id || CLIENT_ID,
     clientSecret: args.client_secret || CLIENT_SECRET,
     spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
     spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
+    redirectUri: args.redirect_uri || REDIRECT_URI,
   };
 
   if (!(authData.clientId && authData.clientSecret && authData.spreadsheetId && authData.spreadsheetName)) {
-    throw new Error('Provide .env file or parameters with spreadsheet configuration data');
+    throw new Error('Provide .env file or parameters with necesessary spreadsheet configuration data');
   }
 
   return authData;

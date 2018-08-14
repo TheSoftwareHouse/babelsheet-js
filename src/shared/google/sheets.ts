@@ -12,8 +12,8 @@ export default class GoogleSheets {
     return util
       .promisify(sheets.spreadsheets.values.get)({
         auth: oAuth2Client,
-        range: credentials.spreadsheetName || process.env.SPREADSHEET_NAME,
-        spreadsheetId: credentials.spreadsheetId || process.env.SPREADSHEET_ID,
+        range: credentials.spreadsheetName,
+        spreadsheetId: credentials.spreadsheetId,
       })
       .then((res: any) => res.data.values);
   }

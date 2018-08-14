@@ -22,8 +22,24 @@ process.on('unhandledRejection', err => {
   process.exit(1);
 });
 
+function getAuthDataFromEnv(): { [key: string]: string } {
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+
+  if (!(CLIENT_ID && CLIENT_SECRET && SPREADSHEET_ID && SPREADSHEET_NAME)) {
+    throw new Error('Provide .env file with configuration data');
+  }
+
+  return {
+    clientId: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetName: SPREADSHEET_NAME,
+  };
+}
+
 async function main() {
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
+  const authData = getAuthDataFromEnv();
+  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(authData);
 
   const transformedData = await container.resolve<ITransformer>('transformer').transform(spreadsheetData);
 

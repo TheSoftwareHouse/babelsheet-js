@@ -68,13 +68,20 @@ function checkFolderPermissions(path: string): void {
   }
 }
 
-function getCliSpreadsheetData(args: Arguments): { [key: string]: string } {
-  return {
-    clientId: args.cid,
-    clientSecret: args.cs,
-    spreadsheetId: args.sid,
-    spreadsheetName: args.sn,
+function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+  const authData = {
+    clientId: args.cid || CLIENT_ID,
+    clientSecret: args.cs || CLIENT_SECRET,
+    spreadsheetId: args.sid || SPREADSHEET_ID,
+    spreadsheetName: args.sn || SPREADSHEET_NAME,
   };
+
+  if (!(authData.clientId && authData.clientSecret && authData.spreadsheetId && authData.spreadsheetName)) {
+    throw new Error('Provide .env file or parameters with configuration data');
+  }
+
+  return authData;
 }
 
 async function main() {
@@ -82,7 +89,7 @@ async function main() {
   const args = configureCli();
 
   info('Checking auth variables...');
-  const spreadsheetAuthData = getCliSpreadsheetData(args);
+  const spreadsheetAuthData = getSpreadsheetAuthData(args);
 
   info('Checking formats...');
   const extension = getExtension(args.format);
@@ -100,7 +107,7 @@ async function main() {
     .transform(spreadsheetData, extension, args.language);
   info('Spreadsheet formatted.');
 
-  info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
+  info(`Saving translations file to ${args.path}/${args.filename}.${extension}`);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
   info('File successfully saved.');
 

@@ -24,7 +24,10 @@ process.on('unhandledRejection', err => {
   container.resolve<ILogger>('logger').error(err.toString());
   process.exit(1);
 });
-
+// -parametry dla spreadsheet
+// -s jako save do .env
+// jesli nie ma podanych parametrow dla spreadsheet
+// to pobierz je od uzytkownika z CLI
 function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
@@ -43,6 +46,11 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
+    .option('cid', { describe: 'Client ID', type: 'string' })
+    .option('cs', { describe: 'Client secret', type: 'string' })
+    .option('sid', { describe: 'Spreadsheet ID', type: 'string' })
+    .option('sn', { describe: 'Spreadsheet name', type: 'string' })
+    .option('s', { describe: 'Save CLI credentials to .env file', type: 'boolean' })
     .help('?')
     .alias('?', 'help')
     .example(
@@ -63,9 +71,31 @@ function checkFolderPermissions(path: string): void {
   }
 }
 
+function checkSpreadsheetAuthData(args: Arguments): void {
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+  if (!(CLIENT_ID || args.cid)) {
+    throw new Error('Provide client ID');
+  }
+
+  if (!(CLIENT_SECRET || args.cs)) {
+    throw new Error('Provide client secret');
+  }
+
+  if (!(SPREADSHEET_ID || args.sid)) {
+    throw new Error('Provide spreadsheet ID');
+  }
+
+  if (!(SPREADSHEET_NAME || args.sn)) {
+    throw new Error('Provide spreadsheet name');
+  }
+}
+
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();
+
+  info('Checking auth variables...');
+  checkSpreadsheetAuthData(args);
 
   info('Checking formats...');
   const extension = getExtension(args.format);

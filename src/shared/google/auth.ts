@@ -53,7 +53,7 @@ export default class GoogleAuth {
   public getOAuth2Client(): OAuth2Client {
     const clientSecret = process.env.CLIENT_SECRET;
     const clientId = process.env.CLIENT_ID;
-    const redirectUrl = process.env.REDIRECT_URI;
+    const redirectUrl = process.env.REDIRECT_URI || 'http://localhost:3000/oauth2callback';
 
     const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirectUrl);
 

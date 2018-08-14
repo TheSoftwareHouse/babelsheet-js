@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import TranslationsStorage from '../../../shared/translations/translations';
 import { getDocumentType } from '../../../shared/formatToExtensions';
+import TranslationsStorage from '../../../shared/translations/translations';
 
 export default class TranslationsController {
   constructor(private translationsStorage: TranslationsStorage) {

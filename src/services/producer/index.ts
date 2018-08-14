@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import { ILogger } from 'node-common';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
+import { checkAuthParameters } from '../../shared/checkAuthParams';
 import GoogleSheets from '../../shared/google/sheets';
 import ITransformer from '../../shared/transformers/transformer';
 import TranslationsStorage from '../../shared/translations/translations';
@@ -22,8 +23,23 @@ process.on('unhandledRejection', err => {
   process.exit(1);
 });
 
+function getAuthDataFromEnv(): { [key: string]: string | undefined } {
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+  const authData = {
+    clientId: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
+    spreadsheetId: SPREADSHEET_ID,
+    spreadsheetName: SPREADSHEET_NAME,
+    redirectUri: REDIRECT_URI,
+  };
+
+  checkAuthParameters(authData);
+  return authData;
+}
+
 async function main() {
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
+  const authData = getAuthDataFromEnv();
+  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(authData);
 
   const transformedData = await container.resolve<ITransformer>('transformer').transform(spreadsheetData);
 

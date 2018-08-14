@@ -55,9 +55,9 @@ export default class GoogleAuth {
     clientSecret,
     redirectUri,
   }: {
-    [key: string]: string;
+    [key: string]: string | undefined;
   }): Promise<OAuth2Client> {
-    let redirect = redirectUri || 'http://localhost:3000/oauth2callback';
+    const redirect = redirectUri || 'http://localhost:3000/oauth2callback';
 
     const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirect);
 

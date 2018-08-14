@@ -1,4 +1,4 @@
-function checkAuthParameters(params: { [key: string]: string | undefined }): void {
+export function checkAuthParameters(params: { [key: string]: string | undefined }): void {
   if (!params.clientId) {
     throw new Error('Please provide Client ID');
   }

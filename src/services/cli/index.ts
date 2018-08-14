@@ -6,6 +6,7 @@ import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
+import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';

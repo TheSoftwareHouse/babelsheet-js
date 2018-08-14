@@ -17,6 +17,7 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
+import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -30,6 +31,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
       flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
@@ -44,6 +46,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       transformers: [
         container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
         container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
+        container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
       ],
     })),
   };

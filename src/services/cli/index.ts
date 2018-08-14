@@ -68,7 +68,7 @@ function checkFolderPermissions(path: string): void {
   }
 }
 
-function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
+function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | undefined } {
   const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
   const authData = {
     clientId: args.client_id || CLIENT_ID,
@@ -78,9 +78,7 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
     redirectUri: args.redirect_uri || REDIRECT_URI,
   };
 
-  if (!(authData.clientId && authData.clientSecret && authData.spreadsheetId && authData.spreadsheetName)) {
-    throw new Error('Provide .env file or parameters with necesessary spreadsheet configuration data');
-  }
+  checkAuthParameters(authData);
 
   return authData;
 }

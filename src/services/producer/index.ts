@@ -22,20 +22,18 @@ process.on('unhandledRejection', err => {
   process.exit(1);
 });
 
-function getAuthDataFromEnv(): { [key: string]: string } {
+function getAuthDataFromEnv(): { [key: string]: string | undefined } {
   const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
-
-  if (!(CLIENT_ID && CLIENT_SECRET && SPREADSHEET_ID && SPREADSHEET_NAME && REDIRECT_URI)) {
-    throw new Error('Provide .env file with configuration data');
-  }
-
-  return {
+  const authData = {
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
     spreadsheetId: SPREADSHEET_ID,
     spreadsheetName: SPREADSHEET_NAME,
     redirectUri: REDIRECT_URI,
   };
+
+  checkAuthParameters(authData);
+  return authData;
 }
 
 async function main() {

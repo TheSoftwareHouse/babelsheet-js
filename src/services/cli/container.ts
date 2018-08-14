@@ -9,13 +9,13 @@ import TokenStorage from '../../shared/token/token';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
+import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spreadsheet-to-ios-strings.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
-import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
-import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

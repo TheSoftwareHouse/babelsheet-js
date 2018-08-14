@@ -38,7 +38,7 @@ export default class CachedTranslations implements ITranslations {
         return Promise.reject(new NotFoundError('Translations not found'));
       }
 
-      let transformedTranslations = await this.transformers.transform(trans, extension);
+      const transformedTranslations = await this.transformers.transform(trans, extension);
 
       await this.storage.set(translationsKey, transformedTranslations);
       return transformedTranslations;

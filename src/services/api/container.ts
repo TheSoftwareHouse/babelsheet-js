@@ -9,6 +9,7 @@ import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import CachedTranslations from '../../shared/translations/cached-translations';
@@ -17,7 +18,6 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
-import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

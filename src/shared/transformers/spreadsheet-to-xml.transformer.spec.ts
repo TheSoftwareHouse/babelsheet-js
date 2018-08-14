@@ -6,22 +6,13 @@ const spreeadsheetToJson: ITransformer = {
   transform: jest.fn(() => 'spreadsheet return'),
 };
 
-const jsonToFlatList: ITransformer = {
+const jsonToXml: ITransformer = {
   supports: type => false,
-  transform: jest.fn(() => 'json return'),
-};
-
-const flatListToXml: ITransformer = {
-  supports: type => false,
-  transform: jest.fn(() => 'flat list return'),
+  transform: jest.fn(() => 'xml return'),
 };
 
 describe('SpreadsheetToXmlTransformer', () => {
-  const spreadsheetToXmlTransformer = new SpreadsheetToXmlTransformer(
-    spreeadsheetToJson,
-    jsonToFlatList,
-    flatListToXml
-  );
+  const spreadsheetToXmlTransformer = new SpreadsheetToXmlTransformer(spreeadsheetToJson, jsonToXml);
 
   it('does return true if supported type', async () => {
     const result = spreadsheetToXmlTransformer.supports('xml');
@@ -42,7 +33,6 @@ describe('SpreadsheetToXmlTransformer', () => {
     spreadsheetToXmlTransformer.transform(object, langCode);
 
     expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToFlatList.transform).toBeCalledWith('spreadsheet return');
-    expect(flatListToXml.transform).toBeCalledWith('json return');
+    expect(jsonToXml.transform).toBeCalledWith('spreadsheet return');
   });
 });

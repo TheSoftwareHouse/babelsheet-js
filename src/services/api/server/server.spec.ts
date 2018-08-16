@@ -318,4 +318,53 @@ describe('Server', () => {
         });
       });
   });
+
+  it('returns translations in xml', async () => {
+    const server = container.resolve<Server>('server').getApp();
+    const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
+
+    await maskedTranslations.setTranslations([], {
+      tags: {
+        tag1: {
+          COMMON: {
+            STH1: null,
+          },
+        },
+        tag2: {
+          CORE: {
+            LABELS: {
+              YES: null,
+            },
+          },
+          COMMON: {
+            STH1: null,
+          },
+        },
+      },
+      en_US: {
+        CORE: {
+          LABELS: {
+            YES: 'yes',
+            NO: 'no',
+          },
+        },
+        COMMON: {
+          STH1: 'Some message ...',
+          FORM: {
+            COMMENT: 'comment',
+          },
+        },
+      },
+    });
+
+    await request(server)
+      .get('/translations?filters[]=en_US.tag1&format=android')
+      .expect(200)
+      .then(res => {
+        expect(res.header['content-type']).toEqual('application/xml; charset=utf-8');
+        expect(res.text).toEqual(
+          `<?xml version=\"1.0\"?><resources><string name=\"en_us_common_sth1\">Some message ...</string></resources>`
+        );
+      });
+  });
 });

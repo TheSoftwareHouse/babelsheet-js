@@ -44,6 +44,7 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
+    .option('one_file', { default: 'false', describe: 'Create one file per language', type: 'boolean' })
     .option('client_id', { describe: 'Client ID', type: 'string' })
     .option('client_secret', { describe: 'Client secret', type: 'string' })
     .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
@@ -84,6 +85,24 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | unde
   return authData;
 }
 
+function saveData(
+  dataToSave: Array<any> | string,
+  separate: boolean,
+  filename: string,
+  extension: string,
+  path: string
+) {
+  if (!separate && typeof dataToSave === 'string') {
+    container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, filename, extension, path);
+    return;
+  }
+
+  (dataToSave as Array<any>).forEach((data: any) =>
+    container.resolve<IFileRepository>('fileRepository').saveData(data.content, data.lang, extension, path)
+  );
+  return;
+}
+
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();
@@ -104,11 +123,11 @@ async function main() {
   info('Formatting spreadsheet...');
   const dataToSave = await container
     .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language);
+    .transform(spreadsheetData, extension, args.language, !args.one_file);
   info('Spreadsheet formatted.');
-
-  info(`Saving translations file to ${args.path}/${args.filename}.${extension}`);
-  container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
+  console.log(dataToSave);
+  info(`Saving translations...`);
+  saveData(dataToSave, !args.one_file, args.filename, extension, args.path);
   info('File successfully saved.');
 
   process.exit(0);

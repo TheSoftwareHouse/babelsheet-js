@@ -44,7 +44,7 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
-    .option('one_file', { default: 'false', describe: 'Create one file per language', type: 'boolean' })
+    .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
     .option('client_id', { describe: 'Client ID', type: 'string' })
     .option('client_secret', { describe: 'Client secret', type: 'string' })
     .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
@@ -85,14 +85,8 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | unde
   return authData;
 }
 
-function saveData(
-  dataToSave: Array<any> | string,
-  separate: boolean,
-  filename: string,
-  extension: string,
-  path: string
-) {
-  if (!separate && typeof dataToSave === 'string') {
+function saveData(dataToSave: Array<any> | string, merge: boolean, filename: string, extension: string, path: string) {
+  if (merge && typeof dataToSave === 'string') {
     container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, filename, extension, path);
     return;
   }
@@ -123,11 +117,11 @@ async function main() {
   info('Formatting spreadsheet...');
   const dataToSave = await container
     .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language, !args.one_file);
+    .transform(spreadsheetData, extension, args.language, args.merge);
   info('Spreadsheet formatted.');
   console.log(dataToSave);
   info(`Saving translations...`);
-  saveData(dataToSave, !args.one_file, args.filename, extension, args.path);
+  saveData(dataToSave, args.merge, args.filename, extension, args.path);
   info('File successfully saved.');
 
   process.exit(0);

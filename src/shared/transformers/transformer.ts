@@ -3,6 +3,6 @@ export default interface ITransformer {
   transform(
     source: { [key: string]: string[] } | Array<{ [key: string]: string }>,
     langCode?: string,
-    separate?: boolean
+    mergeLanguages?: boolean
   ): any;
 }

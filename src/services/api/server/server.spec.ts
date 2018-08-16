@@ -304,4 +304,18 @@ describe('Server', () => {
         });
       });
   });
+
+  it('returns bad request if format does not exists', async () => {
+    const server = container.resolve<Server>('server').getApp();
+
+    await request(server)
+      .get('/translations?filters[]=en_US&format=xyz')
+      .expect(500)
+      .then(res => {
+        expect(res.body).toEqual({
+          message: "Not possible to create translations for format 'xyz'",
+          status: 500,
+        });
+      });
+  });
 });

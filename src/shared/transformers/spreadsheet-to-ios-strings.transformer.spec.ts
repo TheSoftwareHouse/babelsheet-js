@@ -1,26 +1,20 @@
 import SpreadsheetToIosStringsTransformer from './spreadsheet-to-ios-strings.transformer';
-import ITransformer from '../../shared/transformers/transformer';
+import ITransformer from './transformer';
 
 const spreeadsheetToJson: ITransformer = {
   supports: type => false,
   transform: jest.fn(() => 'spreadsheet return'),
 };
 
-const jsonToFlatList: ITransformer = {
+const jsonToIosStrings: ITransformer = {
   supports: type => false,
-  transform: jest.fn(() => 'json return'),
-};
-
-const flatListToIosStrings: ITransformer = {
-  supports: type => false,
-  transform: jest.fn(() => 'flat list return'),
+  transform: jest.fn(() => 'ios string return'),
 };
 
 describe('SpreadsheetToIosStringsTransformer', () => {
   const spreadsheetToIosStringsTransformer = new SpreadsheetToIosStringsTransformer(
     spreeadsheetToJson,
-    jsonToFlatList,
-    flatListToIosStrings
+    jsonToIosStrings
   );
 
   it('does return true if supported type', async () => {
@@ -42,7 +36,6 @@ describe('SpreadsheetToIosStringsTransformer', () => {
     spreadsheetToIosStringsTransformer.transform(object, langCode);
 
     expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToFlatList.transform).toBeCalledWith('spreadsheet return');
-    expect(flatListToIosStrings.transform).toBeCalledWith('json return');
+    expect(jsonToIosStrings.transform).toBeCalledWith('spreadsheet return');
   });
 });

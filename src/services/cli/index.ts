@@ -6,10 +6,11 @@ import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
+import { checkAuthParameters } from '../../shared/checkAuthParams';
+import { getExtension } from '../../shared/formatToExtensions';
 import GoogleSheets from '../../shared/google/sheets';
+import Transformers from '../../shared/transformers/transformers';
 import createContainer from './container';
-import { getExtension } from './formatToExtensions';
-import Transformers from './transformers';
 
 dotenv.config();
 
@@ -43,6 +44,11 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
+    .option('client_id', { describe: 'Client ID', type: 'string' })
+    .option('client_secret', { describe: 'Client secret', type: 'string' })
+    .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
+    .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
+    .option('redirect_uri', { describe: 'The URI to redirect after completing the auth request' })
     .help('?')
     .alias('?', 'help')
     .example(
@@ -63,9 +69,27 @@ function checkFolderPermissions(path: string): void {
   }
 }
 
+function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | undefined } {
+  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+  const authData = {
+    clientId: args.client_id || CLIENT_ID,
+    clientSecret: args.client_secret || CLIENT_SECRET,
+    spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
+    spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
+    redirectUri: args.redirect_uri || REDIRECT_URI,
+  };
+
+  checkAuthParameters(authData);
+
+  return authData;
+}
+
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();
+
+  info('Checking auth variables...');
+  const spreadsheetAuthData = getSpreadsheetAuthData(args);
 
   info('Checking formats...');
   const extension = getExtension(args.format);
@@ -74,7 +98,7 @@ async function main() {
   checkFolderPermissions(args.path);
 
   info('Fetching spreadsheet...');
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet();
+  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
@@ -83,7 +107,7 @@ async function main() {
     .transform(spreadsheetData, extension, args.language);
   info('Spreadsheet formatted.');
 
-  info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
+  info(`Saving translations file to ${args.path}/${args.filename}.${extension}`);
   container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
   info('File successfully saved.');
 

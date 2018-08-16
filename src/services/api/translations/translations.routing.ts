@@ -14,6 +14,7 @@ export default class TranslationsRouting {
       celebrate({
         query: {
           filters: Joi.array().items(Joi.string()),
+          format: Joi.string().default('json'),
         },
       }),
       this.translationsController.getTranslations

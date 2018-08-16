@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { getDocumentType } from '../../../shared/formatToExtensions';
 import TranslationsStorage from '../../../shared/translations/translations';
 
 export default class TranslationsController {
@@ -10,9 +11,13 @@ export default class TranslationsController {
     const queryFilters = req.query.filters || [];
 
     return this.translationsStorage
-      .getTranslations(queryFilters)
+      .getTranslations(queryFilters, req.query.format)
       .then(trans => {
-        res.status(200).json(trans);
+        const docType = getDocumentType(req.query.format);
+        res
+          .status(200)
+          .type(docType)
+          .send(trans);
       })
       .catch(next);
   }

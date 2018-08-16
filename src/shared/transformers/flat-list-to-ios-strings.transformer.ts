@@ -1,7 +1,7 @@
 import ITransformer from './transformer';
 
 export default class FlatListToIosStringsTransformer implements ITransformer {
-  private readonly supportedType = 'strings';
+  private readonly supportedType = 'flat-list-strings';
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;

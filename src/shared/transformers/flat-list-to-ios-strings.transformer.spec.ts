@@ -4,7 +4,7 @@ describe('FlatListToIosStringsTransformer', () => {
   const flatListToXmlTransformer = new FlatListToIosStringsTransformer();
 
   it('does return true if supported type', async () => {
-    const result = flatListToXmlTransformer.supports('strings');
+    const result = flatListToXmlTransformer.supports('flat-list-strings');
 
     expect(result).toBeTruthy();
   });

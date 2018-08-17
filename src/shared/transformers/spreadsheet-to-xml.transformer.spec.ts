@@ -26,7 +26,7 @@ describe('SpreadsheetToXmlTransformer', () => {
     expect(result).toBeFalsy();
   });
 
-  it('does generate xml for given language from spreadsheet', async () => {
+  it('does generate object for given language from spreadsheet', async () => {
     const object = { test: ['test'] };
     const langCode = 'en_US';
 
@@ -36,17 +36,14 @@ describe('SpreadsheetToXmlTransformer', () => {
     expect(jsonToXml.transform).toBeCalledWith('spreadsheet return');
   });
 
-  it('does generate xml object with languages from spreadsheet', async () => {
+  it('does generate languages object from spreadsheet', async () => {
     const spreeadsheetToJson2: ITransformer = {
       supports: type => false,
       transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
     };
 
     const spreadsheetToXmlTransformer2 = new SpreadsheetToXmlTransformer(spreeadsheetToJson2, jsonToXml);
-    const object = {
-      '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', 'pl_PL'],
-      '11': ['', 'CORE'],
-    };
+    const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToXmlTransformer2.transform(object);
 

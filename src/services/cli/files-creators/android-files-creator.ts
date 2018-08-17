@@ -3,7 +3,7 @@ import IFileRepository from '../../../infrastructure/repository/file-repository.
 
 export default class AndroidFilesCreator implements IFilesCreator {
   private supportedExtension = 'xml';
-  private defaultFileName = 'android';
+  private defaultFileName = 'strings';
   constructor(private fileRepository: IFileRepository) {}
 
   public supports(extension: string): boolean {
@@ -17,7 +17,8 @@ export default class AndroidFilesCreator implements IFilesCreator {
     }
 
     dataToSave.forEach((data: any) => {
-      const folderName = `${path}/${data.lang}.android`;
+      const langWithLocale = data.lang.split('-').join('-r');
+      const folderName = `${path}/values-${langWithLocale}`;
       fs.mkdirSync(folderName);
       this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
     });

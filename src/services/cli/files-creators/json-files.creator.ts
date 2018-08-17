@@ -16,10 +16,8 @@ export default class JsonFilesCreator implements IFilesCreator {
       return;
     }
 
-    const folderName = `${path}/translations`;
-    fs.mkdirSync(folderName);
     dataToSave.forEach((data: any) => {
-      this.fileRepository.saveData(data.content, data.lang, this.supportedExtension, folderName);
+      this.fileRepository.saveData(data.content, data.lang, this.supportedExtension, path);
     });
   }
 }

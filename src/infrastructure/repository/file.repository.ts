@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import { ILogger } from 'node-common';
 import IFileRepository from './file-repository.types';
 import { Permission } from './file-repository.types';
 

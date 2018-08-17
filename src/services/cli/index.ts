@@ -86,20 +86,6 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | unde
   return authData;
 }
 
-// function saveData(dataToSave: Array<any> | string, merge: boolean, filename: string, extension: string, path: string) {
-//   if (merge && typeof dataToSave === 'string') {
-//     container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, filename, extension, path);
-//     return;
-//   }
-
-//   (dataToSave as Array<any>).forEach((data: any) => {
-//     const folderName = `${path}/${data.lang}.lproj`;
-//     fs.mkdirSync(folderName);
-//     container.resolve<IFileRepository>('fileRepository').saveData(data.content, 'Localizable', extension, folderName)
-//   });
-//   return;
-// }
-
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
   const args = configureCli();

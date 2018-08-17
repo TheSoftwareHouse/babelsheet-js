@@ -16,12 +16,35 @@ import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spread
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
+import AndroidFilesCreator from './files-creators/android-files-creator';
+import FilesCreators from './files-creators/files-creators';
+import IosFilesCreator from './files-creators/ios-files-creator';
+import JsonFilesCreator from './files-creators/json-files.creator';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
     injectionMode: awilix.InjectionMode.CLASSIC,
     ...options,
   });
+
+  const fileCreatorsRegistry = {
+    androidFilesCreator: awilix.asClass(AndroidFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
+    iosFilesCreator: awilix.asClass(IosFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
+    jsonFilesCreator: awilix.asClass(JsonFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
+    filesCreators: awilix.asClass(FilesCreators, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      filesCreators: [
+        container.resolve<AndroidFilesCreator>('androidFilesCreator'),
+        container.resolve<IosFilesCreator>('iosFilesCreator'),
+        container.resolve<JsonFilesCreator>('jsonFilesCreator'),
+      ],
+    })),
+  };
 
   const transformersRegistry = {
     flatListToIosStringsTransformer: awilix.asClass(FlatListToIosStringsTransformer, {
@@ -77,6 +100,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       .asClass(TokenStorage)
       .inject(() => ({ storage: container.resolve<InFileStorage>('inFileStorage') })),
     ...transformersRegistry,
+    ...fileCreatorsRegistry,
   });
 
   return container;

@@ -11,6 +11,7 @@ import { getExtension } from '../../shared/formatToExtensions';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import createContainer from './container';
+import FilesCreators from './files-creators/files-creators';
 
 dotenv.config();
 
@@ -85,17 +86,19 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | unde
   return authData;
 }
 
-function saveData(dataToSave: Array<any> | string, merge: boolean, filename: string, extension: string, path: string) {
-  if (merge && typeof dataToSave === 'string') {
-    container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, filename, extension, path);
-    return;
-  }
+// function saveData(dataToSave: Array<any> | string, merge: boolean, filename: string, extension: string, path: string) {
+//   if (merge && typeof dataToSave === 'string') {
+//     container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, filename, extension, path);
+//     return;
+//   }
 
-  (dataToSave as Array<any>).forEach((data: any) =>
-    container.resolve<IFileRepository>('fileRepository').saveData(data.content, data.lang, extension, path)
-  );
-  return;
-}
+//   (dataToSave as Array<any>).forEach((data: any) => {
+//     const folderName = `${path}/${data.lang}.lproj`;
+//     fs.mkdirSync(folderName);
+//     container.resolve<IFileRepository>('fileRepository').saveData(data.content, 'Localizable', extension, folderName)
+//   });
+//   return;
+// }
 
 async function main() {
   const { info } = container.resolve<ILogger>('logger');
@@ -119,9 +122,9 @@ async function main() {
     .resolve<Transformers>('transformers')
     .transform(spreadsheetData, extension, args.language, args.merge);
   info('Spreadsheet formatted.');
-  console.log(dataToSave);
+
   info(`Saving translations...`);
-  saveData(dataToSave, args.merge, args.filename, extension, args.path);
+  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension);
   info('File successfully saved.');
 
   process.exit(0);

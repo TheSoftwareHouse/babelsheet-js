@@ -13,7 +13,7 @@ export default class SpreadsheetToXmlTransformer implements ITransformer {
     source: { [key: string]: string[] },
     langCode?: string,
     mergeLanguages?: boolean
-  ): string | Array<any> {
+  ): string | object[] {
     const json = this.spreadsheetToJson.transform(source, langCode);
 
     if (mergeLanguages || langCode) {

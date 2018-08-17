@@ -13,7 +13,7 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
     source: { [key: string]: string[] },
     langCode?: string,
     mergeLanguages?: boolean
-  ): Array<any> | string {
+  ): string | object[] {
     const json = this.spreadsheetToJson.transform(source, langCode);
     if (mergeLanguages || langCode) {
       return JSON.stringify(json);

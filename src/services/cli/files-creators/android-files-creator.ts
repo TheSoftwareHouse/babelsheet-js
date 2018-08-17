@@ -17,7 +17,7 @@ export default class AndroidFilesCreator implements IFilesCreator {
     }
 
     dataToSave.forEach((data: any) => {
-      const langWithLocale = data.lang.split('-').join('-r');
+      const langWithLocale = data.lang.split(/[-_]{1}/).join('-r');
       const folderName = `${path}/values-${langWithLocale}`;
       fs.mkdirSync(folderName);
       this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);

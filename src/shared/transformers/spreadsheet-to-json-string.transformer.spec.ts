@@ -21,9 +21,9 @@ describe('SpreadsheetToJsonStringTransformer', () => {
   });
 
   it('does transform json to string', async () => {
-    const result = spreadsheetToJsonStringTransformer.transform({ test: ['test2'] });
+    const result = spreadsheetToJsonStringTransformer.transform({ en: ['test2'] }, 'en');
 
-    expect(result).toBe('{"test":["test2"]}');
+    expect(result).toBe('{"en":["test2"]}');
   });
 
   it('does call spreadsheetToJson.transform with two parameters', async () => {

@@ -16,7 +16,8 @@ export default class IosFilesCreator implements IFilesCreator {
       return;
     }
 
-    dataToSave.forEach((data: any) => {
+    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
+    dataWithoutTags.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/${langWithLocale}.lproj`;
       fs.mkdirSync(folderName);

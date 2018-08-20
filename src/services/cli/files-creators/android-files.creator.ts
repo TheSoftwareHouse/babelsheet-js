@@ -16,7 +16,8 @@ export default class AndroidFilesCreator implements IFilesCreator {
       return;
     }
 
-    dataToSave.forEach((data: any) => {
+    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
+    dataWithoutTags.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/values-${langWithLocale}`;
       fs.mkdirSync(folderName);

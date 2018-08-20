@@ -18,13 +18,6 @@ describe('FileCreators', () => {
   it('throws exception when there is no transformer', () => {
     const type = 'xyz';
 
-    expect(() => filesCreators.save('', '.', 'test', 'xyz')).toThrow('No support for xyz data type');
+    expect(() => filesCreators.save('', '.', 'test', type)).toThrow(`No support for ${type} data type`);
   });
-  // it('throws exception when there is no transformer', async () => {
-  //   const type = 'xyz';
-
-  //   await expect(transformers.transform(spreadsheetData, type)).rejects.toMatchObject(
-  //     new Error(`No support for ${type} data type`)
-  //   );
-  // });
 });

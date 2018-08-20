@@ -3,7 +3,6 @@ import IFileRepository from '../../../infrastructure/repository/file-repository.
 
 export default class JsonFilesCreator implements IFilesCreator {
   private supportedExtension = 'json';
-  private defaultFileName = 'json';
   constructor(private fileRepository: IFileRepository) {}
 
   public supports(extension: string): boolean {

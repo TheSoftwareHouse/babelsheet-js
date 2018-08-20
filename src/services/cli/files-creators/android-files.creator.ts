@@ -27,12 +27,14 @@ export default class AndroidFilesCreator implements IFilesCreator {
 
   private transformLangWithRegion(languageCode: string): string {
     const langWithLocale = languageCode.split(/[-_]{1}/);
+
     if (langWithLocale.length > 1) {
       if (langWithLocale[0].toLocaleLowerCase() === langWithLocale[1].toLocaleLowerCase()) {
         return langWithLocale[0].toLowerCase();
       }
       return langWithLocale.join('-r');
     }
+
     return languageCode;
   }
 }

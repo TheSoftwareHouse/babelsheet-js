@@ -31,34 +31,23 @@ describe('FileCreators', () => {
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
   });
 
-  it('executes save method for every language', () => {
+  it('executes save method for every language with proper language-region code', () => {
     const translations = [
-      { lang: 'en', content: 'test' },
-      { lang: 'pl', content: 'test2' },
+      { lang: 'pl_pl', content: 'test2' },
+      { lang: 'en_US', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
     iosFilesCreator.save(translations, '.', 'test');
 
-    expect(fs.mkdirSync).toBeCalledWith(`./${translations[0].lang}.lproj`);
-    expect(fs.mkdirSync).toBeCalledWith(`./${translations[1].lang}.lproj`);
-    expect(fs.mkdirSync).toBeCalledWith(`./${translations[2].lang}.lproj`);
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[0].content,
-      'Localizable',
-      'strings',
-      `./${translations[0].lang}.lproj`
-    );
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[1].content,
-      'Localizable',
-      'strings',
-      `./${translations[1].lang}.lproj`
-    );
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[2].content,
-      'Localizable',
-      'strings',
-      `./${translations[2].lang}.lproj`
-    );
+    const firstPathName = './pl.lproj';
+    const secondPathName = './en-US.lproj';
+    const thirdPathName = `./${translations[2].lang}.lproj`;
+
+    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'Localizable', 'strings', firstPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', secondPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'Localizable', 'strings', thirdPathName);
   });
 });

@@ -33,32 +33,21 @@ describe('FileCreators', () => {
 
   it('executes save method for every language', () => {
     const translations = [
-      { lang: 'en', content: 'test' },
-      { lang: 'pl', content: 'test2' },
+      { lang: 'pl_pl', content: 'test2' },
+      { lang: 'en_US', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
     androidFilesCreator.save(translations, '.', 'test');
 
-    expect(fs.mkdirSync).toBeCalledWith(`./values-${translations[2].lang}`);
-    expect(fs.mkdirSync).toBeCalledWith(`./values-${translations[2].lang}`);
-    expect(fs.mkdirSync).toBeCalledWith(`./values-${translations[2].lang}`);
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[0].content,
-      'strings',
-      'xml',
-      `./values-${translations[0].lang}`
-    );
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[1].content,
-      'strings',
-      'xml',
-      `./values-${translations[1].lang}`
-    );
-    expect(fileRepository.saveData).toBeCalledWith(
-      translations[2].content,
-      'strings',
-      'xml',
-      `./values-${translations[2].lang}`
-    );
+    const firstPathName = './values-pl';
+    const secondPathName = './values-en-rUS';
+    const thirdPathName = `./values-${translations[2].lang}`;
+
+    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'strings', 'xml', firstPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'strings', 'xml', secondPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'strings', 'xml', thirdPathName);
   });
 });

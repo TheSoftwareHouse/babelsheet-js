@@ -6,14 +6,14 @@ class GoogleSheets {
     constructor(googleAuth) {
         this.googleAuth = googleAuth;
     }
-    async fetchSpreadsheet() {
-        const oAuth2Client = await this.googleAuth.getAuthenticatedClient();
+    async fetchSpreadsheet(credentials) {
+        const oAuth2Client = await this.googleAuth.getAuthenticatedClient(credentials);
         const sheets = googleapis_1.google.sheets('v4');
         return util
             .promisify(sheets.spreadsheets.values.get)({
             auth: oAuth2Client,
-            range: process.env.SPREADSHEET_NAME,
-            spreadsheetId: process.env.SPREADSHEET_ID,
+            range: credentials.spreadsheetName,
+            spreadsheetId: credentials.spreadsheetId,
         })
             .then((res) => res.data.values);
     }

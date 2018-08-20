@@ -9,6 +9,7 @@ class TranslationsRouting {
         this.routing.get('/', celebrate_1.celebrate({
             query: {
                 filters: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
+                format: celebrate_1.Joi.string().default('json'),
             },
         }), this.translationsController.getTranslations);
     }

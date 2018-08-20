@@ -2,35 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda = require("ramda");
 const not_found_1 = require("../error/not-found");
+const formatToExtensions_1 = require("../formatToExtensions");
 class CachedTranslations {
-    constructor(storage, translationsKeyGenerator, maskedTranslations) {
+    constructor(storage, translationsKeyGenerator, maskedTranslations, transformers) {
         this.storage = storage;
         this.translationsKeyGenerator = translationsKeyGenerator;
         this.maskedTranslations = maskedTranslations;
+        this.transformers = transformers;
         this.translationsCachePrefix = 'translationsCache';
-    }
-    async hasTranslations(filters) {
-        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
-        return this.storage.has(translationsKey);
     }
     async clearTranslations() {
         return this.storage.clear();
     }
-    async setTranslations(filters, translations) {
-        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
+    async setTranslations(filters, translations, format) {
+        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
         return this.storage.set(translationsKey, translations);
     }
-    async getTranslations(filters) {
-        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters);
+    async getTranslations(filters, format) {
+        const extension = formatToExtensions_1.getExtensionsFromJson(format);
+        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
         if (await this.storage.has(translationsKey)) {
-            return this.storage.get(translationsKey);
+            return await this.storage.get(translationsKey);
         }
         return this.maskedTranslations.getTranslations(filters).then(async (trans) => {
             if (ramda.isEmpty(trans)) {
                 return Promise.reject(new not_found_1.default('Translations not found'));
             }
-            await this.storage.set(translationsKey, trans);
-            return trans;
+            const transformedTranslations = await this.transformers.transform(trans, extension);
+            await this.storage.set(translationsKey, transformedTranslations);
+            return transformedTranslations;
         });
     }
 }

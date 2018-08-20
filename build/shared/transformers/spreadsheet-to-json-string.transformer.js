@@ -8,8 +8,15 @@ class SpreadsheetToJsonStringTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode) {
-        return JSON.stringify(this.spreadsheetToJson.transform(source, langCode));
+    transform(source, langCode, mergeLanguages) {
+        const json = this.spreadsheetToJson.transform(source, langCode);
+        if (mergeLanguages || langCode) {
+            return JSON.stringify(json);
+        }
+        return Object.keys(json).map(langName => {
+            const jsonString = JSON.stringify(json[langName]);
+            return { lang: langName, content: jsonString };
+        });
     }
 }
 exports.default = SpreadsheetToJsonStringTransformer;

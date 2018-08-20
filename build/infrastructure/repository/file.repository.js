@@ -3,9 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
 const file_repository_types_1 = require("./file-repository.types");
 class FileRepository {
-    constructor(logger) {
-        this.logger = logger;
-    }
     hasAccess(path, permission) {
         try {
             fs.accessSync(path, permission === file_repository_types_1.Permission.Read ? fs.constants.R_OK : fs.constants.W_OK);

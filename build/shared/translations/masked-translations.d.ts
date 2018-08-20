@@ -8,7 +8,6 @@ export default class MaskedTranslations implements ITranslations {
     private maskConverter;
     private readonly translationsKey;
     constructor(storage: IStorage, maskInput: MaskInput, maskConverter: MaskConverter);
-    hasTranslations(filters: string[]): Promise<boolean>;
     clearTranslations(): Promise<void>;
     setTranslations(filters: string[], translations: {
         [key: string]: any;

@@ -9,9 +9,6 @@ class MaskedTranslations {
         this.maskConverter = maskConverter;
         this.translationsKey = 'translations';
     }
-    async hasTranslations(filters) {
-        return this.storage.has(this.translationsKey);
-    }
     async clearTranslations() {
         return this.storage.clear();
     }

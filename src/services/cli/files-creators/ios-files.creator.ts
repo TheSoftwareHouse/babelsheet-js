@@ -17,9 +17,18 @@ export default class IosFilesCreator implements IFilesCreator {
     }
 
     dataToSave.forEach((data: any) => {
-      const folderName = `${path}/${data.lang}.lproj`;
+      const langWithLocale = this.transformLangWithRegion(data.lang);
+      const folderName = `${path}/${langWithLocale}.lproj`;
       fs.mkdirSync(folderName);
       this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
     });
+  }
+
+  private transformLangWithRegion(languageCode: string): string {
+    const langWithLocale = languageCode.split(/[-_]{1}/);
+    if (langWithLocale.length > 1 && langWithLocale[0].toLocaleLowerCase() === langWithLocale[1].toLocaleLowerCase()) {
+      return langWithLocale[0].toLowerCase();
+    }
+    return languageCode;
   }
 }

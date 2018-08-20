@@ -17,10 +17,21 @@ export default class AndroidFilesCreator implements IFilesCreator {
     }
 
     dataToSave.forEach((data: any) => {
-      const langWithLocale = data.lang.split(/[-_]{1}/).join('-r');
+      const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/values-${langWithLocale}`;
       fs.mkdirSync(folderName);
       this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
     });
+  }
+
+  private transformLangWithRegion(languageCode: string): string {
+    const langWithLocale = languageCode.split(/[-_]{1}/);
+    if (langWithLocale.length > 1) {
+      if (langWithLocale[0].toLocaleLowerCase() === langWithLocale[1].toLocaleLowerCase()) {
+        return langWithLocale[0].toLowerCase();
+      }
+      return langWithLocale.join('-r');
+    }
+    return languageCode;
   }
 }

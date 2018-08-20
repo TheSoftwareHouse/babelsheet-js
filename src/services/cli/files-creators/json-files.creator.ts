@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
 
 export default class JsonFilesCreator implements IFilesCreator {

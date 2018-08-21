@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class FlatListToIosStringsTransformer {
     constructor() {
-        this.supportedType = 'strings';
+        this.supportedType = 'flat-list-strings';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;

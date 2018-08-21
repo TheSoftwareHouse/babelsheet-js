@@ -9,8 +9,20 @@ export default class SpreadsheetToIosStringsTransformer implements ITransformer 
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }, langCode?: string): string {
+  public transform(
+    source: { [key: string]: string[] },
+    langCode?: string,
+    mergeLanguages?: boolean
+  ): string | object[] {
     const json = this.spreadsheetToJson.transform(source, langCode);
-    return this.jsonToIosStrings.transform(json);
+
+    if (mergeLanguages || langCode) {
+      return this.jsonToIosStrings.transform(json);
+    }
+
+    return Object.keys(json).map(langName => {
+      const iosStrings = this.jsonToIosStrings.transform(json[langName]);
+      return { lang: langName, content: iosStrings };
+    });
   }
 }

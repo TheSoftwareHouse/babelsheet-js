@@ -11,6 +11,7 @@ import { getExtension } from '../../shared/formatToExtensions';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import createContainer from './container';
+import FilesCreators from './files-creators/files-creators';
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
+    .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
     .option('client_id', { describe: 'Client ID', type: 'string' })
     .option('client_secret', { describe: 'Client secret', type: 'string' })
     .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
@@ -104,11 +106,11 @@ async function main() {
   info('Formatting spreadsheet...');
   const dataToSave = await container
     .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language);
+    .transform(spreadsheetData, extension, args.language, args.merge);
   info('Spreadsheet formatted.');
 
-  info(`Saving translations file to ${args.path}/${args.filename}.${extension}`);
-  container.resolve<IFileRepository>('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
+  info(`Saving translations...`);
+  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension);
   info('File successfully saved.');
 
   process.exit(0);

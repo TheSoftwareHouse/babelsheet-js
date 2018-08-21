@@ -4,5 +4,5 @@ export default interface ITransformer {
         [key: string]: string[];
     } | Array<{
         [key: string]: string;
-    }>, langCode?: string): any;
+    }>, langCode?: string, mergeLanguages?: boolean): any;
 }

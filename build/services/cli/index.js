@@ -4,8 +4,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = require("dotenv");
 const yargs = require("yargs");
 const file_repository_types_1 = require("../../infrastructure/repository/file-repository.types");
+const checkAuthParams_1 = require("../../shared/checkAuthParams");
+const formatToExtensions_1 = require("../../shared/formatToExtensions");
 const container_1 = require("./container");
-const formatToExtensions_1 = require("./formatToExtensions");
 dotenv.config();
 const container = container_1.default();
 process.on('uncaughtException', err => {
@@ -34,6 +35,12 @@ function configureCli() {
         describe: 'Filename of result file',
         type: 'string',
     })
+        .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
+        .option('client_id', { describe: 'Client ID', type: 'string' })
+        .option('client_secret', { describe: 'Client secret', type: 'string' })
+        .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
+        .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
+        .option('redirect_uri', { describe: 'The URI to redirect after completing the auth request' })
         .help('?')
         .alias('?', 'help')
         .example('$0 generate -f xml -n my-data -p ./result -l en_US', 'Generate my-data.xml with english translations in folder /result')
@@ -47,23 +54,37 @@ function checkFolderPermissions(path) {
         process.exit(1);
     }
 }
+function getSpreadsheetAuthData(args) {
+    const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+    const authData = {
+        clientId: args.client_id || CLIENT_ID,
+        clientSecret: args.client_secret || CLIENT_SECRET,
+        spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
+        spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
+        redirectUri: args.redirect_uri || REDIRECT_URI,
+    };
+    checkAuthParams_1.checkAuthParameters(authData);
+    return authData;
+}
 async function main() {
     const { info } = container.resolve('logger');
     const args = configureCli();
+    info('Checking auth variables...');
+    const spreadsheetAuthData = getSpreadsheetAuthData(args);
     info('Checking formats...');
     const extension = formatToExtensions_1.getExtension(args.format);
     info('Checking folder permissions...');
     checkFolderPermissions(args.path);
     info('Fetching spreadsheet...');
-    const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet();
+    const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
     info('Spreadsheet fetched successfully.');
     info('Formatting spreadsheet...');
     const dataToSave = await container
         .resolve('transformers')
-        .transform(spreadsheetData, extension, args.language);
+        .transform(spreadsheetData, extension, args.language, args.merge);
     info('Spreadsheet formatted.');
-    info(`Saving file to ${args.path}/${args.filename}.${args.format}`);
-    container.resolve('fileRepository').saveData(dataToSave, args.filename, extension, args.path);
+    info(`Saving translations...`);
+    container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension);
     info('File successfully saved.');
     process.exit(0);
 }

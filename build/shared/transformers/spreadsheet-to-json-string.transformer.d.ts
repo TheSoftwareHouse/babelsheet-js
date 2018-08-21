@@ -6,5 +6,5 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
     supports(type: string): boolean;
     transform(source: {
         [key: string]: string[];
-    }, langCode?: string): string;
+    }, langCode?: string, mergeLanguages?: boolean): string | object[];
 }

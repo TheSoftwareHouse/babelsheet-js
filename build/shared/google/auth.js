@@ -40,15 +40,9 @@ class GoogleAuth {
             destroyer(server);
         });
     }
-    getOAuth2Client() {
-        const clientSecret = process.env.CLIENT_SECRET;
-        const clientId = process.env.CLIENT_ID;
-        const redirectUrl = process.env.REDIRECT_URI;
-        const oAuth2Client = new google_auth_library_1.OAuth2Client(clientId, clientSecret, redirectUrl);
-        return oAuth2Client;
-    }
-    async getAuthenticatedClient() {
-        const oAuth2Client = this.getOAuth2Client();
+    async getAuthenticatedClient({ clientId, clientSecret, redirectUri, }) {
+        const redirect = redirectUri || 'http://localhost:3000/oauth2callback';
+        const oAuth2Client = new google_auth_library_1.OAuth2Client(clientId, clientSecret, redirect);
         const token = await this.tokenStorage.getToken();
         if (token && token.access_token) {
             this.logger.info('Using token from storage.');

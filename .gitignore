@@ -7,3 +7,4 @@ docker-compose.yml
 translations.json
 translations.xml
 translations.strings
+/translations

@@ -38,4 +38,26 @@ describe('SpreadsheetToIosStringsTransformer', () => {
     expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
     expect(jsonToIosStrings.transform).toBeCalledWith('spreadsheet return');
   });
+
+  it('does generate languages object from spreadsheet', async () => {
+    const spreeadsheetToJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+    };
+
+    const spreadsheetToIosStringsTransformer2 = new SpreadsheetToIosStringsTransformer(
+      spreeadsheetToJson2,
+      jsonToIosStrings
+    );
+    const object = { '11': ['', 'CORE'] };
+
+    const result = spreadsheetToIosStringsTransformer2.transform(object);
+
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
+    expect(jsonToIosStrings.transform).toBeCalledWith('spreadsheet return');
+    expect(result).toEqual([
+      { content: 'ios string return', lang: 'en' },
+      { content: 'ios string return', lang: 'fr' },
+    ]);
+  });
 });

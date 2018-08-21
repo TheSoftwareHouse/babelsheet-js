@@ -1,11 +1,8 @@
 import * as fs from 'fs';
-import { ILogger } from 'node-common';
 import IFileRepository from './file-repository.types';
 import { Permission } from './file-repository.types';
 
 export default class FileRepository implements IFileRepository {
-  constructor(private logger: ILogger) {}
-
   public hasAccess(path: string, permission: Permission): boolean {
     try {
       fs.accessSync(path, permission === Permission.Read ? fs.constants.R_OK : fs.constants.W_OK);

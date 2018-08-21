@@ -1,3 +1,3 @@
 interface ITransformers {
-  transform(data: any, type: string, langCode?: string): any;
+  transform(data: any, type: string, langCode?: string, mergeLanguages?: boolean): any;
 }

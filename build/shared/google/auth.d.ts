@@ -8,6 +8,7 @@ export default class GoogleAuth {
     private tokenStorage;
     constructor(logger: ILogger, port: number, tokenStorage: TokenStorage);
     getTokens(oAuth2Client: OAuth2Client): Promise<Credentials>;
-    getOAuth2Client(): OAuth2Client;
-    getAuthenticatedClient(): Promise<OAuth2Client>;
+    getAuthenticatedClient({ clientId, clientSecret, redirectUri, }: {
+        [key: string]: string | undefined;
+    }): Promise<OAuth2Client>;
 }

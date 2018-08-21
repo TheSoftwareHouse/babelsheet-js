@@ -1,3 +1,3 @@
 export default class TranslationsKeyGenerator {
-    generateKey(prefix: string, filters: string[]): string;
+    generateKey(prefix: string, filters: string[], extension?: string): string;
 }

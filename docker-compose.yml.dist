@@ -7,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - babelsheet-producer
+      - redis
   babelsheet-producer:
     image: tsh/babelsheet-producer
     env_file:

@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:10 as with-modules
 
 WORKDIR /app
 
@@ -18,6 +18,13 @@ RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
 
 RUN npm i --production
+
+# Copy files from previous image
+FROM node:10
+
+COPY --from=with-modules /app /app
+
+WORKDIR /app
 
 COPY . /app
 

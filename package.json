@@ -13,7 +13,6 @@
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint-fix": "tslint -c tslint.json 'src/**/*.ts' --fix",
     "nsp": "nsp check",
-    "start": "npm run start-producer & npm run start-api",
     "start-producer": "node build/services/producer/index.js",
     "start-api": "node build/services/api/index.js"
   },

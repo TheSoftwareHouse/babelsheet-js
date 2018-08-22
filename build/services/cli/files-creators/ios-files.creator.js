@@ -25,8 +25,11 @@ class IosFilesCreator {
     }
     transformLangWithRegion(languageCode) {
         const langWithLocale = languageCode.split(/[-_]{1}/);
-        if (langWithLocale.length > 1 && langWithLocale[0].toLocaleLowerCase() === langWithLocale[1].toLocaleLowerCase()) {
-            return langWithLocale[0].toLowerCase();
+        if (langWithLocale.length > 1) {
+            if (langWithLocale[0].toLocaleLowerCase() === langWithLocale[1].toLocaleLowerCase()) {
+                return langWithLocale[0].toLowerCase();
+            }
+            return langWithLocale.join('-');
         }
         return languageCode;
     }

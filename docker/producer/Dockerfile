@@ -28,4 +28,4 @@ WORKDIR /app
 
 COPY . /app
 
-CMD npm run start
+CMD npm run start-producer

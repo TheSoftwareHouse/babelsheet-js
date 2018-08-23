@@ -20,6 +20,7 @@ import AndroidFilesCreator from './files-creators/android-files.creator';
 import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
+import InEnvStorage from '../../infrastructure/storage/in-env';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -94,11 +95,11 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),
     logger: awilix.asValue(winstonLogger),
-    inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
+    inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.PORT || 3000),
     tokenStorage: awilix
       .asClass(TokenStorage)
-      .inject(() => ({ storage: container.resolve<InFileStorage>('inFileStorage') })),
+      .inject(() => ({ storage: container.resolve<InEnvStorage>('inEnvStorage') })),
     ...transformersRegistry,
     ...fileCreatorsRegistry,
   });

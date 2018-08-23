@@ -10,6 +10,7 @@ import MaskInput from '../../shared/mask/mask.input';
 import TokenStorage from '../../shared/token/token';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import MaskedTranslations from '../../shared/translations/masked-translations';
+import FileRepository from '../../infrastructure/repository/file.repository';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -18,6 +19,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   });
 
   container.register({
+    fileRepository: awilix.asClass(FileRepository, { lifetime: awilix.Lifetime.SINGLETON }),
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),

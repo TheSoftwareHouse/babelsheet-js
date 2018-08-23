@@ -5,7 +5,7 @@ import { ILogger } from 'node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
-import { generateTranslations, generateEnvFile } from './fileGenerators';
+import { generateEnvFile, generateTranslations } from './fileGenerators';
 
 dotenv.config();
 
@@ -56,11 +56,11 @@ function configureCli(): Arguments {
 }
 
 async function main() {
-  const yargs: Arguments = configureCli();
-  if (yargs['env-config']) {
-    await generateEnvFile(container, yargs);
+  const args: Arguments = configureCli();
+  if (args['env-config']) {
+    await generateEnvFile(container, args);
   } else {
-    await generateTranslations(container, yargs);
+    await generateTranslations(container, args);
   }
   process.exit(0);
 }

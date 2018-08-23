@@ -1,16 +1,16 @@
-import { ILogger } from 'node-common';
-import { Arguments } from 'yargs';
 import { AwilixContainer } from 'awilix';
+import { ILogger } from 'node-common';
+import * as ramda from 'ramda';
+import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
+import FileRepository from '../../infrastructure/repository/file.repository';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
+import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
-import GoogleAuth from '../../shared/google/auth';
-import * as ramda from 'ramda';
-import FileRepository from '../../infrastructure/repository/file.repository';
 
 const envFileVars = [
   'CLIENT_ID',
@@ -98,7 +98,7 @@ export async function generateEnvFile(container: AwilixContainer, args: Argument
   const tokens = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
 
   info('Saving tokens to .env file');
-  process.env['token'] = JSON.stringify(tokens);
+  process.env.token = JSON.stringify(tokens);
   const envsForFile = ramda.pick(envFileVars, process.env);
   const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
   container.resolve<FileRepository>('fileRepository').saveData(result, '', 'env');

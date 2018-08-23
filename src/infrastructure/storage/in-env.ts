@@ -1,5 +1,5 @@
-import Storage from './storage';
 import IFileRepository from '../repository/file-repository.types';
+import Storage from './storage';
 
 export default class InEnvStorage implements Storage {
   constructor(private fileRepository: IFileRepository) {}

@@ -2,6 +2,7 @@ import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
 import { winstonLogger } from 'node-common';
 import FileRepository from '../../infrastructure/repository/file.repository';
+import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
@@ -20,7 +21,6 @@ import AndroidFilesCreator from './files-creators/android-files.creator';
 import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
-import InEnvStorage from '../../infrastructure/storage/in-env';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

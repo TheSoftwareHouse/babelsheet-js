@@ -25,11 +25,8 @@ export default class InEnvStorage implements Storage {
 
   public async set(key: string, value: any) {
     process.env[key] = JSON.stringify(value);
-    const envsForFile = ramda.pick(envFileVars, process.env);
-    const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
 
-    this.fileRepository.saveData(result, '', 'env');
-    return Promise.resolve();
+    this.updateEnvsInFile();
   }
 
   public async get(key: string) {
@@ -42,6 +39,13 @@ export default class InEnvStorage implements Storage {
 
   public async clear() {
     return Promise.resolve();
+  }
+
+  private updateEnvsInFile() {
+    const envsForFile = ramda.pick(envFileVars, process.env);
+    const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
+
+    this.fileRepository.saveData(result, '', 'env');
   }
 
   private tryParse(value: any) {

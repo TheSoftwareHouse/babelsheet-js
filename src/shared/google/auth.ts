@@ -8,6 +8,7 @@ import * as querystring from 'querystring';
 import destroyer = require('server-destroy');
 import * as url from 'url';
 import TokenStorage from '../token/token';
+import * as ramda from 'ramda';
 
 export default class GoogleAuth {
   constructor(private logger: ILogger, private port: number, private tokenStorage: TokenStorage) {}
@@ -39,7 +40,9 @@ export default class GoogleAuth {
 
             this.logger.info('Tokens acquired.');
 
-            resolve(tokenResponse.tokens);
+            const tokens = ramda.pick(['access_token', 'refresh_token'], tokenResponse.tokens);
+
+            resolve(tokens);
           }
         })
         .listen(this.port, () => {

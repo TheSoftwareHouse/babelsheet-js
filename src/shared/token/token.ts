@@ -6,9 +6,11 @@ export default class TokenStorage {
 
   public async setToken(token: Credentials) {
     this.storage.set('token', token);
+    //rozbijam na dwa
   }
 
   public async getToken(): Promise<Credentials> {
     return this.storage.get('token');
+    //zbijam z dwoch do obiektu
   }
 }

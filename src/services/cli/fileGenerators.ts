@@ -17,7 +17,7 @@ const envFileVars = [
   'CLIENT_SECRET',
   'SPREADSHEET_ID',
   'SPREADSHEET_NAME',
-  'token',
+  'TOKEN',
   'REDIRECT_URI',
   'REDIS_HOST',
   'REDIS_PORT',
@@ -98,7 +98,8 @@ export async function generateEnvFile(container: AwilixContainer, args: Argument
   const { refresh_token } = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
 
   info('Saving tokens to .env file');
-  process.env.token = refresh_token as string;
+  process.env.TOKEN = refresh_token as string;
+  console.log(process.env);
   const envsForFile = ramda.pick(envFileVars, process.env);
   const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
   container.resolve<FileRepository>('fileRepository').saveData(result, '', 'env');

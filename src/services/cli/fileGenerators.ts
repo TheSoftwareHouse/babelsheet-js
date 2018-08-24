@@ -1,6 +1,5 @@
 import { AwilixContainer } from 'awilix';
 import { ILogger } from 'node-common';
-import * as ramda from 'ramda';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
@@ -11,24 +10,7 @@ import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
-
-const envFileVars = [
-  'CLIENT_ID',
-  'CLIENT_SECRET',
-  'SPREADSHEET_ID',
-  'SPREADSHEET_NAME',
-  'TOKEN',
-  'REDIRECT_URI',
-  'REDIS_HOST',
-  'REDIS_PORT',
-  'HOST',
-  'PORT',
-  'NODE_ENV',
-  'APP_NAME',
-  'LOGGING_LEVEL',
-  'TRACING_SERVICE_HOST',
-  'TRACING_SERVICE_PORT',
-];
+import InEnvStorage from '../../infrastructure/storage/in-env';
 
 function checkFolderPermissions(container: AwilixContainer, path: string): void {
   const { error } = container.resolve<ILogger>('logger');
@@ -98,10 +80,6 @@ export async function generateEnvFile(container: AwilixContainer, args: Argument
   const { refresh_token } = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
 
   info('Saving tokens to .env file');
-  process.env.TOKEN = refresh_token as string;
-  console.log(process.env);
-  const envsForFile = ramda.pick(envFileVars, process.env);
-  const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
-  container.resolve<FileRepository>('fileRepository').saveData(result, '', 'env');
+  container.resolve<InEnvStorage>('inEnvStorage').set('TOKEN', refresh_token);
   info('.env file created');
 }

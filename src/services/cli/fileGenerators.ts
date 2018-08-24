@@ -29,7 +29,7 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
     clientId: args.client_id || CLIENT_ID,
     clientSecret: args.client_secret || CLIENT_SECRET,
     spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
-    spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
+    spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME || 'Sheet1',
     redirectUri: args.redirect_uri || REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 

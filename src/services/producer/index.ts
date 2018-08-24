@@ -29,7 +29,7 @@ function getAuthDataFromEnv(): { [key: string]: string } {
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
     spreadsheetId: SPREADSHEET_ID,
-    spreadsheetName: SPREADSHEET_NAME,
+    spreadsheetName: SPREADSHEET_NAME || 'Sheet1',
     redirectUri: REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 

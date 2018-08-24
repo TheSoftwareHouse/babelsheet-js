@@ -67,20 +67,8 @@ export default class GoogleAuth {
 
     if (token && token.access_token) {
       this.logger.info('Using token from storage.');
+
       oAuth2Client.setCredentials(token);
-
-      const newToken = await oAuth2Client.getAccessToken();
-
-      if (token.access_token !== newToken.token) {
-        await this.tokenStorage.setToken({
-          ...token,
-          access_token: newToken.token,
-          expiry_date: new Date().getTime() + 1000 * 60 * 60 * 24,
-        });
-
-        this.logger.info('Storing refreshed access token.');
-        oAuth2Client.setCredentials(await this.tokenStorage.getToken());
-      }
     } else {
       const tokens = await this.getTokens(oAuth2Client);
 

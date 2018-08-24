@@ -38,6 +38,10 @@ export default class GoogleAuth {
 
             const tokenResponse = await oAuth2Client.getToken(code);
 
+            if (!tokenResponse.tokens.refresh_token) {
+              throw new Error('Problem with acquiring tokens.');
+            }
+
             this.logger.info('Tokens acquired.');
 
             resolve(ramda.pick(['access_token', 'refresh_token'], tokenResponse.tokens));

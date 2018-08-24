@@ -1,5 +1,19 @@
 version: '3'
 services:
+  babelsheet-api:
+    image: tsh/babelsheet-api
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+  babelsheet-producer:
+    image: tsh/babelsheet-producer
+    env_file:
+      - .env
+    depends_on:
+      - redis
   redis:
     image: redis
     ports:

@@ -1,0 +1,17 @@
+.bitbucket-pipelines.yml
+.env
+.env.dist
+.git
+.gitignore
+.prettierrc
+node_modules
+data.json
+docker-compose.yml
+docker-compose.yml.dist
+Dockerfile
+README.md
+src
+translations
+tsconfig.json
+tsconfig.test.json
+tslint.json

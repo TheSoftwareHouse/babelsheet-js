@@ -57,6 +57,7 @@ async function main() {
 
 const everyFiveMinutes = '*/5 * * * *';
 
+main();
 schedule.scheduleJob(everyFiveMinutes, () => {
   main();
 });

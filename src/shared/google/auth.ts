@@ -40,9 +40,7 @@ export default class GoogleAuth {
 
             this.logger.info('Tokens acquired.');
 
-            const tokens = ramda.pick(['access_token', 'refresh_token'], tokenResponse.tokens);
-
-            resolve(tokens);
+            resolve(ramda.pick(['access_token', 'refresh_token'], tokenResponse.tokens));
           }
         })
         .listen(this.port, () => {
@@ -65,23 +63,26 @@ export default class GoogleAuth {
     [key: string]: string;
   }): Promise<OAuth2Client> {
     const oAuth2Client = this.createOAuthClient(clientId, clientSecret, redirectUri);
+    const refreshToken = await this.tokenStorage.getToken();
 
-    const token = await this.tokenStorage.getToken();
-
-    if (token && token.access_token) {
+    if (refreshToken) {
       this.logger.info('Using token from storage.');
+      oAuth2Client.setCredentials({ refresh_token: refreshToken });
 
-      oAuth2Client.setCredentials(token);
-    } else {
-      const tokens = await this.getTokens(oAuth2Client);
+      const accessToken = await oAuth2Client.getAccessToken();
 
-      this.tokenStorage.setToken(tokens);
-
-      this.logger.info('Token is stored.');
-
-      oAuth2Client.setCredentials(tokens);
+      oAuth2Client.setCredentials({
+        refresh_token: refreshToken,
+        access_token: accessToken.token,
+      });
+      return oAuth2Client;
     }
 
+    const tokens = await this.getTokens(oAuth2Client);
+    this.tokenStorage.setToken(tokens.refresh_token);
+    this.logger.info('Token is stored.');
+
+    oAuth2Client.setCredentials(tokens);
     return oAuth2Client;
   }
 }

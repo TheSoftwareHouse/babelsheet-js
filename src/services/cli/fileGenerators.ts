@@ -95,10 +95,10 @@ export async function generateEnvFile(container: AwilixContainer, args: Argument
     .createOAuthClient(clientId, clientSecret, redirectUri);
 
   info('Getting google tokens');
-  const tokens = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
+  const { refresh_token } = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
 
   info('Saving tokens to .env file');
-  process.env.token = JSON.stringify(tokens);
+  process.env.token = JSON.stringify(refresh_token);
   const envsForFile = ramda.pick(envFileVars, process.env);
   const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
   container.resolve<FileRepository>('fileRepository').saveData(result, '', 'env');

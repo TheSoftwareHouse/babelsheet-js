@@ -1,16 +1,13 @@
-import { Credentials } from 'google-auth-library/build/src/auth/credentials';
 import IStorage from '../../infrastructure/storage/storage';
 
 export default class TokenStorage {
   constructor(private storage: IStorage) {}
 
-  public async setToken(token: Credentials) {
+  public async setToken(token: string | null | undefined) {
     this.storage.set('token', token);
-    //rozbijam na dwa
   }
 
-  public async getToken(): Promise<Credentials> {
+  public async getToken(): Promise<string | null | undefined> {
     return this.storage.get('token');
-    //zbijam z dwoch do obiektu
   }
 }

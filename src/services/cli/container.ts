@@ -6,7 +6,6 @@ import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
-import TokenStorage from '../../shared/token/token';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
@@ -21,12 +20,28 @@ import AndroidFilesCreator from './files-creators/android-files.creator';
 import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
+import InRedisStorage from '../../infrastructure/storage/in-redis';
+import TokenProvider from '../../shared/token-provider/token-provider';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
     injectionMode: awilix.InjectionMode.CLASSIC,
     ...options,
   });
+
+  const tokenProviders = {
+    inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
+    inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
+    inRedisStorage: awilix.asClass(InRedisStorage, { lifetime: awilix.Lifetime.SINGLETON }),
+    tokenProvider: awilix.asClass(TokenProvider).inject(() => ({
+      writeProvider: container.resolve<InEnvStorage>('inEnvStorage'),
+      readProviders: [
+        container.resolve<InEnvStorage>('inEnvStorage'),
+        container.resolve<InFileStorage>('inFileStorage'),
+        container.resolve<InRedisStorage>('inRedisStorage'),
+      ],
+    })),
+  };
 
   const fileCreatorsRegistry = {
     androidFilesCreator: awilix.asClass(AndroidFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
@@ -97,9 +112,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     logger: awilix.asValue(winstonLogger),
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.PORT || 3000),
-    tokenStorage: awilix
-      .asClass(TokenStorage)
-      .inject(() => ({ storage: container.resolve<InEnvStorage>('inEnvStorage') })),
+    ...tokenProviders,
     ...transformersRegistry,
     ...fileCreatorsRegistry,
   });

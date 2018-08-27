@@ -1,5 +1,5 @@
 import { AwilixContainer } from 'awilix';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 export default class ErrorHandler {
     private logger;
     constructor(logger: ILogger);

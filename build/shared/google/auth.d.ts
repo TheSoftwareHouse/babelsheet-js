@@ -1,6 +1,6 @@
 import { OAuth2Client } from 'google-auth-library';
 import { Credentials } from 'google-auth-library/build/src/auth/credentials';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import TokenStorage from '../token/token';
 export default class GoogleAuth {
     private logger;

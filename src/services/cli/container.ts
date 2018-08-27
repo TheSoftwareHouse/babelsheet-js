@@ -32,13 +32,11 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   const tokenProviders = {
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
-    inRedisStorage: awilix.asClass(InRedisStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     tokenProvider: awilix.asClass(TokenProvider).inject(() => ({
       writeProvider: container.resolve<InEnvStorage>('inEnvStorage'),
       readProviders: [
         container.resolve<InEnvStorage>('inEnvStorage'),
         container.resolve<InFileStorage>('inFileStorage'),
-        container.resolve<InRedisStorage>('inRedisStorage'),
       ],
     })),
   };

@@ -5,7 +5,7 @@ import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
-import { generateEnvFile, generateTranslations } from './fileGenerators';
+import { generateEnvConfigFile, generateTranslations, generateJsonConfigFile } from './fileGenerators';
 
 dotenv.config();
 
@@ -26,7 +26,16 @@ function configureCli(): Arguments {
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
-    .option('env-config', { default: 'false', describe: 'Generates env tokens for google auth', type: 'boolean' })
+    .option('env-config', {
+      default: 'false',
+      describe: 'Generates .env file with token for google auth',
+      type: 'boolean',
+    })
+    .option('json-config', {
+      default: 'false',
+      describe: 'Generates json file with token for google auth',
+      type: 'boolean',
+    })
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('l', {
@@ -58,7 +67,9 @@ function configureCli(): Arguments {
 async function main() {
   const args: Arguments = configureCli();
   if (args['env-config']) {
-    await generateEnvFile(container, args);
+    await generateEnvConfigFile(container, args);
+  } else if (args['json-config']) {
+    await generateJsonConfigFile(container, args);
   } else {
     await generateTranslations(container, args);
   }

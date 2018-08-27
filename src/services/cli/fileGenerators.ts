@@ -10,6 +10,7 @@ import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
 import InEnvStorage from '../../infrastructure/storage/in-env';
+import InFileStorage from '../../infrastructure/storage/in-file';
 
 function checkFolderPermissions(container: AwilixContainer, path: string): void {
   const { error } = container.resolve<ILogger>('logger');
@@ -64,7 +65,7 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('File successfully saved.');
 }
 
-export async function generateEnvFile(container: AwilixContainer, args: Arguments) {
+async function getTokens(container: AwilixContainer, args: Arguments) {
   const { info } = container.resolve<ILogger>('logger');
 
   info('Checking auth variables...');
@@ -77,8 +78,23 @@ export async function generateEnvFile(container: AwilixContainer, args: Argument
 
   info('Getting google tokens');
   const { refresh_token } = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
+  return refresh_token;
+}
 
-  info('Saving tokens to .env file');
-  container.resolve<InEnvStorage>('inEnvStorage').set('TOKEN', refresh_token);
+export async function generateEnvConfigFile(container: AwilixContainer, args: Arguments) {
+  const { info } = container.resolve<ILogger>('logger');
+  const refreshToken = await getTokens(container, args);
+
+  info('Saving token to .env file');
+  container.resolve<InEnvStorage>('inEnvStorage').set('TOKEN', refreshToken);
   info('.env file created');
+}
+
+export async function generateJsonConfigFile(container: AwilixContainer, args: Arguments) {
+  const { info } = container.resolve<ILogger>('logger');
+  const refreshToken = await getTokens(container, args);
+
+  info('Saving token to data.json file');
+  container.resolve<InFileStorage>('inFileStorage').set('token', refreshToken);
+  info('data.json file created');
 }

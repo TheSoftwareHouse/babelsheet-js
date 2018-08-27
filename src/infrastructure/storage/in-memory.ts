@@ -13,19 +13,18 @@ export default class InMemoryStorage implements IStorage {
   }
 
   public async get(key: string): Promise<any> {
-    return Promise.resolve(this.data[key]);
+    return this.data[key];
   }
 
   public async has(key: string) {
-    return Promise.resolve(Boolean(this.data[key]));
+    return Boolean(this.data[key]);
   }
 
   public async getData() {
-    return Promise.resolve(this.data);
+    return this.data;
   }
 
   public async clear() {
     this.data = {};
-    return Promise.resolve();
   }
 }

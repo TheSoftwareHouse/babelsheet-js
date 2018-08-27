@@ -1,4 +1,4 @@
 export interface ITokenProvider {
-  set(key: string, value: string): void;
-  get(key: string): Promise<any>;
+  setToken(key: string, value: string): void;
+  getToken(key: string): Promise<any>;
 }

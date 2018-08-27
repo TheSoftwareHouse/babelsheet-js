@@ -2,21 +2,27 @@ import { ITokenProvider } from './token-provider.spec';
 import IStorage from '../../infrastructure/storage/storage';
 
 export default class TokenProvider implements ITokenProvider {
-  currentProvider: any = null;
-  constructor(private providers: IStorage[]) {}
+  currentReadProvider: any = null;
 
-  async set(key: string, value: string) {
-    this.providers[0].set(key, value);
+  constructor(private writeProvider: IStorage, private readProviders: IStorage[]) {}
+
+  async setToken(value: string) {
+    this.writeProvider.set('token', value);
   }
 
-  async get(key: string): Promise<any> {
-    for (let i = 0; i < this.providers.length; ++i) {
-      const value = await this.providers[i].get(key);
+  async getToken(): Promise<any> {
+    if (this.currentReadProvider) {
+      return this.currentReadProvider.get('token');
+    }
+
+    for (const readProvider of this.readProviders) {
+      const value = await readProvider.get('token');
       if (value) {
-        this.currentProvider = this.providers[i];
+        this.currentReadProvider = readProvider;
         return value;
       }
     }
+
     return null;
   }
 }

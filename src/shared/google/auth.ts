@@ -7,11 +7,11 @@ import opn = require('opn');
 import * as querystring from 'querystring';
 import destroyer = require('server-destroy');
 import * as url from 'url';
-import TokenStorage from '../token/token';
 import * as ramda from 'ramda';
+import TokenProvider from '../token-provider/token-provider';
 
 export default class GoogleAuth {
-  constructor(private logger: ILogger, private port: number, private tokenStorage: TokenStorage) {}
+  constructor(private logger: ILogger, private port: number, private tokenProvider: TokenProvider) {}
 
   public async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
     return new Promise<Credentials>((resolve, reject) => {
@@ -67,7 +67,7 @@ export default class GoogleAuth {
     [key: string]: string;
   }): Promise<OAuth2Client> {
     const oAuth2Client = this.createOAuthClient(clientId, clientSecret, redirectUri);
-    const refreshToken = await this.tokenStorage.getToken();
+    const refreshToken = await this.tokenProvider.getToken();
 
     if (refreshToken) {
       this.logger.info('Using token from storage.');
@@ -83,7 +83,7 @@ export default class GoogleAuth {
     }
 
     const tokens = await this.getTokens(oAuth2Client);
-    this.tokenStorage.setToken(tokens.refresh_token);
+    this.tokenProvider.setToken(tokens.refresh_token as string);
     this.logger.info('Token is stored.');
 
     oAuth2Client.setCredentials(tokens);

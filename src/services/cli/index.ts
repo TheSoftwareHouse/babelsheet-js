@@ -5,7 +5,7 @@ import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
-import { generateEnvConfigFile, generateTranslations, generateJsonConfigFile } from './fileGenerators';
+import { generateEnvConfigFile, generateJsonConfigFile, generateTranslations } from './fileGenerators';
 
 dotenv.config();
 

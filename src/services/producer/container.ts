@@ -1,17 +1,17 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import FileRepository from '../../infrastructure/repository/file.repository';
 import { winstonLogger } from 'tsh-node-common';
+import FileRepository from '../../infrastructure/repository/file.repository';
 import InEnvStorage from '../../infrastructure/storage/in-env';
+import InFileStorage from '../../infrastructure/storage/in-file';
 import InRedisStorage from '../../infrastructure/storage/in-redis';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
+import TokenProvider from '../../shared/token-provider/token-provider';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import MaskedTranslations from '../../shared/translations/masked-translations';
-import TokenProvider from '../../shared/token-provider/token-provider';
-import InFileStorage from '../../infrastructure/storage/in-file';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

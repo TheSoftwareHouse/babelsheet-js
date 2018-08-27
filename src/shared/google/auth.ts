@@ -4,10 +4,10 @@ import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
 import opn = require('opn');
 import * as querystring from 'querystring';
+import * as ramda from 'ramda';
 import destroyer = require('server-destroy');
 import { ILogger } from 'tsh-node-common';
 import * as url from 'url';
-import * as ramda from 'ramda';
 import TokenProvider from '../token-provider/token-provider';
 
 export default class GoogleAuth {

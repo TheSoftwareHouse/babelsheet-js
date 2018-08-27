@@ -3,14 +3,14 @@ import { ILogger } from 'tsh-node-common';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
+import InEnvStorage from '../../infrastructure/storage/in-env';
+import InFileStorage from '../../infrastructure/storage/in-file';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
-import InEnvStorage from '../../infrastructure/storage/in-env';
-import InFileStorage from '../../infrastructure/storage/in-file';
 
 function checkFolderPermissions(container: AwilixContainer, path: string): void {
   const { error } = container.resolve<ILogger>('logger');

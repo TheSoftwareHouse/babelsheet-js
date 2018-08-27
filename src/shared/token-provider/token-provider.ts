@@ -1,16 +1,16 @@
-import { ITokenProvider } from './token-provider.types';
 import IStorage from '../../infrastructure/storage/storage';
+import { ITokenProvider } from './token-provider.types';
 
 export default class TokenProvider implements ITokenProvider {
-  currentReadProvider: any = null;
+  private currentReadProvider: any = null;
 
   constructor(private writeProvider: IStorage, private readProviders: IStorage[]) {}
 
-  async setToken(value: string) {
+  public async setToken(value: string) {
     this.writeProvider.set('token', value);
   }
 
-  async getToken(): Promise<any> {
+  public async getToken(): Promise<any> {
     if (this.currentReadProvider) {
       return this.currentReadProvider.get('token');
     }

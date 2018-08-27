@@ -1,6 +1,6 @@
-import Storage from './storage';
-import FileRepository from '../repository/file.repository';
 import * as ramda from 'ramda';
+import FileRepository from '../repository/file.repository';
+import Storage from './storage';
 
 const envFileVars = [
   'CLIENT_ID',

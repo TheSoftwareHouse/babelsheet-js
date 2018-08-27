@@ -2,7 +2,7 @@ import { OAuth2Client } from 'google-auth-library';
 import { Credentials } from 'google-auth-library/build/src/auth/credentials';
 import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import opn = require('opn');
 import * as querystring from 'querystring';
 import destroyer = require('server-destroy');

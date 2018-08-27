@@ -1,6 +1,6 @@
 import to from 'await-to-js';
 import * as dotenv from 'dotenv';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
 import { checkAuthParameters } from '../../shared/checkAuthParams';

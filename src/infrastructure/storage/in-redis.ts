@@ -14,7 +14,7 @@ export default class InRedisStorage implements IStorage {
   }
 
   public async get(key: string): Promise<any> {
-    return Promise.resolve(JSON.parse(await util.promisify(this.client.get).bind(this.client)(key)));
+    return JSON.parse(await util.promisify(this.client.get).bind(this.client)(key));
   }
 
   public async has(key: string) {

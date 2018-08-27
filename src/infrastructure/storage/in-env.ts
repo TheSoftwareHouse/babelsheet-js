@@ -30,11 +30,11 @@ export default class InEnvStorage implements Storage {
   }
 
   public async get(key: string) {
-    return Promise.resolve(this.tryParse(process.env[key.toUpperCase()]));
+    return this.tryParse(process.env[key.toUpperCase()]);
   }
 
   public async has(key: string) {
-    return Promise.resolve(Boolean(await this.get(key.toUpperCase())));
+    return Boolean(await this.get(key.toUpperCase()));
   }
 
   public async clear() {

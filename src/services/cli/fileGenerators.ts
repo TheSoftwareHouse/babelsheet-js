@@ -3,7 +3,6 @@ import { ILogger } from 'node-common';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
-import FileRepository from '../../infrastructure/repository/file.repository';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
 import GoogleAuth from '../../shared/google/auth';

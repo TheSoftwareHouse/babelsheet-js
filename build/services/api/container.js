@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const awilix = require("awilix");
-const node_common_1 = require("node-common");
+const tsh_node_common_1 = require("tsh-node-common");
 const in_redis_1 = require("../../infrastructure/storage/in-redis");
 const handler_1 = require("../../shared/error/handler");
 const mask_converter_1 = require("../../shared/mask/mask.converter");
@@ -51,7 +51,7 @@ function createContainer(options) {
     };
     container.register({
         errorHandler: awilix.asClass(handler_1.default),
-        logger: awilix.asValue(node_common_1.winstonLogger),
+        logger: awilix.asValue(tsh_node_common_1.winstonLogger),
         maskConverter: awilix.asClass(mask_converter_1.default),
         maskInput: awilix.asClass(mask_input_1.default),
         maskedTranslations: awilix.asClass(masked_translations_1.default),

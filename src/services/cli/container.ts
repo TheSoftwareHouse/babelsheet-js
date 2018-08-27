@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import { winstonLogger } from 'node-common';
+import { winstonLogger } from 'tsh-node-common';
 import FileRepository from '../../infrastructure/repository/file.repository';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';

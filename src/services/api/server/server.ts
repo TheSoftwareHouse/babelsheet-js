@@ -4,7 +4,7 @@ import { Application, NextFunction, Request, Response } from 'express';
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import AppError from '../../../shared/error/app';
 import ErrorHandler from '../../../shared/error/handler';
 import TranslationsRouting from '../translations/translations.routing';

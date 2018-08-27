@@ -1,4 +1,4 @@
-import { ITokenProvider } from './token-provider.spec';
+import { ITokenProvider } from './token-provider.types';
 import IStorage from '../../infrastructure/storage/storage';
 
 export default class TokenProvider implements ITokenProvider {

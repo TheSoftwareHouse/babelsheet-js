@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { ILogger } from 'node-common';
+import { ILogger } from 'tsh-node-common';
 import createContainer from './container';
 import Server from './server/server';
 

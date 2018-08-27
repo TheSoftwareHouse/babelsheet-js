@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import { winstonLogger } from 'node-common';
+import { winstonLogger } from 'tsh-node-common';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InRedisStorage from '../../infrastructure/storage/in-redis';
 import GoogleAuth from '../../shared/google/auth';

@@ -1,6 +1,6 @@
 import * as awilix from 'awilix';
 import { AwilixContainer, ContainerOptions } from 'awilix';
-import { winstonLogger } from 'node-common';
+import { winstonLogger } from 'tsh-node-common';
 import InRedisStorage from '../../infrastructure/storage/in-redis';
 import ErrorHandler from '../../shared/error/handler';
 import MaskConverter from '../../shared/mask/mask.converter';

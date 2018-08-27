@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const awilix = require("awilix");
-const node_common_1 = require("node-common");
+const tsh_node_common_1 = require("tsh-node-common");
 const in_env_1 = require("../../infrastructure/storage/in-env");
 const in_redis_1 = require("../../infrastructure/storage/in-redis");
 const auth_1 = require("../../shared/google/auth");
@@ -20,7 +20,7 @@ function createContainer(options) {
         googleAuth: awilix.asClass(auth_1.default),
         googleSheets: awilix.asClass(sheets_1.default),
         inEnvStorage: awilix.asClass(in_env_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
-        logger: awilix.asValue(node_common_1.winstonLogger),
+        logger: awilix.asValue(tsh_node_common_1.winstonLogger),
         maskConverter: awilix.asClass(mask_converter_1.default),
         maskInput: awilix.asClass(mask_input_1.default),
         port: awilix.asValue(process.env.PORT || 3000),

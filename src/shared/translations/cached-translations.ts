@@ -1,7 +1,8 @@
 import * as ramda from 'ramda';
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import { getExtension, getExtensionsFromJson } from '../formatToExtensions';
+import { getExtensionsFromJson } from '../formatToExtensions';
+import { ITransformers } from '../transformers/transformers.types';
 import ITranslations from './translations';
 import TranslationsKeyGenerator from './translations.key-generator';
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
+import { AwilixContainer } from 'awilix';
 import * as dotenv from 'dotenv';
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
 import { generateEnvConfigFile, generateJsonConfigFile, generateTranslations } from './fileGenerators';
-import { AwilixContainer } from 'awilix';
 
 dotenv.config();
 
@@ -60,8 +60,8 @@ function configureCli(): Arguments {
 }
 
 const configFileGenerators: { [key: string]: any } = {
-  env: (container: AwilixContainer, args: Arguments) => generateEnvConfigFile(container, args),
-  json: async (container: AwilixContainer, args: Arguments) => await generateJsonConfigFile(container, args),
+  env: (args: Arguments) => generateEnvConfigFile(container, args),
+  json: async (args: Arguments) => await generateJsonConfigFile(container, args),
 };
 
 function getConfigType(config: string | undefined): string | null {
@@ -74,7 +74,7 @@ function getConfigType(config: string | undefined): string | null {
 async function main() {
   const args: Arguments = configureCli();
   const configType = getConfigType(args.config);
-  configType ? await configFileGenerators[configType](container, args) : await generateTranslations(container, args);
+  configType ? await configFileGenerators[configType](args) : await generateTranslations(container, args);
   process.exit(0);
 }
 

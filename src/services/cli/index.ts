@@ -6,6 +6,7 @@ import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
 import { generateEnvConfigFile, generateJsonConfigFile, generateTranslations } from './fileGenerators';
+import { AwilixContainer } from 'awilix';
 
 dotenv.config();
 
@@ -26,15 +27,9 @@ function configureCli(): Arguments {
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
-    .option('env-config', {
-      default: 'false',
-      describe: 'Generates .env file with token for google auth',
-      type: 'boolean',
-    })
-    .option('json-config', {
-      default: 'false',
-      describe: 'Generates json file with token for google auth',
-      type: 'boolean',
+    .option('config', {
+      describe: 'Generates config file with token for google auth',
+      type: 'string',
     })
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
@@ -64,15 +59,22 @@ function configureCli(): Arguments {
     .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
 
+const configFileGenerators: { [key: string]: any } = {
+  env: (container: AwilixContainer, args: Arguments) => generateEnvConfigFile(container, args),
+  json: async (container: AwilixContainer, args: Arguments) => await generateJsonConfigFile(container, args),
+};
+
+function getConfigType(config: string | undefined): string | null {
+  if (config !== undefined) {
+    return config.length === 0 ? 'env' : config;
+  }
+  return null;
+}
+
 async function main() {
   const args: Arguments = configureCli();
-  if (args['env-config']) {
-    await generateEnvConfigFile(container, args);
-  } else if (args['json-config']) {
-    await generateJsonConfigFile(container, args);
-  } else {
-    await generateTranslations(container, args);
-  }
+  const configType = getConfigType(args.config);
+  configType ? await configFileGenerators[configType](container, args) : await generateTranslations(container, args);
   process.exit(0);
 }
 

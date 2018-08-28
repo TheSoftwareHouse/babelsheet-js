@@ -10,7 +10,7 @@ export default class IosFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: object[] | string, path: string, filename: string): void {
+  public save(dataToSave: object[] | string, path: string, filename: string, baseLang: string): void {
     if (typeof dataToSave === 'string') {
       this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
       return;

@@ -44,6 +44,7 @@ function configureCli(): Arguments {
       describe: 'Filename of result file',
       type: 'string',
     })
+    .option('default', { default: 'en', describe: 'Default language for translations', type: 'string' })
     .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
     .option('client_id', { describe: 'Client ID', type: 'string' })
     .option('client_secret', { describe: 'Client secret', type: 'string' })

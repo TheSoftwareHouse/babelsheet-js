@@ -61,7 +61,7 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('Spreadsheet formatted.');
 
   info(`Saving translations...`);
-  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension);
+  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension, args.default);
   info('File successfully saved.');
 }
 

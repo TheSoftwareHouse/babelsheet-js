@@ -6,7 +6,7 @@ export default class TokenProvider implements ITokenProvider {
 
   constructor(private writeProvider: IStorage, private readProviders: IStorage[]) {}
 
-  public async setToken(value: string) {
+  public async setToken(value: string): Promise<void> {
     this.writeProvider.set('token', value);
   }
 

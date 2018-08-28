@@ -2,7 +2,7 @@ export default class FilesCreators {
   constructor(private filesCreators: IFilesCreator[]) {}
 
   public save(
-    dataToSave: object[] | string,
+    dataToSave: { lang: string; content: string }[] | string,
     path: string,
     filename: string,
     extension: string,

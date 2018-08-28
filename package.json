@@ -1,13 +1,12 @@
 {
   "name": "babelsheet",
-  "version": "1.0.0-1",
+  "version": "1.0.1",
   "description": "",
   "main": "build/index.js",
   "scripts": {
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",
-    "postinstall": "pm2 install typescript",
     "type-check": "tsc --noEmit",
     "build": "tsc",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",

@@ -20,7 +20,11 @@ export default class IosFilesCreator implements IFilesCreator {
     dataWithoutTags.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/${langWithLocale}.lproj`;
-      fs.mkdirSync(folderName);
+
+      if (!fs.existsSync(folderName)) {
+        fs.mkdirSync(folderName);
+      }
+
       this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
     });
   }

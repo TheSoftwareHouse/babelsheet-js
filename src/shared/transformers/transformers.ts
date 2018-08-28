@@ -1,4 +1,5 @@
 import ITransformer from './transformer';
+import { ITransformers } from './transformers.types';
 
 export default class Transformers implements ITransformers {
   constructor(private transformers: ITransformer[]) {}

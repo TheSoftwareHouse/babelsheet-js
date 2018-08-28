@@ -22,8 +22,8 @@ function getAuthDataFromEnv() {
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         spreadsheetId: SPREADSHEET_ID,
-        spreadsheetName: SPREADSHEET_NAME,
-        redirectUri: REDIRECT_URI,
+        spreadsheetName: SPREADSHEET_NAME || 'Sheet1',
+        redirectUri: REDIRECT_URI || 'http://localhost:3000/oauth2callback',
     };
     checkAuthParams_1.checkAuthParameters(authData);
     return authData;

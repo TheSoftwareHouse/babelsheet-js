@@ -1,4 +1,5 @@
 import IStorage from '../../infrastructure/storage/storage';
+import { ITransformers } from '../transformers/transformers.types';
 import ITranslations from './translations';
 import TranslationsKeyGenerator from './translations.key-generator';
 export default class CachedTranslations implements ITranslations {

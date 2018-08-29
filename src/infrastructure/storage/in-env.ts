@@ -37,9 +37,7 @@ export default class InEnvStorage implements Storage {
     return Boolean(await this.get(key.toUpperCase()));
   }
 
-  public async clear() {
-    return Promise.resolve();
-  }
+  public async clear() {}
 
   private updateEnvsInFile() {
     const envsForFile = ramda.pick(envFileVars, process.env);

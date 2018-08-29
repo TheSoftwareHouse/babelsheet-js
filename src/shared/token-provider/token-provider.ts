@@ -2,7 +2,7 @@ import IStorage from '../../infrastructure/storage/storage';
 import { ITokenProvider } from './token-provider.types';
 
 export default class TokenProvider implements ITokenProvider {
-  private currentReadProvider: any = null;
+  private currentReadProvider: IStorage | null = null;
 
   constructor(private writeProvider: IStorage, private readProviders: IStorage[]) {}
 

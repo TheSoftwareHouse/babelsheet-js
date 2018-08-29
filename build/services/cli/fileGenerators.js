@@ -44,7 +44,7 @@ async function generateTranslations(container, args) {
     info('File successfully saved.');
 }
 exports.generateTranslations = generateTranslations;
-async function getTokens(container, args) {
+async function getRefreshToken(container, args) {
     const { info } = container.resolve('logger');
     info('Checking auth variables...');
     const { clientId, clientSecret, redirectUri } = getSpreadsheetAuthData(args);
@@ -58,17 +58,17 @@ async function getTokens(container, args) {
 }
 async function generateEnvConfigFile(container, args) {
     const { info } = container.resolve('logger');
-    const refreshToken = await getTokens(container, args);
+    const refreshToken = await getRefreshToken(container, args);
     info('Saving token to .env file');
-    container.resolve('inEnvStorage').set('TOKEN', refreshToken);
+    container.resolve('inEnvStorage').set('refresh_token', refreshToken);
     info('.env file created');
 }
 exports.generateEnvConfigFile = generateEnvConfigFile;
 async function generateJsonConfigFile(container, args) {
     const { info } = container.resolve('logger');
-    const refreshToken = await getTokens(container, args);
+    const refreshToken = await getRefreshToken(container, args);
     info('Saving token to data.json file');
-    container.resolve('inFileStorage').set('token', refreshToken);
+    container.resolve('inFileStorage').set('refresh_token', refreshToken);
     info('data.json file created');
 }
 exports.generateJsonConfigFile = generateJsonConfigFile;

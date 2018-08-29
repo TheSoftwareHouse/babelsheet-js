@@ -6,15 +6,15 @@ class TokenProvider {
         this.readProviders = readProviders;
         this.currentReadProvider = null;
     }
-    async setToken(value) {
-        this.writeProvider.set('token', value);
+    async setRefreshToken(value) {
+        this.writeProvider.set('refresh_token', value);
     }
-    async getToken() {
+    async getRefreshToken() {
         if (this.currentReadProvider) {
-            return this.currentReadProvider.get('token');
+            return this.currentReadProvider.get('refresh_token');
         }
         for (const readProvider of this.readProviders) {
-            const value = await readProvider.get('token');
+            const value = await readProvider.get('refresh_token');
             if (value) {
                 this.currentReadProvider = readProvider;
                 return value;

@@ -6,7 +6,7 @@ const envFileVars = [
     'CLIENT_SECRET',
     'SPREADSHEET_ID',
     'SPREADSHEET_NAME',
-    'TOKEN',
+    'REFRESH_TOKEN',
     'REDIRECT_URI',
     'REDIS_HOST',
     'REDIS_PORT',
@@ -32,9 +32,8 @@ class InEnvStorage {
     async has(key) {
         return Boolean(await this.get(key.toUpperCase()));
     }
-    async clear() {
-        return Promise.resolve();
-    }
+    // tslint:disable-next-line
+    async clear() { }
     updateEnvsInFile() {
         const envsForFile = ramda.pick(envFileVars, process.env);
         const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');

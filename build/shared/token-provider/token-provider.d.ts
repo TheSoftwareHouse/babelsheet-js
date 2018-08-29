@@ -5,6 +5,6 @@ export default class TokenProvider implements ITokenProvider {
     private readProviders;
     private currentReadProvider;
     constructor(writeProvider: IStorage, readProviders: IStorage[]);
-    setToken(value: string): Promise<void>;
-    getToken(): Promise<any>;
+    setRefreshToken(value: string): Promise<void>;
+    getRefreshToken(): Promise<any>;
 }

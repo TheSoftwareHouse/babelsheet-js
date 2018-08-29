@@ -6,7 +6,13 @@ import TranslationsStorage from '../../../shared/translations/translations';
 import createContainer from '../container';
 import Server from './server';
 
+const loggerMock = {
+  info: () => null,
+  error: () => null,
+};
+
 const container = createContainer().register({
+  logger: awilix.asValue(loggerMock),
   storage: awilix.asClass(InMemoryStorage, { lifetime: awilix.Lifetime.SINGLETON }),
 });
 

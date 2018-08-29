@@ -6,6 +6,11 @@ import { ITransformers } from '../../shared/transformers/transformers.types';
 
 export const getExtension = jest.fn();
 
+const loggerMock = {
+  info: () => null,
+  error: () => null,
+};
+
 describe('fileGenerators', async () => {
   it('generateTranslations does run proper functions', async () => {
     const mockGoogleSheets = {
@@ -21,6 +26,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       googleSheets: awilix.asValue(mockGoogleSheets),
       transformers: awilix.asValue(mockTransformers),
       filesCreators: awilix.asValue(mockFileCreators),
@@ -57,6 +63,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       inEnvStorage: awilix.asValue(mockInEnvStorage),
       googleAuth: awilix.asValue(mockGoogleAuth),
     });
@@ -90,6 +97,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       inFileStorage: awilix.asValue(mockInFileStorage),
       googleAuth: awilix.asValue(mockGoogleAuth),
     });

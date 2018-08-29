@@ -10,20 +10,18 @@ class AndroidFilesCreator {
     supports(extension) {
         return extension.toLowerCase() === this.supportedExtension;
     }
-    save(dataToSave, path, filename) {
+    save(dataToSave, path, filename, baseLang) {
         if (typeof dataToSave === 'string') {
             this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
             return;
         }
-        const dataWithoutTags = dataToSave.filter((translations) => translations.lang !== 'tags');
+        const dataWithoutTags = dataToSave.filter((translation) => translation.lang !== 'tags');
         dataWithoutTags.forEach((data) => {
             const langWithLocale = this.transformLangWithRegion(data.lang);
             const folderName = `${path}/values-${langWithLocale}`;
-            if (!fs.existsSync(folderName)) {
-                fs.mkdirSync(folderName);
-            }
-            this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
+            this.createFolderAndSave(data.content, folderName);
         });
+        this.generateBaseTranslations(dataToSave, path, baseLang);
     }
     transformLangWithRegion(languageCode) {
         const langWithLocale = languageCode.split(/[-_]{1}/);
@@ -34,6 +32,19 @@ class AndroidFilesCreator {
             return langWithLocale.join('-r');
         }
         return languageCode;
+    }
+    createFolderAndSave(data, folderName) {
+        if (!fs.existsSync(folderName)) {
+            fs.mkdirSync(folderName);
+        }
+        this.fileRepository.saveData(data, this.defaultFileName, this.supportedExtension, folderName);
+    }
+    generateBaseTranslations(dataToSave, path, baseLang) {
+        const baseTranslations = dataToSave.find((translation) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1);
+        if (baseTranslations) {
+            const folderName = `${path}/values`;
+            this.createFolderAndSave(baseTranslations.content, folderName);
+        }
     }
 }
 exports.default = AndroidFilesCreator;

@@ -7,7 +7,7 @@ const envFileVars = [
   'CLIENT_SECRET',
   'SPREADSHEET_ID',
   'SPREADSHEET_NAME',
-  'TOKEN',
+  'REFRESH_TOKEN',
   'REDIRECT_URI',
   'REDIS_HOST',
   'REDIS_PORT',

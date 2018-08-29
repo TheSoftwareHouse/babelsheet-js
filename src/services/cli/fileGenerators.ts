@@ -65,7 +65,7 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('File successfully saved.');
 }
 
-async function getTokens(container: AwilixContainer, args: Arguments) {
+async function getRefreshToken(container: AwilixContainer, args: Arguments) {
   const { info } = container.resolve<ILogger>('logger');
 
   info('Checking auth variables...');
@@ -83,18 +83,18 @@ async function getTokens(container: AwilixContainer, args: Arguments) {
 
 export async function generateEnvConfigFile(container: AwilixContainer, args: Arguments) {
   const { info } = container.resolve<ILogger>('logger');
-  const refreshToken = await getTokens(container, args);
+  const refreshToken = await getRefreshToken(container, args);
 
   info('Saving token to .env file');
-  container.resolve<InEnvStorage>('inEnvStorage').set('TOKEN', refreshToken);
+  container.resolve<InEnvStorage>('inEnvStorage').set('refresh_token', refreshToken);
   info('.env file created');
 }
 
 export async function generateJsonConfigFile(container: AwilixContainer, args: Arguments) {
   const { info } = container.resolve<ILogger>('logger');
-  const refreshToken = await getTokens(container, args);
+  const refreshToken = await getRefreshToken(container, args);
 
   info('Saving token to data.json file');
-  container.resolve<InFileStorage>('inFileStorage').set('token', refreshToken);
+  container.resolve<InFileStorage>('inFileStorage').set('refresh_token', refreshToken);
   info('data.json file created');
 }

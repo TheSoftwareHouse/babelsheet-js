@@ -75,7 +75,7 @@ describe('fileGenerators', async () => {
 
     await generateEnvConfigFile(container, args);
 
-    expect(mockInEnvStorage.set).toBeCalledWith('TOKEN', 'test-token');
+    expect(mockInEnvStorage.set).toBeCalledWith('refresh_token', 'test-token');
   });
 
   it('generateJsonConfigFile does run proper json storage', async () => {
@@ -108,6 +108,6 @@ describe('fileGenerators', async () => {
 
     await generateJsonConfigFile(container, args);
 
-    expect(mockInFileStorage.set).toBeCalledWith('token', 'test-token');
+    expect(mockInFileStorage.set).toBeCalledWith('refresh_token', 'test-token');
   });
 });

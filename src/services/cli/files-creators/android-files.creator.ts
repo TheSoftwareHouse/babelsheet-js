@@ -11,7 +11,7 @@ export default class AndroidFilesCreator implements IFilesCreator {
   }
 
   public save(
-    dataToSave: { lang: string; content: string }[] | string,
+    dataToSave: Array<{ lang: string; content: string }> | string,
     path: string,
     filename: string,
     baseLang: string
@@ -53,7 +53,11 @@ export default class AndroidFilesCreator implements IFilesCreator {
     this.fileRepository.saveData(data, this.defaultFileName, this.supportedExtension, folderName);
   }
 
-  private generateBaseTranslations(dataToSave: { lang: string; content: string }[], path: string, baseLang: string) {
+  private generateBaseTranslations(
+    dataToSave: Array<{ lang: string; content: string }>,
+    path: string,
+    baseLang: string
+  ) {
     const baseTranslations: any = dataToSave.find(
       (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1
     );

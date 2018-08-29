@@ -1,7 +1,7 @@
 interface IFilesCreator {
   supports(extension: string): boolean;
   save(
-    dataToSave: { lang: string; content: string }[] | string,
+    dataToSave: Array<{ lang: string; content: string }> | string,
     path: string,
     filename: string,
     baseLang?: string

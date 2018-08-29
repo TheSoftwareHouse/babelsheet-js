@@ -4,7 +4,6 @@ import { winstonLogger } from 'tsh-node-common';
 import FileRepository from '../../infrastructure/repository/file.repository';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
-import InRedisStorage from '../../infrastructure/storage/in-redis';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenProvider from '../../shared/token-provider/token-provider';

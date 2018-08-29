@@ -1,4 +1,3 @@
-import * as fs from 'fs';
 import IFileRepository from '../repository/file-repository.types';
 import IStorage from './storage';
 

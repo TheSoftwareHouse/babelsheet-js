@@ -67,7 +67,7 @@ export default class GoogleAuth {
     [key: string]: string;
   }): Promise<OAuth2Client> {
     const oAuth2Client = this.createOAuthClient(clientId, clientSecret, redirectUri);
-    const refreshToken = await this.tokenProvider.getToken();
+    const refreshToken = await this.tokenProvider.getRefreshToken();
 
     if (refreshToken) {
       this.logger.info('Using token from storage.');
@@ -83,7 +83,7 @@ export default class GoogleAuth {
     }
 
     const tokens = await this.getTokens(oAuth2Client);
-    this.tokenProvider.setToken(tokens.refresh_token as string);
+    this.tokenProvider.setRefreshToken(tokens.refresh_token as string);
     this.logger.info('Token is stored.');
 
     oAuth2Client.setCredentials(tokens);

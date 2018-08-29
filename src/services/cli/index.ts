@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-import { AwilixContainer } from 'awilix';
 import * as dotenv from 'dotenv';
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';

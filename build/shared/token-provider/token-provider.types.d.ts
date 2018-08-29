@@ -1,4 +1,4 @@
 export interface ITokenProvider {
-    setToken(key: string, value: string): Promise<void>;
-    getToken(key: string): Promise<any>;
+    setRefreshToken(key: string, value: string): Promise<void>;
+    getRefreshToken(key: string): Promise<any>;
 }

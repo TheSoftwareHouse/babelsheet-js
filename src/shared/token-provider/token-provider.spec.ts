@@ -32,7 +32,7 @@ describe('TokenProvider', () => {
 
     const tokenProvider = new TokenProvider(writeProvider, readProviders);
 
-    const result = await tokenProvider.getToken();
+    const result = await tokenProvider.getRefreshToken();
 
     expect(result).toBe('readProvider2');
   });
@@ -56,7 +56,7 @@ describe('TokenProvider', () => {
 
     const tokenProvider = new TokenProvider(writeProvider2, readProviders2);
 
-    const result = await tokenProvider.getToken();
+    const result = await tokenProvider.getRefreshToken();
 
     expect(result).toBe(null);
   });
@@ -92,8 +92,8 @@ describe('TokenProvider', () => {
 
     const tokenProvider = new TokenProvider(writeProvider, readProviders);
 
-    const result = await tokenProvider.getToken();
-    const result2 = await tokenProvider.getToken();
+    const result = await tokenProvider.getRefreshToken();
+    const result2 = await tokenProvider.getRefreshToken();
 
     expect(result).toBe('readProvider2');
     expect(result2).toBe('readProvider2');
@@ -120,8 +120,8 @@ describe('TokenProvider', () => {
     const tokenProvider = new TokenProvider(writeProvider, readProviders);
 
     const token = 'test_token_232';
-    await tokenProvider.setToken(token);
+    await tokenProvider.setRefreshToken(token);
 
-    expect(writeProvider.set).toBeCalledWith('token', token);
+    expect(writeProvider.set).toBeCalledWith('refresh_token', token);
   });
 });

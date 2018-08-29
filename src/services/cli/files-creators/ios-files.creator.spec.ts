@@ -3,14 +3,19 @@ import * as fs from 'fs';
 
 jest.mock('fs');
 
-const fileRepository = {
-  hasAccess: (path, permission) => false,
-  loadData: (filename, extension) => 'loadData',
-  saveData: jest.fn(),
-};
-
 describe('FileCreators', () => {
-  const iosFilesCreator = new IosFilesCreator(fileRepository);
+  let fileRepository = null;
+  let iosFilesCreator = null;
+
+  beforeEach(() => {
+    fileRepository = {
+      hasAccess: (path, permission) => false,
+      loadData: (filename, extension) => 'loadData',
+      saveData: jest.fn(),
+    };
+
+    iosFilesCreator = new IosFilesCreator(fileRepository);
+  });
 
   it('does return true if supported type', async () => {
     const result = iosFilesCreator.supports('strings');
@@ -51,5 +56,26 @@ describe('FileCreators', () => {
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', secondPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'Localizable', 'strings', thirdPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', './Base.lproj');
+  });
+
+  it('executes save method for every language without base language', () => {
+    const translations = [
+      { lang: 'pl_pl', content: 'test2' },
+      { lang: 'fr', content: 'test' },
+      { lang: 'de', content: 'test3' },
+    ];
+    iosFilesCreator.save(translations, '.', 'test', 'test2');
+
+    const firstPathName = './pl.lproj';
+    const secondPathName = './fr.lproj';
+    const thirdPathName = `./${translations[2].lang}.lproj`;
+
+    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'Localizable', 'strings', firstPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', secondPathName);
+    expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'Localizable', 'strings', thirdPathName);
+    expect(fileRepository.saveData).toHaveBeenCalledTimes(3);
   });
 });

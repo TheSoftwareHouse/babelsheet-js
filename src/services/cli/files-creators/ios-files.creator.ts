@@ -55,7 +55,7 @@ export default class IosFilesCreator implements IFilesCreator {
 
   private generateBaseTranslations(dataToSave: { lang: string; content: string }[], path: string, baseLang: string) {
     const baseTranslations: any = dataToSave.find(
-      (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) != -1
+      (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1
     );
 
     if (baseTranslations) {

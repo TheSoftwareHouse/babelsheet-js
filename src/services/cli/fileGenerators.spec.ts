@@ -37,12 +37,13 @@ describe('fileGenerators', async () => {
       language: 'test-lang',
       merge: false,
       filename: 'test-filename',
+      default: 'en',
     };
     await generateTranslations(container, args);
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
     expect(mockTransformers.transform).toBeCalledWith('fetchSpreadsheetReturn', 'json', args.language, args.merge);
-    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json');
+    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.default);
   });
 
   it('generateEnvConfigFile does run proper env storage', async () => {

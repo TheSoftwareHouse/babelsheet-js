@@ -4,13 +4,14 @@ import * as http from 'http';
 import { IncomingMessage, ServerResponse } from 'http';
 import opn = require('opn');
 import * as querystring from 'querystring';
+import * as ramda from 'ramda';
 import destroyer = require('server-destroy');
 import { ILogger } from 'tsh-node-common';
 import * as url from 'url';
-import TokenStorage from '../token/token';
+import TokenProvider from '../token-provider/token-provider';
 
 export default class GoogleAuth {
-  constructor(private logger: ILogger, private port: number, private tokenStorage: TokenStorage) {}
+  constructor(private logger: ILogger, private port: number, private tokenProvider: TokenProvider) {}
 
   public async getTokens(oAuth2Client: OAuth2Client): Promise<Credentials> {
     return new Promise<Credentials>((resolve, reject) => {
@@ -37,9 +38,13 @@ export default class GoogleAuth {
 
             const tokenResponse = await oAuth2Client.getToken(code);
 
+            if (!tokenResponse.tokens.refresh_token) {
+              throw new Error('Problem with acquiring tokens.');
+            }
+
             this.logger.info('Tokens acquired.');
 
-            resolve(tokenResponse.tokens);
+            resolve(ramda.pick(['access_token', 'refresh_token'], tokenResponse.tokens));
           }
         })
         .listen(this.port, () => {
@@ -50,45 +55,38 @@ export default class GoogleAuth {
     });
   }
 
+  public createOAuthClient(clientId: string, clientSecret: string, redirectUri: string) {
+    return new OAuth2Client(clientId, clientSecret, redirectUri);
+  }
+
   public async getAuthenticatedClient({
     clientId,
     clientSecret,
     redirectUri,
   }: {
-    [key: string]: string | undefined;
+    [key: string]: string;
   }): Promise<OAuth2Client> {
-    const redirect = redirectUri || 'http://localhost:3000/oauth2callback';
+    const oAuth2Client = this.createOAuthClient(clientId, clientSecret, redirectUri);
+    const refreshToken = await this.tokenProvider.getRefreshToken();
 
-    const oAuth2Client = new OAuth2Client(clientId, clientSecret, redirect);
-
-    const token = await this.tokenStorage.getToken();
-
-    if (token && token.access_token) {
+    if (refreshToken) {
       this.logger.info('Using token from storage.');
-      oAuth2Client.setCredentials(token);
+      oAuth2Client.setCredentials({ refresh_token: refreshToken });
 
-      const newToken = await oAuth2Client.getAccessToken();
+      const accessToken = await oAuth2Client.getAccessToken();
 
-      if (token.access_token !== newToken.token) {
-        await this.tokenStorage.setToken({
-          ...token,
-          access_token: newToken.token,
-          expiry_date: new Date().getTime() + 1000 * 60 * 60 * 24,
-        });
-
-        this.logger.info('Storing refreshed access token.');
-        oAuth2Client.setCredentials(await this.tokenStorage.getToken());
-      }
-    } else {
-      const tokens = await this.getTokens(oAuth2Client);
-
-      this.tokenStorage.setToken(tokens);
-
-      this.logger.info('Token is stored.');
-
-      oAuth2Client.setCredentials(tokens);
+      oAuth2Client.setCredentials({
+        refresh_token: refreshToken,
+        access_token: accessToken.token,
+      });
+      return oAuth2Client;
     }
 
+    const tokens = await this.getTokens(oAuth2Client);
+    this.tokenProvider.setRefreshToken(tokens.refresh_token as string);
+    this.logger.info('Token is stored.');
+
+    oAuth2Client.setCredentials(tokens);
     return oAuth2Client;
   }
 }

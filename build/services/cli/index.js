@@ -3,10 +3,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = require("dotenv");
 const yargs = require("yargs");
-const file_repository_types_1 = require("../../infrastructure/repository/file-repository.types");
-const checkAuthParams_1 = require("../../shared/checkAuthParams");
-const formatToExtensions_1 = require("../../shared/formatToExtensions");
 const container_1 = require("./container");
+const fileGenerators_1 = require("./fileGenerators");
 dotenv.config();
 const container = container_1.default();
 process.on('uncaughtException', err => {
@@ -22,6 +20,10 @@ function configureCli() {
         .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
         .command('generate', 'Generate file with translations')
         .required(1, 'generate')
+        .option('config', {
+        describe: 'Generates config file with token for google auth',
+        type: 'string',
+    })
         .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
         .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
         .option('l', {
@@ -46,46 +48,20 @@ function configureCli() {
         .example('$0 generate -f xml -n my-data -p ./result -l en_US', 'Generate my-data.xml with english translations in folder /result')
         .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
-function checkFolderPermissions(path) {
-    const { error } = container.resolve('logger');
-    const canWrite = container.resolve('fileRepository').hasAccess(path, file_repository_types_1.Permission.Write);
-    if (!canWrite) {
-        error(`No access to '${path}'`);
-        process.exit(1);
+const configFileGenerators = {
+    env: (args) => fileGenerators_1.generateEnvConfigFile(container, args),
+    json: async (args) => await fileGenerators_1.generateJsonConfigFile(container, args),
+};
+function getConfigType(config) {
+    if (config !== undefined) {
+        return config.length === 0 ? 'env' : config;
     }
-}
-function getSpreadsheetAuthData(args) {
-    const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
-    const authData = {
-        clientId: args.client_id || CLIENT_ID,
-        clientSecret: args.client_secret || CLIENT_SECRET,
-        spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
-        spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
-        redirectUri: args.redirect_uri || REDIRECT_URI,
-    };
-    checkAuthParams_1.checkAuthParameters(authData);
-    return authData;
+    return null;
 }
 async function main() {
-    const { info } = container.resolve('logger');
     const args = configureCli();
-    info('Checking auth variables...');
-    const spreadsheetAuthData = getSpreadsheetAuthData(args);
-    info('Checking formats...');
-    const extension = formatToExtensions_1.getExtension(args.format);
-    info('Checking folder permissions...');
-    checkFolderPermissions(args.path);
-    info('Fetching spreadsheet...');
-    const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
-    info('Spreadsheet fetched successfully.');
-    info('Formatting spreadsheet...');
-    const dataToSave = await container
-        .resolve('transformers')
-        .transform(spreadsheetData, extension, args.language, args.merge);
-    info('Spreadsheet formatted.');
-    info(`Saving translations...`);
-    container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension);
-    info('File successfully saved.');
+    const configType = getConfigType(args.config);
+    configType ? await configFileGenerators[configType](args) : await fileGenerators_1.generateTranslations(container, args);
     process.exit(0);
 }
 main();

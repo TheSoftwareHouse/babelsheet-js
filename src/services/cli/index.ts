@@ -4,14 +4,8 @@ import * as dotenv from 'dotenv';
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
-import IFileRepository from '../../infrastructure/repository/file-repository.types';
-import { Permission } from '../../infrastructure/repository/file-repository.types';
-import { checkAuthParameters } from '../../shared/checkAuthParams';
-import { getExtension } from '../../shared/formatToExtensions';
-import GoogleSheets from '../../shared/google/sheets';
-import Transformers from '../../shared/transformers/transformers';
 import createContainer from './container';
-import FilesCreators from './files-creators/files-creators';
+import { generateEnvConfigFile, generateJsonConfigFile, generateTranslations } from './fileGenerators';
 
 dotenv.config();
 
@@ -32,6 +26,10 @@ function configureCli(): Arguments {
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
+    .option('config', {
+      describe: 'Generates config file with token for google auth',
+      type: 'string',
+    })
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
     .option('l', {
@@ -60,59 +58,22 @@ function configureCli(): Arguments {
     .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
 }
 
-function checkFolderPermissions(path: string): void {
-  const { error } = container.resolve<ILogger>('logger');
+const configFileGenerators: { [key: string]: any } = {
+  env: (args: Arguments) => generateEnvConfigFile(container, args),
+  json: async (args: Arguments) => await generateJsonConfigFile(container, args),
+};
 
-  const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(path, Permission.Write);
-
-  if (!canWrite) {
-    error(`No access to '${path}'`);
-    process.exit(1);
+function getConfigType(config: string | undefined): string | null {
+  if (config !== undefined) {
+    return config.length === 0 ? 'env' : config;
   }
-}
-
-function getSpreadsheetAuthData(args: Arguments): { [key: string]: string | undefined } {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
-  const authData = {
-    clientId: args.client_id || CLIENT_ID,
-    clientSecret: args.client_secret || CLIENT_SECRET,
-    spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
-    spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME,
-    redirectUri: args.redirect_uri || REDIRECT_URI,
-  };
-
-  checkAuthParameters(authData);
-
-  return authData;
+  return null;
 }
 
 async function main() {
-  const { info } = container.resolve<ILogger>('logger');
-  const args = configureCli();
-
-  info('Checking auth variables...');
-  const spreadsheetAuthData = getSpreadsheetAuthData(args);
-
-  info('Checking formats...');
-  const extension = getExtension(args.format);
-
-  info('Checking folder permissions...');
-  checkFolderPermissions(args.path);
-
-  info('Fetching spreadsheet...');
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
-  info('Spreadsheet fetched successfully.');
-
-  info('Formatting spreadsheet...');
-  const dataToSave = await container
-    .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language, args.merge);
-  info('Spreadsheet formatted.');
-
-  info(`Saving translations...`);
-  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension);
-  info('File successfully saved.');
-
+  const args: Arguments = configureCli();
+  const configType = getConfigType(args.config);
+  configType ? await configFileGenerators[configType](args) : await generateTranslations(container, args);
   process.exit(0);
 }
 

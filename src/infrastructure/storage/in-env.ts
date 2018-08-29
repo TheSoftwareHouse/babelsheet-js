@@ -1,32 +1,50 @@
+import * as ramda from 'ramda';
+import FileRepository from '../repository/file.repository';
 import Storage from './storage';
 
-export default class InEnvStorage implements Storage {
-  private data: any;
+const envFileVars = [
+  'CLIENT_ID',
+  'CLIENT_SECRET',
+  'SPREADSHEET_ID',
+  'SPREADSHEET_NAME',
+  'REFRESH_TOKEN',
+  'REDIRECT_URI',
+  'REDIS_HOST',
+  'REDIS_PORT',
+  'HOST',
+  'PORT',
+  'NODE_ENV',
+  'APP_NAME',
+  'LOGGING_LEVEL',
+  'TRACING_SERVICE_HOST',
+  'TRACING_SERVICE_PORT',
+];
 
-  constructor() {
-    this.data = {};
-  }
+export default class InEnvStorage implements Storage {
+  constructor(private fileRepository: FileRepository) {}
 
   public async set(key: string, value: any) {
-    this.data[key] = value;
-    return Promise.resolve();
+    process.env[key.toUpperCase()] = JSON.stringify(value);
+
+    this.updateEnvsInFile();
   }
 
   public async get(key: string) {
-    if (this.data[key]) {
-      return Promise.resolve(this.tryParse(this.data[key]));
-    }
-
-    return Promise.resolve(this.tryParse(process.env[key]));
+    return this.tryParse(process.env[key.toUpperCase()]);
   }
 
   public async has(key: string) {
-    return Promise.resolve(Boolean(await this.get(key)));
+    return Boolean(await this.get(key.toUpperCase()));
   }
 
-  public async clear() {
-    this.data = {};
-    return Promise.resolve();
+  // tslint:disable-next-line
+  public async clear() {}
+
+  private updateEnvsInFile() {
+    const envsForFile = ramda.pick(envFileVars, process.env);
+    const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
+
+    this.fileRepository.saveData(result, '', 'env');
   }
 
   private tryParse(value: any) {

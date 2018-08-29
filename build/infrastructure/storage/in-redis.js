@@ -10,7 +10,7 @@ class InRedisStorage {
         return util.promisify(this.client.set).bind(this.client)(key, JSON.stringify(value));
     }
     async get(key) {
-        return Promise.resolve(JSON.parse(await util.promisify(this.client.get).bind(this.client)(key)));
+        return JSON.parse(await util.promisify(this.client.get).bind(this.client)(key));
     }
     async has(key) {
         return util.promisify(this.client.exists).bind(this.client)(key);

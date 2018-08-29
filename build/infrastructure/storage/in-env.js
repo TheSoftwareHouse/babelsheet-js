@@ -1,25 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ramda = require("ramda");
+const envFileVars = [
+    'CLIENT_ID',
+    'CLIENT_SECRET',
+    'SPREADSHEET_ID',
+    'SPREADSHEET_NAME',
+    'REFRESH_TOKEN',
+    'REDIRECT_URI',
+    'REDIS_HOST',
+    'REDIS_PORT',
+    'HOST',
+    'PORT',
+    'NODE_ENV',
+    'APP_NAME',
+    'LOGGING_LEVEL',
+    'TRACING_SERVICE_HOST',
+    'TRACING_SERVICE_PORT',
+];
 class InEnvStorage {
-    constructor() {
-        this.data = {};
+    constructor(fileRepository) {
+        this.fileRepository = fileRepository;
     }
     async set(key, value) {
-        this.data[key] = value;
-        return Promise.resolve();
+        process.env[key.toUpperCase()] = JSON.stringify(value);
+        this.updateEnvsInFile();
     }
     async get(key) {
-        if (this.data[key]) {
-            return Promise.resolve(this.tryParse(this.data[key]));
-        }
-        return Promise.resolve(this.tryParse(process.env[key]));
+        return this.tryParse(process.env[key.toUpperCase()]);
     }
     async has(key) {
-        return Promise.resolve(Boolean(await this.get(key)));
+        return Boolean(await this.get(key.toUpperCase()));
     }
-    async clear() {
-        this.data = {};
-        return Promise.resolve();
+    // tslint:disable-next-line
+    async clear() { }
+    updateEnvsInFile() {
+        const envsForFile = ramda.pick(envFileVars, process.env);
+        const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
+        this.fileRepository.saveData(result, '', 'env');
     }
     tryParse(value) {
         try {

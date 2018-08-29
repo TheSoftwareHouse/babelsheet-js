@@ -5,9 +5,7 @@ import GoogleAuth from './auth';
 export default class GoogleSheets {
   constructor(private googleAuth: GoogleAuth) {}
 
-  public async fetchSpreadsheet(credentials: {
-    [key: string]: string | undefined;
-  }): Promise<{ [key: string]: string[] }> {
+  public async fetchSpreadsheet(credentials: { [key: string]: string }): Promise<{ [key: string]: string[] }> {
     const oAuth2Client = await this.googleAuth.getAuthenticatedClient(credentials);
     const sheets = google.sheets('v4');
 

@@ -23,18 +23,18 @@ process.on('unhandledRejection', err => {
   process.exit(1);
 });
 
-function getAuthDataFromEnv(): { [key: string]: string | undefined } {
+function getAuthDataFromEnv(): { [key: string]: string } {
   const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
   const authData = {
     clientId: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
     spreadsheetId: SPREADSHEET_ID,
-    spreadsheetName: SPREADSHEET_NAME,
-    redirectUri: REDIRECT_URI,
+    spreadsheetName: SPREADSHEET_NAME || 'Sheet1',
+    redirectUri: REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 
   checkAuthParameters(authData);
-  return authData;
+  return authData as { [key: string]: string };
 }
 
 async function main() {

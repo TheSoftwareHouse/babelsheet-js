@@ -37,6 +37,7 @@ export default class InEnvStorage implements Storage {
     return Boolean(await this.get(key.toUpperCase()));
   }
 
+  // tslint:disable-next-line
   public async clear() {}
 
   private updateEnvsInFile() {

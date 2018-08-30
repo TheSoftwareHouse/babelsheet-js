@@ -23,6 +23,7 @@ const args = {
   language: 'test-lang',
   merge: false,
   filename: 'test-filename',
+  base: 'pl',
 };
 
 describe('fileGenerators', async () => {
@@ -50,7 +51,7 @@ describe('fileGenerators', async () => {
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
     expect(mockTransformers.transform).toBeCalledWith('fetchSpreadsheetReturn', 'json', args.language, args.merge);
-    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.default);
+    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
   });
 
   it('generateEnvConfigFile does run proper env storage', async () => {

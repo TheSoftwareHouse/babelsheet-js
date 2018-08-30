@@ -10,23 +10,26 @@ export default class AndroidFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: object[] | string, path: string, filename: string): void {
+  public save(
+    dataToSave: Array<{ lang: string; content: string }> | string,
+    path: string,
+    filename: string,
+    baseLang: string
+  ): void {
     if (typeof dataToSave === 'string') {
       this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
       return;
     }
 
-    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
+    const dataWithoutTags = dataToSave.filter((translation: any) => translation.lang !== 'tags');
     dataWithoutTags.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/values-${langWithLocale}`;
 
-      if (!fs.existsSync(folderName)) {
-        fs.mkdirSync(folderName);
-      }
-
-      this.fileRepository.saveData(data.content, this.defaultFileName, this.supportedExtension, folderName);
+      this.createFolderAndSave(data.content, folderName);
     });
+
+    this.generateBaseTranslations(dataToSave, path, baseLang);
   }
 
   private transformLangWithRegion(languageCode: string): string {
@@ -40,5 +43,29 @@ export default class AndroidFilesCreator implements IFilesCreator {
     }
 
     return languageCode;
+  }
+
+  private createFolderAndSave(data: string, folderName: string) {
+    if (!fs.existsSync(folderName)) {
+      fs.mkdirSync(folderName);
+    }
+
+    this.fileRepository.saveData(data, this.defaultFileName, this.supportedExtension, folderName);
+  }
+
+  private generateBaseTranslations(
+    dataToSave: Array<{ lang: string; content: string }>,
+    path: string,
+    baseLang: string
+  ) {
+    const baseTranslations: any = dataToSave.find(
+      (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1
+    );
+
+    if (baseTranslations) {
+      const folderName = `${path}/values`;
+
+      this.createFolderAndSave(baseTranslations.content, folderName);
+    }
   }
 }

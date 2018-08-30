@@ -4,12 +4,12 @@ class FilesCreators {
     constructor(filesCreators) {
         this.filesCreators = filesCreators;
     }
-    save(dataToSave, path, filename, extension) {
+    save(dataToSave, path, filename, extension, baseLang) {
         const fileCreator = this.filesCreators.find(creator => creator.supports(extension));
         if (!fileCreator) {
             throw new Error(`No support for xyz data type`);
         }
-        return fileCreator.save(dataToSave, path, filename);
+        return fileCreator.save(dataToSave, path, filename, baseLang);
     }
 }
 exports.default = FilesCreators;

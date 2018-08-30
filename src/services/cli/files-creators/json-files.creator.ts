@@ -8,7 +8,7 @@ export default class JsonFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: object[] | string, path: string, filename: string): void {
+  public save(dataToSave: Array<{ lang: string; content: string }> | string, path: string, filename: string): void {
     if (typeof dataToSave === 'string') {
       this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
       return;

@@ -3,8 +3,11 @@ import { generateTranslations, generateEnvConfigFile, generateJsonConfigFile } f
 import createContainer from './container';
 import { ITransformers } from '../../shared/transformers/transformers.types';
 import { getGoogleAuthMock } from '../../tests/googleAuthMock';
+import { getLoggerMock } from '../../tests/loggerMock';
 
 export const getExtension = jest.fn();
+
+const loggerMock = getLoggerMock();
 
 const args = {
   _: ['test', 'test2'],
@@ -18,6 +21,7 @@ const args = {
   language: 'test-lang',
   merge: false,
   filename: 'test-filename',
+  base: 'pl',
 };
 
 describe('fileGenerators', async () => {
@@ -35,6 +39,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       googleSheets: awilix.asValue(mockGoogleSheets),
       transformers: awilix.asValue(mockTransformers),
       filesCreators: awilix.asValue(mockFileCreators),
@@ -44,7 +49,7 @@ describe('fileGenerators', async () => {
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
     expect(mockTransformers.transform).toBeCalledWith('fetchSpreadsheetReturn', 'json', args.language, args.merge);
-    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json');
+    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
   });
 
   it('generateEnvConfigFile does run proper env storage', async () => {
@@ -53,6 +58,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       inEnvStorage: awilix.asValue(mockInEnvStorage),
       googleAuth: awilix.asValue(getGoogleAuthMock()),
     });
@@ -68,6 +74,7 @@ describe('fileGenerators', async () => {
     };
 
     const container = createContainer().register({
+      logger: awilix.asValue(loggerMock),
       inFileStorage: awilix.asValue(mockInFileStorage),
       googleAuth: awilix.asValue(getGoogleAuthMock()),
     });

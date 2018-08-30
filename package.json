@@ -13,7 +13,10 @@
     "lint-fix": "tslint -c tslint.json 'src/**/*.ts' --fix",
     "nsp": "nsp check",
     "start-producer": "node build/services/producer/index.js",
-    "start-api": "node build/services/api/index.js"
+    "start-api": "node build/services/api/index.js",
+    "dev-install": "pm2 install typescript",
+    "dev-start-producer": "TS_NODE_FILES=true pm2 start --name translations-producer src/services/producer/index.ts",
+    "dev-start-api": "TS_NODE_FILES=true pm2 start --name translations-api src/services/api/index.ts"
   },
   "bin": {
     "babelsheet": "./build/services/cli/index.js"

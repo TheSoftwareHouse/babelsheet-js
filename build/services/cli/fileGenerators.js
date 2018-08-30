@@ -40,7 +40,7 @@ async function generateTranslations(container, args) {
         .transform(spreadsheetData, extension, args.language, args.merge);
     info('Spreadsheet formatted.');
     info(`Saving translations...`);
-    container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension);
+    container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);
     info('File successfully saved.');
 }
 exports.generateTranslations = generateTranslations;

@@ -5,11 +5,9 @@ import MaskedTranslations from '../../../shared/translations/masked-translations
 import TranslationsStorage from '../../../shared/translations/translations';
 import createContainer from '../container';
 import Server from './server';
+import { getLoggerMock } from '../../../tests/loggerMock';
 
-const loggerMock = {
-  info: () => null,
-  error: () => null,
-};
+const loggerMock = getLoggerMock();
 
 const container = createContainer().register({
   logger: awilix.asValue(loggerMock),

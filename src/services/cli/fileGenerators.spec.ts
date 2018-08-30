@@ -3,13 +3,11 @@ import { generateTranslations, generateEnvConfigFile, generateJsonConfigFile } f
 import createContainer from './container';
 import { ITransformers } from '../../shared/transformers/transformers.types';
 import { getGoogleAuthMock } from '../../tests/googleAuthMock';
+import { getLoggerMock } from '../../tests/loggerMock';
 
 export const getExtension = jest.fn();
 
-const loggerMock = {
-  info: () => null,
-  error: () => null,
-};
+const loggerMock = getLoggerMock();
 
 const args = {
   _: ['test', 'test2'],

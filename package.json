@@ -2,6 +2,7 @@
   "name": "babelsheet",
   "version": "1.0.1",
   "description": "",
+  "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",
   "scripts": {
     "test": "jest --coverage",

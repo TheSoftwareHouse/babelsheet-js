@@ -1,0 +1,5 @@
+site_name: Babelsheet
+
+theme: 'material'
+docs_dir: docs-src
+

@@ -1,17 +1,18 @@
-# Welcome to MkDocs
+## About Babelsheet
 
-For full documentation visit [mkdocs.org](https://mkdocs.org).
+Babelsheet node service allows you to translate all of the UI / app content to specific language. As a user interface we use google spreadsheets and translations are synchronised every 5 minutes. This service contains a scheduler to synchronise translations, a web server allowing you to fetch them, and a CLI tools which can generate translations in various formats. What's more there is a cache layer for better performance.
 
-## Commands
+No more dealing with complicated paid translation services or problems with multiple users working at the same time!
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs help` - Print this help message.
 
-## Project layout
+## To run CLI
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+1. Create [configuration file](/../configuration#configuration-file).
+2. `npm i -g babelsheet`
+3. `babelsheet generate`
+
+## To run as API
+
+1. Create [configuration file](/../configuration#configuration-file).
+2. Create [docker-compose.yml](/../docker#docker-compose).
+3. `docker-compose up`

@@ -3,3 +3,10 @@ site_name: Babelsheet
 theme: 'material'
 docs_dir: docs-src
 
+pages:
+  - Getting started: index.md
+  - Configuration: configuration.md
+  - Services: services.md
+  - Docker: docker.md
+  - How it works: how-it-works.md
+  

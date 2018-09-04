@@ -28,7 +28,7 @@ Feel free to add new providers.
 
 
 ## Change translations storage from redis to file
-By default, translations as saved in redis storage. In order to change translations storage to file.
+Service is implemented to use redis as cache storage but can use another database or even in memory cache as well. There are various implementations in `src/infrastracture/storage`. For fast production use it is recommended to use redis, but for local development and debugging in memory implementation can be used. There are some other implementations available now, like `in file`. In order to change translations storage to file:
 
 1. Open `/src/services/producer/container.ts` and change:
 
@@ -48,3 +48,18 @@ By default, translations as saved in redis storage. In order to change translati
     ```
 
 Producer will now save to `data.json` file, and API will read from that file as well.
+
+## Scripts
+
+```
+npm run test - runs tests and generates coverage report
+npm run test-watch - runs tests continuously and watches for changes
+npm run format - formats code using prettier
+npm run type-check - runs typescript checks
+npm run build - compiles typescript
+npm run lint - runs typescript linter
+npm run lint-fix - runs typescript linter and fixes some common mistakes
+npm run nsp - runs security check
+npm run start-producer - runs redis producer
+npm run start-api - runs api
+```

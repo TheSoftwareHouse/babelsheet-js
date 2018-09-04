@@ -2,6 +2,7 @@ site_name: Babelsheet
 
 theme: 'material'
 docs_dir: docs-src
+site_dir: docs
 
 pages:
   - Getting started: index.md
@@ -9,4 +10,13 @@ pages:
   - Services: services.md
   - Docker: docker.md
   - How it works: how-it-works.md
-  
+  - Development: development.md
+
+extra:
+  social:
+    - type: 'facebook'
+      link: 'https://www.facebook.com/TheSoftwareHousePL/'
+    - type: 'twitter'
+      link: 'https://twitter.com/realtsh'
+    - type: 'circle-o-notch'
+      link: 'https://clutch.co/profile/software-house'

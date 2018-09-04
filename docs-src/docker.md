@@ -25,22 +25,22 @@ services:
       - "6379:6379"
 ```
 
-Next, make sure you have proper [.env file](/../configuration#configuration-file) in the same directory, then run `docker-compose up`, and API should be working now.
+Next, make sure you have proper [.env](/../configuration#configuration-file) file in the same directory, then run `docker-compose up`, and API should be working now.
 
 ## Redis
   To run redis as a docker container type
   `docker run --name redis -p 6379:6379 redis`
 
-  Or run it from [docker-compose.yml file](#docker-compose) by following command:
+  Or run it from [docker-compose.yml](#docker-compose) file by following command:
 
   `docker-compose up redis`
 
 ## Producer
-  To run producer from [docker-compose.yml file](#docker-compose) run following command:
+  To run producer from [docker-compose.yml](#docker-compose) file run following command:
 
   `docker-compose up babelsheet-producer`
 
 ## API
-  To run API from [docker-compose.yml file](#docker-compose) run following command:
+  To run API from [docker-compose.yml](#docker-compose) file run following command:
 
   `docker-compose up babelsheet-api`

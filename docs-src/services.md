@@ -19,6 +19,10 @@ To generate translations type:
 
 `babelsheet generate [options]`
 
+Remember to [create .env file](/../configuration#configuration-file) before generating translations.
+
+<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and save will save it in right storage - you can change read and write storages, check it [here](/../configuration#set-refresh-token-read-providers).</small>
+
 **Options**
 <details>
   <summary>--format</summary>
@@ -62,7 +66,7 @@ To generate translations type:
     (default: <code>translations</code>)
   </p>
   <p>
-    Filename of final translati3on file.
+    Filename of final translation file.
   </p>
 </details>
 <details>
@@ -123,7 +127,6 @@ To generate translations type:
 
 `babelsheet generate --format ios --path ./translations` - generates translations in iOS format in translations folder.
 
-
 ## Producer
 Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer is not able to work properly. In such case it runs a command responsible for obtaining those keys.
 
@@ -137,8 +140,17 @@ If you want to run producer locally, first remember about [setting environment v
 
 Producer should be working now.
 
+You can change `REFRESH_TOKEN` read and write providers, check it [here](/../development#set-refresh-token-read-providers).
+
+You can also change translations storage from redis to file, check it [here](/../development#change-translations-storage-from-redis-to-file).
+
 ## API
-API is a web server built on top of `express.js` which serves translations. There is one endpoint available to obtain translations, which is `/translations`, but they can be also filtered by using query param filter, e.g. calling `/translations?filters[]=en_US.CORE` will result in getting translations for `en_US` locale and section `CORE`. Other possibility is to use tag as a filter, e.g. `/translations?filters[]=en_US.tag1`. Translations are served in json format and the structure is preserved regardless of filters being used.
+API is a web server built on top of `express.js` which serves translations. There is one endpoint available to obtain translations, which is `/translations`.
+Translations can be filtered by using:
+
+- `filters[]` -  e.g. calling `/translations?filters[]=en_US.CORE` will result in getting translations for `en_US` locale and section `CORE`. Other possibility is to use tag as a filter, e.g. `/translations?filters[]=en_US.tag1`.
+
+- `format` - translations can be served in json/android/ios formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
 
 You can run API in docker container - see [Docker](/../docker#).
 
@@ -149,3 +161,10 @@ If you want to run API locally, first remember about [setting environment variab
 2. `npm run dev-start-api`
 
 API should be working now.
+
+### Usage
+```
+curl -X GET -g 'http://localhost:3000/translations'
+curl -X GET -g 'http://localhost:3000/translations?filters[]=en_US.CORE'
+curl -X GET -g 'http://localhost:3000/translations?filters[]=en_US.CORE.LABELS&format=android'
+```

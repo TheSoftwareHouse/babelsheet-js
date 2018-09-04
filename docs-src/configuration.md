@@ -1,4 +1,4 @@
-In order to start using babelsheet, you have to configure your .env file first.
+In order to start using babelsheet, you have to configure your `.env` file first.
 
 ## Configuration file
 
@@ -39,7 +39,7 @@ TRACING_SERVICE_PORT=6832
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>
-    Spreadsheet name is the name of the tab in spreadsheet document
+    Spreadsheet name is the name of the tab in spreadsheet document.
     ![Screenshot](img/spreadsheet-name.png)
   </p>
 </details>
@@ -82,21 +82,26 @@ TRACING_SERVICE_PORT=6832
 
 1. To generate refresh token, you have to [configure Google Spreadsheet API](#configuring-google-spreadsheet-api) first.
 2. When `CLIENT_ID` and `CLIENT_SECRET` are stored in `.env` file, you are ready to generate refresh-token.
-3. Run `npm generate --config`.
-  <details>
-    <summary>Config in json file</summary>
-    <p>
-      You can also generate token in `data.json` file, just by passing `json` parameter option `npm generate --config json`.
-    </p>
-  </details>
-  <details>
-    <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
-    <p>
-      You don't have to create .env file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
-      `npm generate --config --client_id <yours-client-id> --client_secret <yours-client-secret>`
-    </p>
-  </details>
+3. Run `babelsheet generate --config`.
+
+
+    <small>If babelsheet is not installed, run `npm i -g babelsheet` to install.</small>
+    <details>
+      <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
+      <p>
+        You don't have to create .env file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
+        `npm generate --config --client_id <yours-client-id> --client_secret <yours-client-secret>`
+      </p>
+    </details>
+    <details>
+      <summary>Config in json file</summary>
+      <p>
+        You can also generate token in `data.json` file, just by passing `json` parameter option `npm generate --config json`.
+      </p>
+    </details>
+
 
 4. Browser window will be opened automatically. Log in into you Google account and then grant your application an access for reading spreadsheets in your account. You should be given a message `Authentication successful! Please return to the console`.
-5. Refresh token is now stored in `.env` file.
+5. Refresh token is now stored in `.env` file. You can change storage type [here](#set-refresh-token-write-provider).
 6. More actions won't be needed because tokens will be refreshed automatically if necessary.
+

@@ -11,7 +11,7 @@ No more dealing with complicated paid translation services or problems with mult
 2. `npm i -g babelsheet`
 3. `babelsheet generate`
 
-## To run as API
+## To run API
 
 1. Create [configuration file](/../configuration#configuration-file).
 2. Create [docker-compose.yml](/../docker#docker-compose).

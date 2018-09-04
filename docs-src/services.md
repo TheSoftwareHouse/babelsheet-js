@@ -11,7 +11,7 @@ To run command line tools, you need to install it first:
 `npm i -g babelsheet`
 
 
-If you want to obtain `REFRESH_TOKEN` then see [Generating refresh token](/../configuration#generating-refresh-token)
+If you want to obtain `REFRESH_TOKEN` then see [generating refresh token](/../configuration#generating-refresh-token) section.
 
 ### Generating translations files
 
@@ -21,7 +21,7 @@ To generate translations type:
 
 Remember to [create .env file](/../configuration#configuration-file) before generating translations.
 
-<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and save will save it in right storage - you can change read and write storages, check it [here](/../configuration#set-refresh-token-read-providers).</small>
+<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](/../development#set-refresh-token-read-providers).</small>
 
 **Options**
 <details>
@@ -33,7 +33,7 @@ Remember to [create .env file](/../configuration#configuration-file) before gene
     (default: <code>json</code>)
   </p>
   <p>
-    Format type (android/ios/json).
+    Format type (_android/ios/json_).
   </p>
 </details>
 <details>
@@ -75,7 +75,7 @@ Remember to [create .env file](/../configuration#configuration-file) before gene
     (default: <code>EN</code>)
   </p>
   <p>
-    Base language for translations, `Base.lproj` folder on iOS format and `values` folder on android format.
+    Base language for translations. `Base.lproj` folder on iOS format and `values` folder on android format.
   </p>
 </details>
 <details>
@@ -87,31 +87,31 @@ Remember to [create .env file](/../configuration#configuration-file) before gene
 <details>
   <summary>--client_id</summary>
   <p>
-    Client id received from Google. Overwrite .env `CLIENT_ID` value.
+    Client id received from Google. Overwrite .env `CLIENT_ID` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--client_secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env `CLIENT_SECRET` value.
+    Client secret received from Google. Overwrite .env `CLIENT_SECRET` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env `SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id)).
+    Spreadsheet ID from spreadsheet URL. Overwrite .env `SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Sheet name. Overwrite .env `SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name)).
+    Sheet name. Overwrite .env `SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env `REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name)).
+    Url to which user should be redirected after receiving refresh token. Overwrite .env `REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
@@ -123,9 +123,9 @@ Remember to [create .env file](/../configuration#configuration-file) before gene
 
 **Examples**
 
-`babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder` - generates english translations in my-own-en-translations.json file inside ./my-folder folder.
+`babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder` - generates english translations in `my-own-en-translations.json` file inside `./my-folder` folder.
 
-`babelsheet generate --format ios --path ./translations` - generates translations in iOS format in translations folder.
+`babelsheet generate --format ios --path ./translations` - generates translations in iOS format in `./translations` folder.
 
 ## Producer
 Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer is not able to work properly. In such case it runs a command responsible for obtaining those keys.

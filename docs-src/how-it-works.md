@@ -1,5 +1,4 @@
-For BabelSheet to know how to handle your translations, You need to stick with very simple spreadsheet markup.
-
+For BabelSheet to know how to handle your translations, you need to stick with very simple spreadsheet markup.
 
 **Metadata**:
 
@@ -10,14 +9,14 @@ For BabelSheet to know how to handle your translations, You need to stick with v
 
 Example:
 
-| ###        | >>>  | >>>    | >>>  | en        | pl  |
-|------------|------|--------|------|-----------|-----|
-|            | CORE |        |      |           |     |
-|            |      | LABELS |      |           |     |
-| tag1, tag2 |      |        | YES  | Yes       | Tak |
-| tag1       |      |        | NO   | No        | Nie |
-|            |      | COMMON |      |           |     |
-|            |      |        | SMTH | Something | Coś |
+| ###        | >>>   | >>>    | >>>   | en        | pl  |
+|------------|-------|--------|-------|-----------|-----|
+|            | CORE  |        |       |           |     |
+|            |       | LABELS |       |           |     |
+| tag1, tag2 |       |        | YES   | Yes       | Tak |
+| tag1       |       |        | NO    | No        | Nie |
+|            | FRONT |        |       |           |     |
+|            |       | HEADER |       |           |     |
+|            |       |        | TITLE | Something | Coś |
 
 Nothing is more self-explanatory then [a working example](https://docs.google.com/spreadsheets/d/1AUAKxhuZyjYl4NdpQCLBcSZe2snKAOjcXArlHRIn_hM/edit?usp=sharing).
-

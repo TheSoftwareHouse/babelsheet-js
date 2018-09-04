@@ -28,7 +28,7 @@ Feel free to add new providers.
 
 
 ## Change translations storage from redis to file
-Service is implemented to use redis as cache storage but can use another database or even in memory cache as well. There are various implementations in `src/infrastracture/storage`. For fast production use it is recommended to use redis, but for local development and debugging in memory implementation can be used. There are some other implementations available now, like `in file`. In order to change translations storage to file:
+Service is implemented to use redis as cache storage but can use another database or even in memory cache as well. There are various implementations in `src/infrastracture/storage`. For fast production use it is recommended to use redis, but for local development and debugging in memory implementation can be used. There are some other implementations available now, like `inFileStorage`. In order to change translations storage in file:
 
 1. Open `/src/services/producer/container.ts` and change:
 

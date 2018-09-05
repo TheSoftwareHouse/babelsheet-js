@@ -17,8 +17,6 @@ PORT=3000
 NODE_ENV=dev
 APP_NAME=babelsheet-node
 LOGGING_LEVEL=debug
-TRACING_SERVICE_HOST=localhost
-TRACING_SERVICE_PORT=6832
 ```
 
 ### Configuration options
@@ -61,10 +59,6 @@ TRACING_SERVICE_PORT=6832
 `APP_NAME` - name which indentify app
 
 `LOGGING_LEVEL` - Log level debug/error/info
-
-`TRACING_SERVICE_HOST` - Server open tracing host / jaeger server
-
-`TRACING_SERVICE_PORT` - Server open tracing port / jaeger server
 
 <small>* - required</small>
 

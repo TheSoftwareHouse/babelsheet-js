@@ -128,7 +128,7 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
 `babelsheet generate --format ios --path ./translations` - generates translations in iOS format in `./translations` folder.
 
 ## Producer
-Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer is not able to work properly. In such case it runs a command responsible for obtaining those keys.
+Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.
 
 You can run Producer in docker container - see [Docker](docker.md).
 

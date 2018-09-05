@@ -45,18 +45,18 @@ function configureCli(): Arguments {
     })
     .option('base', { default: 'en', describe: 'Base language for translations', type: 'string' })
     .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
-    .option('client_id', { describe: 'Client ID', type: 'string' })
-    .option('client_secret', { describe: 'Client secret', type: 'string' })
-    .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
-    .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
-    .option('redirect_uri', { describe: 'The URI to redirect after completing the auth request' })
+    .option('client-id', { describe: 'Client ID', type: 'string' })
+    .option('client-secret', { describe: 'Client secret', type: 'string' })
+    .option('spreadsheet-id', { describe: 'Spreadsheet ID', type: 'string' })
+    .option('spreadsheet-name', { describe: 'Spreadsheet name', type: 'string' })
+    .option('redirect-uri', { describe: 'The URI to redirect after completing the auth request' })
     .help('?')
     .alias('?', 'help')
     .example(
-      '$0 generate -f xml -n my-data -p ./result -l en_US',
+      '$0 generate -f xml -n my-data -p ./result -l en_US --merge',
       'Generate my-data.xml with english translations in folder /result'
     )
-    .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
+    .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format').argv;
 }
 
 const configFileGenerators: { [key: string]: any } = {

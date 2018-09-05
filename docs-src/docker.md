@@ -25,7 +25,7 @@ services:
       - "6379:6379"
 ```
 
-Next, make sure you have proper [.env](/../configuration#configuration-file) file in the same directory, then run `docker-compose up`, and API should be working now.
+Next, make sure you have proper [.env](configuration.md#configuration-file) file in the same directory, then run `docker-compose up`, and API should be working now.
 
 ## Redis
   To run redis as a docker container type

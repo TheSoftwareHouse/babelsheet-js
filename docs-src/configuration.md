@@ -102,6 +102,6 @@ TRACING_SERVICE_PORT=6832
 
 
 4. Browser window will be opened automatically. Log in into you Google account and then grant your application an access for reading spreadsheets in your account. You should be given a message `Authentication successful! Please return to the console`.
-5. Refresh token is now stored in `.env` file. You can change storage type [here](/development#set-refresh-token-write-provider).
+5. Refresh token is now stored in `.env` file. You can change storage type [here](development.md#set-refresh-token-write-provider).
 6. More actions won't be needed because tokens will be refreshed automatically if necessary.
 

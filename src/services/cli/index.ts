@@ -31,7 +31,7 @@ function configureCli(): Arguments {
       type: 'string',
     })
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
-    .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
+    .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
     .option('l', {
       alias: 'language',
       describe: 'Language code for generating translations file only in given language',

@@ -85,16 +85,17 @@ LOGGING_LEVEL=debug
       <p>Click _Enable_.</p>
       ![Screenshot](img/google-config/click-enable.png)
     </details>
-3. Go to section _Create credendials_ and fill in the form with proper product name, e-mail address, then click _Done_.
+3. Go to section _Create credendials_ and fill in the form with proper product name, e-mail address, redirect uri as `http://localhost:3000/oauth2callback` then click _Done_.
     <details>
       <summary>Creating credentials in details</summary>
       <p>From previous view, select _Create credentials_.</p>
       ![Screenshot](img/google-config/create-credentials.png)
-      <p>Select proper credentials and click _Done_.</p>
+      <p>Fill the form and click _Done_.</p>
+      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `REDIRECT_URI` in [.env file](#configuration-file).</p>
       ![Screenshot](img/google-config/add-credentials.png)
     </details>
 4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env` file](#configuration-file).
-5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name) and you are ready to generate translations.
+5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name), then you will be ready to generate translations.
 
 ## Generating refresh token
 

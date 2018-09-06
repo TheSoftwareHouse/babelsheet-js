@@ -65,12 +65,36 @@ LOGGING_LEVEL=debug
 
 ## Configuring Google Spreadsheet API
 
-1. Create account in Google Cloud Platform
-2. Create a project in Google Cloud Platform and enable Google Sheets API usage (section API & Services dashboard)
-3. Go to section API & Services Credentials, then OAuth consent screen and fill in the form with proper product name, e-mail address.
-4. In API & Services Credentials add new credentials and choose OAuth client, then choose Other as a type and provide its name.
-5. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in `.env` file.
-
+1. Create account in Google Cloud Platform.
+    <details>
+      <summary>Creating account in details</summary>
+      <p>Go to [https://cloud.google.com/](https://cloud.google.com/). Click _Try free_, then fill the form, next click _Agree and continue_ and _Submit_.</p>
+      ![Screenshot](img/google-config/create-account.png)
+    </details>
+2. Create a project in Google Cloud Platform and enable Google Sheets API usage (section API & Services dashboard).
+    <details>
+      <summary>Creating project with enable API in details</summary>
+      <p>Go to [https://console.cloud.google.com](https://console.cloud.google.com). Click _Select a project_, then _NEW PROJECT_, write name of the project and click _CREATE_.
+      ![Screenshot](img/google-config/create-project.png)
+      <p>Choose _API_.</p>
+      ![Screenshot](img/google-config/choose-api.png)
+      <p>Click _ENABLE APIS AND SERVICES_.</p>
+      ![Screenshot](img/google-config/enable-api.png)
+      <p>Find _Google sheets_.</p>
+      ![Screenshot](img/google-config/find-google-sheets.png)
+      <p>Click _Enable_.</p>
+      ![Screenshot](img/google-config/click-enable.png)
+    </details>
+3. Go to section _Create credendials_ and fill in the form with proper product name, e-mail address, then click _Done_.
+    <details>
+      <summary>Creating credentials in details</summary>
+      <p>From previous view, select _Create credentials_.</p>
+      ![Screenshot](img/google-config/create-credentials.png)
+      <p>Select proper credentials and click _Done_.</p>
+      ![Screenshot](img/google-config/add-credentials.png)
+    </details>
+4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env` file](#configuration-file).
+5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name) and you are ready to generate translations.
 
 ## Generating refresh token
 

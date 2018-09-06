@@ -4,10 +4,10 @@ import * as dotenv from 'dotenv';
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
-import createContainer from './container';
-import { generateTranslations, generateConfigFile } from './fileGenerators';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
+import createContainer from './container';
+import { generateConfigFile, generateTranslations } from './fileGenerators';
 
 dotenv.config();
 

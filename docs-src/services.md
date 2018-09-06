@@ -11,7 +11,7 @@ To run command line tools, you need to install it first:
 `npm i -g babelsheet`
 
 
-If you want to obtain `REFRESH_TOKEN` then see [generating refresh token](/../configuration#generating-refresh-token) section.
+If you want to obtain `REFRESH_TOKEN` then see [generating refresh token](configuration.md#generating-refresh-token) section.
 
 ### Generating translations files
 
@@ -19,9 +19,9 @@ To generate translations type:
 
 `babelsheet generate [options]`
 
-Remember to [create .env file](/../configuration#configuration-file) before generating translations.
+Remember to [create .env file](configuration.md#configuration-file) before generating translations.
 
-<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](/../development#set-refresh-token-read-providers).</small>
+<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](development.md#set-refresh-token-read-providers).</small>
 
 **Options**
 <details>
@@ -128,11 +128,11 @@ Remember to [create .env file](/../configuration#configuration-file) before gene
 `babelsheet generate --format ios --path ./translations` - generates translations in iOS format in `./translations` folder.
 
 ## Producer
-Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer is not able to work properly. In such case it runs a command responsible for obtaining those keys.
+Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.
 
-You can run Producer in docker container - see [Docker](/../docker).
+You can run Producer in docker container - see [Docker](docker.md).
 
-If you want to run producer locally, first remember about [setting environment variables](/../configuration#configuration-file) and [running redis](/../docker#redis), next type:
+If you want to run producer locally, first remember about [setting environment variables](configuration.md#configuration-file) and [running redis](docker.md#redis), next type:
 
 1. `npm run dev-install`
 
@@ -140,9 +140,9 @@ If you want to run producer locally, first remember about [setting environment v
 
 Producer should be working now.
 
-You can change `REFRESH_TOKEN` read and write providers, check it [here](/../development#set-refresh-token-read-providers).
+You can change `REFRESH_TOKEN` read and write providers, check it [here](development.md#set-refresh-token-read-providers).
 
-You can also change translations storage from redis to file, check it [here](/../development#change-translations-storage-from-redis-to-file).
+You can also change translations storage from redis to file, check it [here](development.md#change-translations-storage-from-redis-to-file).
 
 ## API
 API is a web server built on top of `express.js` which serves translations. There is one endpoint available to obtain translations, which is `/translations`.
@@ -152,9 +152,9 @@ Translations can be filtered by using:
 
 - `format` - translations can be served in json/android/ios formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
 
-You can run API in docker container - see [Docker](/../docker#).
+You can run API in docker container - see [Docker](docker.md).
 
-If you want to run API locally, first remember about [setting environment variables](/../configuration#configuration-file) and [running redis](/../docker#redis), next type:
+If you want to run API locally, first remember about [setting environment variables](configuration.md#configuration-file) and [running redis](docker.md#redis), next type:
 
 1. `npm run dev-install`
 

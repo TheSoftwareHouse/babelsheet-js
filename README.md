@@ -11,14 +11,14 @@ No more dealing with complicated paid translation services or problems with mult
 ## Setup
 
 ### CLI
-1. Create `.env` from `.env.dist` file with required environment variables ([more info here](https://github.com/TheSoftwareHouse/babelsheet-js/blob/master/docs/configuration#configuration-file))
+1. Create `.env` from `.env.dist` file with required environment variables ([more info here](https://thesoftwarehouse.github.io/babelsheet-js/configuration#configuration-file))
 2. Run `npm i -g babelsheet`
-3. 'babelsheet generate' ([more info here](https://github.com/TheSoftwareHouse/babelsheet-js/blob/master/docs/services#cli))
+3. 'babelsheet generate' ([more info here](https://thesoftwarehouse.github.io/babelsheet-js/services#cli))
 
 
 ### Docker
-1. Create `.env` from `.env.dist` file with required environment variables ([more info here](https://github.com/TheSoftwareHouse/babelsheet-js/blob/master/docs/onfiguration#configuration-file))
-2. Create `docker-compose.yml` from `docker-compose.yml.dist` ([more info here](https://github.com/TheSoftwareHouse/babelsheet-js/blob/master/docs/configuration#docker))
+1. Create `.env` from `.env.dist` file with required environment variables ([more info here](https://thesoftwarehouse.github.io/babelsheet-js/configuration#configuration-file))
+2. Create `docker-compose.yml` from `docker-compose.yml.dist` ([more info here](https://thesoftwarehouse.github.io/babelsheet-js/docker#docker-compose))
 3. `docker-compose up`
 
 

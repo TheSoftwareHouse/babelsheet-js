@@ -17,8 +17,6 @@ PORT=3000
 NODE_ENV=dev
 APP_NAME=babelsheet-node
 LOGGING_LEVEL=debug
-TRACING_SERVICE_HOST=localhost
-TRACING_SERVICE_PORT=6832
 ```
 
 ### Configuration options
@@ -62,21 +60,42 @@ TRACING_SERVICE_PORT=6832
 
 `LOGGING_LEVEL` - Log level debug/error/info
 
-`TRACING_SERVICE_HOST` - Server open tracing host / jaeger server
-
-`TRACING_SERVICE_PORT` - Server open tracing port / jaeger server
-
 <small>* - required</small>
 
 
 ## Configuring Google Spreadsheet API
 
-1. Create account in Google Cloud Platform
-2. Create a project in Google Cloud Platform and enable Google Sheets API usage (section API & Services dashboard)
-3. Go to section API & Services Credentials, then OAuth consent screen and fill in the form with proper product name, e-mail address.
-4. In API & Services Credentials add new credentials and choose OAuth client, then choose Other as a type and provide its name.
-5. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in `.env` file.
-
+1. Create account in Google Cloud Platform.
+    <details>
+      <summary>Creating account in details</summary>
+      <p>Go to [https://cloud.google.com/](https://cloud.google.com/). Click _Try free_, then fill the form, next click _Agree and continue_ and _Submit_.</p>
+      ![Screenshot](img/google-config/create-account.png)
+    </details>
+2. Create a project in Google Cloud Platform and enable Google Sheets API usage (section API & Services dashboard).
+    <details>
+      <summary>Creating project with enable API in details</summary>
+      <p>Go to [https://console.cloud.google.com](https://console.cloud.google.com). Click _Select a project_, then _NEW PROJECT_, write name of the project and click _CREATE_.
+      ![Screenshot](img/google-config/create-project.png)
+      <p>Choose _API_.</p>
+      ![Screenshot](img/google-config/choose-api.png)
+      <p>Click _ENABLE APIS AND SERVICES_.</p>
+      ![Screenshot](img/google-config/enable-api.png)
+      <p>Find _Google sheets_.</p>
+      ![Screenshot](img/google-config/find-google-sheets.png)
+      <p>Click _Enable_.</p>
+      ![Screenshot](img/google-config/click-enable.png)
+    </details>
+3. Go to section _Create credendials_ and fill in the form with proper product name, e-mail address, redirect uri as `http://localhost:3000/oauth2callback` then click _Done_.
+    <details>
+      <summary>Creating credentials in details</summary>
+      <p>From previous view, select _Create credentials_.</p>
+      ![Screenshot](img/google-config/create-credentials.png)
+      <p>Fill the form and click _Done_.</p>
+      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `REDIRECT_URI` in [.env file](#configuration-file).</p>
+      ![Screenshot](img/google-config/add-credentials.png)
+    </details>
+4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env` file](#configuration-file).
+5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name), then you will be ready to generate translations.
 
 ## Generating refresh token
 
@@ -102,6 +121,6 @@ TRACING_SERVICE_PORT=6832
 
 
 4. Browser window will be opened automatically. Log in into you Google account and then grant your application an access for reading spreadsheets in your account. You should be given a message `Authentication successful! Please return to the console`.
-5. Refresh token is now stored in `.env` file. You can change storage type [here](/development#set-refresh-token-write-provider).
+5. Refresh token is now stored in `.env` file. You can change storage type [here](development.md#set-refresh-token-write-provider).
 6. More actions won't be needed because tokens will be refreshed automatically if necessary.
 

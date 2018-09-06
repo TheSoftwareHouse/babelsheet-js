@@ -4,13 +4,13 @@ import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import InEnvStorage from '../../infrastructure/storage/in-env';
-import InFileStorage from '../../infrastructure/storage/in-file';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
+import IStorage from '../../infrastructure/storage/storage';
 
 function checkFolderPermissions(container: AwilixContainer, path: string): void {
   const { error } = container.resolve<ILogger>('logger');
@@ -113,7 +113,7 @@ async function getRefreshToken(
   return refresh_token;
 }
 
-export async function generateEnvConfigFile(container: AwilixContainer, args: Arguments) {
+export async function generateConfigFile(container: AwilixContainer, args: Arguments, storage: IStorage) {
   const { info } = container.resolve<ILogger>('logger');
 
   const spreadsheetAuthData = getAndSaveAuthData(container, args);
@@ -121,20 +121,7 @@ export async function generateEnvConfigFile(container: AwilixContainer, args: Ar
   info('Acquiring refresh token...');
   const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
 
-  info('Saving token to .env file');
-  container.resolve<InEnvStorage>('inEnvStorage').set('refresh_token', refreshToken);
-  info('.env file created');
-}
-
-export async function generateJsonConfigFile(container: AwilixContainer, args: Arguments) {
-  const { info } = container.resolve<ILogger>('logger');
-
-  const spreadsheetAuthData = getAndSaveAuthData(container, args);
-
-  info('Acquiring refresh token...');
-  const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
-
-  info('Saving token to data.json file');
-  container.resolve<InFileStorage>('inFileStorage').set('refresh_token', refreshToken);
+  info('Saving token...');
+  storage.set('refresh_token', refreshToken);
   info('Refresh token saved');
 }

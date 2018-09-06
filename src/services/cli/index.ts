@@ -5,7 +5,9 @@ import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
 import createContainer from './container';
-import { generateEnvConfigFile, generateJsonConfigFile, generateTranslations } from './fileGenerators';
+import { generateTranslations, generateConfigFile } from './fileGenerators';
+import InEnvStorage from '../../infrastructure/storage/in-env';
+import InFileStorage from '../../infrastructure/storage/in-file';
 
 dotenv.config();
 
@@ -59,9 +61,9 @@ function configureCli(): Arguments {
     .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format').argv;
 }
 
-const configFileGenerators: { [key: string]: any } = {
-  env: (args: Arguments) => generateEnvConfigFile(container, args),
-  json: async (args: Arguments) => await generateJsonConfigFile(container, args),
+const getProperStorage: { [key: string]: any } = {
+  env: container.resolve<InEnvStorage>('inEnvStorage'),
+  json: container.resolve<InFileStorage>('inFileStorage'),
 };
 
 function getConfigType(config: string | undefined): string | null {
@@ -74,7 +76,9 @@ function getConfigType(config: string | undefined): string | null {
 async function main() {
   const args: Arguments = configureCli();
   const configType = getConfigType(args.config);
-  configType ? await configFileGenerators[configType](args) : await generateTranslations(container, args);
+  configType
+    ? await generateConfigFile(container, args, getProperStorage[configType])
+    : await generateTranslations(container, args);
   process.exit(0);
 }
 

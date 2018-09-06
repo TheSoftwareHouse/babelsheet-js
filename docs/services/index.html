@@ -402,12 +402,12 @@ Translations files are possible to generate in given formats:</p>
 </ul>
 <p>To run command line tools, you need to install it first:</p>
 <p><code>npm i -g babelsheet</code></p>
-<p>If you want to obtain <code>REFRESH_TOKEN</code> then see <a href="/../configuration#generating-refresh-token">Generating refresh token</a></p>
+<p>If you want to obtain <code>REFRESH_TOKEN</code> then see <a href="../configuration/#generating-refresh-token">generating refresh token</a> section.</p>
 <h3 id="generating-translations-files">Generating translations files</h3>
 <p>To generate translations type:</p>
 <p><code>babelsheet generate [options]</code></p>
-<p>Remember to <a href="/../configuration#configuration-file">create .env file</a> before generating translations.</p>
-<p><small>If you wont provide <code>REFRESH_TOKEN</code> in <code>.env</code> file or <code>data.json</code> file, babelsheet will automatically open browser to create such token, and save will save it in right storage - you can change read and write storages, check it <a href="/../configuration#set-refresh-token-read-providers">here</a>.</small></p>
+<p>Remember to <a href="../configuration/#configuration-file">create .env file</a> before generating translations.</p>
+<p><small>If you wont provide <code>REFRESH_TOKEN</code> in <code>.env</code> file or <code>data.json</code> file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it <a href="../development/#set-refresh-token-read-providers">here</a>.</small></p>
 <p><strong>Options</strong>
 <details>
   <summary>--format</summary>
@@ -418,7 +418,7 @@ Translations files are possible to generate in given formats:</p>
     (default: <code>json</code>)
   </p>
   <p>
-    Format type (android/ios/json).
+    Format type (<em>android/ios/json</em>).
   </p>
 </details>
 <details>
@@ -460,7 +460,7 @@ Translations files are possible to generate in given formats:</p>
     (default: <code>EN</code>)
   </p>
   <p>
-    Base language for translations, <code>Base.lproj</code> folder on iOS format and <code>values</code> folder on android format.
+    Base language for translations. <code>Base.lproj</code> folder on iOS format and <code>values</code> folder on android format.
   </p>
 </details>
 <details>
@@ -472,31 +472,31 @@ Translations files are possible to generate in given formats:</p>
 <details>
   <summary>--client_id</summary>
   <p>
-    Client id received from Google. Overwrite .env <code>CLIENT_ID</code> value.
+    Client id received from Google. Overwrite .env <code>CLIENT_ID</code> value. (<a href="/../configuration#configuring-google-spreadsheet-api">see how to obtain</a>)
   </p>
 </details>
 <details>
   <summary>--client_secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env <code>CLIENT_SECRET</code> value.
+    Client secret received from Google. Overwrite .env <code>CLIENT_SECRET</code> value. (<a href="/../configuration#configuring-google-spreadsheet-api">see how to obtain</a>)
   </p>
 </details>
 <details>
   <summary>--spreadsheet_id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env <code>SPREADSHEET_ID</code> value. (<a href="/../configuration#how-to-get-spreadsheet-id">see how to obtain</a>).
+    Spreadsheet ID from spreadsheet URL. Overwrite .env <code>SPREADSHEET_ID</code> value. (<a href="/../configuration#how-to-get-spreadsheet-id">see how to obtain</a>)
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Sheet name. Overwrite .env <code>SPREADSHEET_NAME</code> value. (<a href="/../configuration#how-to-get-spreadsheet-name">see how to obtain</a>).
+    Sheet name. Overwrite .env <code>SPREADSHEET_NAME</code> value. (<a href="/../configuration#how-to-get-spreadsheet-name">see how to obtain</a>)
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env <code>REDIRECT_URI</code> value. (<a href="/../configuration/#how-to-get-spreadsheet-name">see how to obtain</a>).
+    Url to which user should be redirected after receiving refresh token. Overwrite .env <code>REDIRECT_URI</code> value. (<a href="/../configuration/#how-to-get-spreadsheet-name">see how to obtain</a>)
   </p>
 </details>
 <details>
@@ -506,12 +506,12 @@ Translations files are possible to generate in given formats:</p>
   </p>
 </details></p>
 <p><strong>Examples</strong></p>
-<p><code>babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder</code> - generates english translations in my-own-en-translations.json file inside ./my-folder folder.</p>
-<p><code>babelsheet generate --format ios --path ./translations</code> - generates translations in iOS format in translations folder.</p>
+<p><code>babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder</code> - generates english translations in <code>my-own-en-translations.json</code> file inside <code>./my-folder</code> folder.</p>
+<p><code>babelsheet generate --format ios --path ./translations</code> - generates translations in iOS format in <code>./translations</code> folder.</p>
 <h2 id="producer">Producer</h2>
-<p>Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes. Please note that if there are no proper environment variables such as <code>CLIENT_ID</code>, <code>CLIENT_SECRET</code> and <code>REFRESH_TOKEN</code> then producer is not able to work properly. In such case it runs a command responsible for obtaining those keys.</p>
-<p>You can run Producer in docker container - see <a href="/../docker">Docker</a>.</p>
-<p>If you want to run producer locally, first remember about <a href="/../configuration#configuration-file">setting environment variables</a> and <a href="/../docker#redis">running redis</a>, next type:</p>
+<p>Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as <code>CLIENT_ID</code>, <code>CLIENT_SECRET</code> and <code>REFRESH_TOKEN</code> then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.</p>
+<p>You can run Producer in docker container - see <a href="../docker/">Docker</a>.</p>
+<p>If you want to run producer locally, first remember about <a href="../configuration/#configuration-file">setting environment variables</a> and <a href="../docker/#redis">running redis</a>, next type:</p>
 <ol>
 <li>
 <p><code>npm run dev-install</code></p>
@@ -521,8 +521,8 @@ Translations files are possible to generate in given formats:</p>
 </li>
 </ol>
 <p>Producer should be working now.</p>
-<p>You can change <code>REFRESH_TOKEN</code> read and write providers, check it <a href="/../development#set-refresh-token-read-providers">here</a>.</p>
-<p>You can also change translations storage from redis to file, check it <a href="/../development#change-translations-storage-from-redis-to-file">here</a>.</p>
+<p>You can change <code>REFRESH_TOKEN</code> read and write providers, check it <a href="../development/#set-refresh-token-read-providers">here</a>.</p>
+<p>You can also change translations storage from redis to file, check it <a href="../development/#change-translations-storage-from-redis-to-file">here</a>.</p>
 <h2 id="api">API</h2>
 <p>API is a web server built on top of <code>express.js</code> which serves translations. There is one endpoint available to obtain translations, which is <code>/translations</code>.
 Translations can be filtered by using:</p>
@@ -534,8 +534,8 @@ Translations can be filtered by using:</p>
 <p><code>format</code> - translations can be served in json/android/ios formats, just add adtitional parameter e.g. <code>/translations?filters[]=en_US.CORE&amp;format=android</code>.</p>
 </li>
 </ul>
-<p>You can run API in docker container - see <a href="/../docker#">Docker</a>.</p>
-<p>If you want to run API locally, first remember about <a href="/../configuration#configuration-file">setting environment variables</a> and <a href="/../docker#redis">running redis</a>, next type:</p>
+<p>You can run API in docker container - see <a href="../docker/">Docker</a>.</p>
+<p>If you want to run API locally, first remember about <a href="../configuration/#configuration-file">setting environment variables</a> and <a href="../docker/#redis">running redis</a>, next type:</p>
 <ol>
 <li>
 <p><code>npm run dev-install</code></p>

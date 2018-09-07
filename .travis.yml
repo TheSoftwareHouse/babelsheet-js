@@ -2,5 +2,4 @@ language: node_js
 node_js:
   - "lts/*"
 script:
-  - npm i
   - npm test

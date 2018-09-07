@@ -1,9 +1,10 @@
 import * as awilix from 'awilix';
-import { generateTranslations, generateEnvConfigFile, generateJsonConfigFile } from './fileGenerators';
+import { generateTranslations, generateConfigFile } from './fileGenerators';
 import createContainer from './container';
 import { ITransformers } from '../../shared/transformers/transformers.types';
 import { getGoogleAuthMock } from '../../tests/googleAuthMock';
 import { getLoggerMock } from '../../tests/loggerMock';
+import InEnvStorage from '../../infrastructure/storage/in-env';
 
 export const getExtension = jest.fn();
 
@@ -13,10 +14,10 @@ const args = {
   _: ['test', 'test2'],
   $0: 'test',
   format: 'json',
-  client_id: 'test',
-  client_secret: 'test2',
-  spreadsheet_id: 'test3',
-  spreadsheet_name: 'test4',
+  'client-id': 'test',
+  'client-secret': 'test2',
+  'spreadsheet-id': 'test3',
+  'spreadsheet-name': 'test4',
   path: '.',
   language: 'test-lang',
   merge: false,
@@ -52,7 +53,7 @@ describe('fileGenerators', async () => {
     expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
   });
 
-  it('generateEnvConfigFile does run proper env storage', async () => {
+  it('generateConfigFile does run storage', async () => {
     const mockInEnvStorage = {
       set: jest.fn(),
     };
@@ -63,24 +64,10 @@ describe('fileGenerators', async () => {
       googleAuth: awilix.asValue(getGoogleAuthMock()),
     });
 
-    await generateEnvConfigFile(container, args);
+    const inEnvStorage = container.resolve<InEnvStorage>('inEnvStorage');
+
+    await generateConfigFile(container, args, inEnvStorage);
 
     expect(mockInEnvStorage.set).toBeCalledWith('refresh_token', 'test-token');
-  });
-
-  it('generateJsonConfigFile does run proper json storage', async () => {
-    const mockInFileStorage = {
-      set: jest.fn(),
-    };
-
-    const container = createContainer().register({
-      logger: awilix.asValue(loggerMock),
-      inFileStorage: awilix.asValue(mockInFileStorage),
-      googleAuth: awilix.asValue(getGoogleAuthMock()),
-    });
-
-    await generateJsonConfigFile(container, args);
-
-    expect(mockInFileStorage.set).toBeCalledWith('refresh_token', 'test-token');
   });
 });

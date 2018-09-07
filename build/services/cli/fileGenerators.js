@@ -14,19 +14,20 @@ function checkFolderPermissions(container, path) {
 function getSpreadsheetAuthData(args) {
     const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
     const authData = {
-        clientId: args.client_id || CLIENT_ID,
-        clientSecret: args.client_secret || CLIENT_SECRET,
-        spreadsheetId: args.spreadsheet_id || SPREADSHEET_ID,
-        spreadsheetName: args.spreadsheet_name || SPREADSHEET_NAME || 'Sheet1',
+        clientId: args['client-id'] || CLIENT_ID,
+        clientSecret: args['client-secret'] || CLIENT_SECRET,
+        spreadsheetId: args['spreadsheet-id'] || SPREADSHEET_ID,
+        spreadsheetName: args['spreadsheet-name'] || SPREADSHEET_NAME || 'Sheet1',
         redirectUri: args.redirect_uri || REDIRECT_URI || 'http://localhost:3000/oauth2callback',
     };
-    checkAuthParams_1.checkAuthParameters(authData);
     return authData;
 }
 async function generateTranslations(container, args) {
     const { info } = container.resolve('logger');
-    info('Checking auth variables...');
+    info('Getting auth variables...');
     const spreadsheetAuthData = getSpreadsheetAuthData(args);
+    info('Checking auth variables...');
+    checkAuthParams_1.checkAuthParameters(spreadsheetAuthData);
     info('Checking formats...');
     const extension = formatToExtensions_1.getExtension(args.format);
     info('Checking folder permissions...');
@@ -44,31 +45,44 @@ async function generateTranslations(container, args) {
     info('File successfully saved.');
 }
 exports.generateTranslations = generateTranslations;
-async function getRefreshToken(container, args) {
+function saveNecessaryEnvToFile(container, authData) {
+    const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+    if (!authData.clientId || authData.clientId !== CLIENT_ID) {
+        container.resolve('inEnvStorage').set('CLIENT_ID', authData.clientId || '');
+    }
+    if (!authData.clientSecret || authData.clientSecret !== CLIENT_SECRET) {
+        container.resolve('inEnvStorage').set('CLIENT_SECRET', authData.clientSecret || '');
+    }
+    if (!authData.spreadsheetId || authData.spreadsheetId !== SPREADSHEET_ID) {
+        container.resolve('inEnvStorage').set('SPREADSHEET_ID', authData.spreadsheetId || '');
+    }
+    if (authData.spreadsheetName !== SPREADSHEET_NAME) {
+        container.resolve('inEnvStorage').set('SPREADSHEET_NAME', authData.spreadsheetName);
+    }
+}
+function getAndSaveAuthData(container, args) {
     const { info } = container.resolve('logger');
+    info('Getting auth variables...');
+    const spreadsheetAuthData = getSpreadsheetAuthData(args);
+    saveNecessaryEnvToFile(container, spreadsheetAuthData);
     info('Checking auth variables...');
-    const { clientId, clientSecret, redirectUri } = getSpreadsheetAuthData(args);
-    info('Google authentication...');
+    checkAuthParams_1.checkAuthParameters(spreadsheetAuthData);
+    return spreadsheetAuthData;
+}
+async function getRefreshToken(container, { clientId, clientSecret, redirectUri }) {
     const oAuth2Client = await container
         .resolve('googleAuth')
         .createOAuthClient(clientId, clientSecret, redirectUri);
-    info('Getting google tokens');
     const { refresh_token } = await container.resolve('googleAuth').getTokens(oAuth2Client);
     return refresh_token;
 }
-async function generateEnvConfigFile(container, args) {
+async function generateConfigFile(container, args, storage) {
     const { info } = container.resolve('logger');
-    const refreshToken = await getRefreshToken(container, args);
-    info('Saving token to .env file');
-    container.resolve('inEnvStorage').set('refresh_token', refreshToken);
-    info('.env file created');
+    const spreadsheetAuthData = getAndSaveAuthData(container, args);
+    info('Acquiring refresh token...');
+    const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
+    info('Saving token...');
+    storage.set('refresh_token', refreshToken);
+    info('Refresh token saved');
 }
-exports.generateEnvConfigFile = generateEnvConfigFile;
-async function generateJsonConfigFile(container, args) {
-    const { info } = container.resolve('logger');
-    const refreshToken = await getRefreshToken(container, args);
-    info('Saving token to data.json file');
-    container.resolve('inFileStorage').set('refresh_token', refreshToken);
-    info('data.json file created');
-}
-exports.generateJsonConfigFile = generateJsonConfigFile;
+exports.generateConfigFile = generateConfigFile;

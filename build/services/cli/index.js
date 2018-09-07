@@ -25,7 +25,7 @@ function configureCli() {
         type: 'string',
     })
         .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
-        .option('p', { alias: 'path', default: '.', describe: 'Path for file save', type: 'string' })
+        .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
         .option('l', {
         alias: 'language',
         describe: 'Language code for generating translations file only in given language',
@@ -39,19 +39,19 @@ function configureCli() {
     })
         .option('base', { default: 'en', describe: 'Base language for translations', type: 'string' })
         .option('merge', { default: 'false', describe: 'Create one file with all languages', type: 'boolean' })
-        .option('client_id', { describe: 'Client ID', type: 'string' })
-        .option('client_secret', { describe: 'Client secret', type: 'string' })
-        .option('spreadsheet_id', { describe: 'Spreadsheet ID', type: 'string' })
-        .option('spreadsheet_name', { describe: 'Spreadsheet name', type: 'string' })
-        .option('redirect_uri', { describe: 'The URI to redirect after completing the auth request' })
+        .option('client-id', { describe: 'Client ID', type: 'string' })
+        .option('client-secret', { describe: 'Client secret', type: 'string' })
+        .option('spreadsheet-id', { describe: 'Spreadsheet ID', type: 'string' })
+        .option('spreadsheet-name', { describe: 'Spreadsheet name', type: 'string' })
+        .option('redirect-uri', { describe: 'The URI to redirect after completing the auth request' })
         .help('?')
         .alias('?', 'help')
-        .example('$0 generate -f xml -n my-data -p ./result -l en_US', 'Generate my-data.xml with english translations in folder /result')
-        .example('$0 generate -n my-data', 'Generate file with result in json extension').argv;
+        .example('$0 generate -f xml -n my-data -p ./result -l en_US --merge', 'Generate my-data.xml with english translations in folder /result')
+        .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format').argv;
 }
-const configFileGenerators = {
-    env: (args) => fileGenerators_1.generateEnvConfigFile(container, args),
-    json: async (args) => await fileGenerators_1.generateJsonConfigFile(container, args),
+const getProperStorage = {
+    env: container.resolve('inEnvStorage'),
+    json: container.resolve('inFileStorage'),
 };
 function getConfigType(config) {
     if (config !== undefined) {
@@ -62,7 +62,9 @@ function getConfigType(config) {
 async function main() {
     const args = configureCli();
     const configType = getConfigType(args.config);
-    configType ? await configFileGenerators[configType](args) : await fileGenerators_1.generateTranslations(container, args);
+    configType
+        ? await fileGenerators_1.generateConfigFile(container, args, getProperStorage[configType])
+        : await fileGenerators_1.generateTranslations(container, args);
     process.exit(0);
 }
 main();

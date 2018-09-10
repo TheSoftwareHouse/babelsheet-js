@@ -3,7 +3,7 @@ import AndroidFilesCreator from './android-files.creator';
 
 jest.mock('fs');
 
-describe('FileCreators', () => {
+describe('AndroidFilesCreator', () => {
   let fileRepository = null;
   let androidFilesCreator = null;
 

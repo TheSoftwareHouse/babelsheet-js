@@ -3,7 +3,7 @@ import * as fs from 'fs';
 
 jest.mock('fs');
 
-describe('FileCreators', () => {
+describe('IosFilesCreator', () => {
   let fileRepository = null;
   let iosFilesCreator = null;
 

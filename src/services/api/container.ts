@@ -18,6 +18,8 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
+import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
+import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -30,6 +32,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       lifetime: awilix.Lifetime.SINGLETON,
     }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
@@ -42,11 +45,16 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
         flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
       })),
+    jsonToXlfTransformer: awilix.asClass(JsonToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+      flatListToXlf: container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
+    })),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
         container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
         container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
+        container.resolve<JsonToXlfTransformer>('jsonToXlfTransformer'),
       ],
     })),
   };

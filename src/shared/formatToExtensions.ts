@@ -18,6 +18,7 @@ const extensionsFromJson: { [key: string]: { [key: string]: string } } = {
   android: { extension: 'json-xml', documentType: 'application/xml' },
   ios: { extension: 'json-ios-strings', documentType: 'text/plain' },
   json: { extension: 'json', documentType: 'application/json' },
+  yaml: { extension: 'json-yaml', documentType: 'text/plain' },
 };
 
 export function getExtensionsFromJson(format: string): string {

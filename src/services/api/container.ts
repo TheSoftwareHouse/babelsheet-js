@@ -18,6 +18,7 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
+import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -42,11 +43,13 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
         flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
       })),
+    jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
         container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
         container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
+        container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
       ],
     })),
   };

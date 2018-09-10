@@ -4,7 +4,7 @@ const fs = require("fs");
 class YamlFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
-        this.supportedExtension = 'yaml';
+        this.supportedExtension = 'yml';
     }
     supports(extension) {
         return extension.toLowerCase() === this.supportedExtension;

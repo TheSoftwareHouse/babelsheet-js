@@ -4,7 +4,7 @@ class SpreadsheetToYamlTransformer {
     constructor(spreadsheetToJson, jsonToYaml) {
         this.spreadsheetToJson = spreadsheetToJson;
         this.jsonToYaml = jsonToYaml;
-        this.supportedType = 'yaml';
+        this.supportedType = 'yml';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;

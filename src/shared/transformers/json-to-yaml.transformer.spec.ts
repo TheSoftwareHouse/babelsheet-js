@@ -10,7 +10,7 @@ describe('JsonToYamlTransformer', () => {
   const jsonToYamlTransformer = new JsonToYamlTransformer();
 
   it('does return true if supported type', async () => {
-    const result = jsonToYamlTransformer.supports('json-yaml');
+    const result = jsonToYamlTransformer.supports('json-yml');
 
     expect(result).toBeTruthy();
   });

@@ -15,7 +15,7 @@ describe('SpreadsheetToYamlTransformer', () => {
   const spreadsheetToYamlTransformer = new SpreadsheetToYamlTransformer(spreadsheetToJson, jsonToYaml);
 
   it('does return true if supported type', async () => {
-    const result = spreadsheetToYamlTransformer.supports('yaml');
+    const result = spreadsheetToYamlTransformer.supports('yml');
 
     expect(result).toBeTruthy();
   });

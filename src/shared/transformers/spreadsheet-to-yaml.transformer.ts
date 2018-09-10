@@ -1,7 +1,7 @@
 import ITransformer from './transformer';
 
 export default class SpreadsheetToYamlTransformer implements ITransformer {
-  private readonly supportedType = 'yaml';
+  private readonly supportedType = 'yml';
 
   constructor(private spreadsheetToJson: ITransformer, private jsonToYaml: ITransformer) {}
 

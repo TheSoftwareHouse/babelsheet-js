@@ -15,7 +15,7 @@ describe('YamlFilesCreator', () => {
   });
 
   it('does return true if supported type', async () => {
-    const result = yamlFilesCreator.supports('yaml');
+    const result = yamlFilesCreator.supports('yml');
 
     expect(result).toBeTruthy();
   });
@@ -29,7 +29,7 @@ describe('YamlFilesCreator', () => {
   it('executes save method once when dataToSave is string', () => {
     yamlFilesCreator.save('data', '.', 'test');
 
-    expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'yaml', '.');
+    expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'yml', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
   });
 
@@ -44,19 +44,19 @@ describe('YamlFilesCreator', () => {
     expect(fileRepository.saveData).toBeCalledWith(
       translations[0].content,
       `messages.${translations[0].lang}`,
-      'yaml',
+      'yml',
       '.'
     );
     expect(fileRepository.saveData).toBeCalledWith(
       translations[1].content,
       `messages.${translations[1].lang}`,
-      'yaml',
+      'yml',
       '.'
     );
     expect(fileRepository.saveData).toBeCalledWith(
       translations[2].content,
       `messages.${translations[2].lang}`,
-      'yaml',
+      'yml',
       '.'
     );
     expect(fileRepository.saveData).toHaveBeenCalledTimes(3);

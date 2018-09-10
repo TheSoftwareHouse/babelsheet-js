@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
 
 export default class YamlFilesCreator implements IFilesCreator {
-  private supportedExtension = 'yaml';
+  private supportedExtension = 'yml';
 
   constructor(private fileRepository: IFileRepository) {}
 

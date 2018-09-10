@@ -10,7 +10,7 @@ describe('FileCreators', () => {
   const filesCreators = new FilesCreators(fileCreatorsList);
 
   it('executes save method on proper fileCreator', () => {
-    const result = filesCreators.save('', '.', 'test', 'ios');
+    const result = filesCreators.save('', '.', 'test', 'ios', 'en');
 
     expect(result).toBe('test');
   });
@@ -18,6 +18,6 @@ describe('FileCreators', () => {
   it('throws exception when there is no transformer', () => {
     const type = 'xyz';
 
-    expect(() => filesCreators.save('', '.', 'test', type)).toThrow(`No support for ${type} data type`);
+    expect(() => filesCreators.save('', '.', 'test', type, 'en')).toThrow(`No support for ${type} data type`);
   });
 });

@@ -11,6 +11,7 @@ import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-li
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
 import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
+import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import CachedTranslations from '../../shared/translations/cached-translations';
 import MaskedTranslations from '../../shared/translations/masked-translations';
@@ -18,7 +19,6 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
-import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

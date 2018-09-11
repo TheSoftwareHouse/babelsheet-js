@@ -7,7 +7,7 @@ class FilesCreators {
     save(dataToSave, path, filename, extension, baseLang) {
         const fileCreator = this.filesCreators.find(creator => creator.supports(extension));
         if (!fileCreator) {
-            throw new Error(`No support for xyz data type`);
+            throw new Error(`No support for ${extension} data type`);
         }
         return fileCreator.save(dataToSave, path, filename, baseLang);
     }

@@ -12,6 +12,7 @@ const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-
 const json_to_ios_strings_transformer_1 = require("../../shared/transformers/json-to-ios-strings.transformer");
 const json_to_json_transformer_1 = require("../../shared/transformers/json-to-json.transformer");
 const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
+const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-yaml.transformer");
 const transformers_1 = require("../../shared/transformers/transformers");
 const cached_translations_1 = require("../../shared/translations/cached-translations");
 const masked_translations_1 = require("../../shared/translations/masked-translations");
@@ -41,11 +42,13 @@ function createContainer(options) {
             jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
             flatListToIosStrings: container.resolve('flatListToIosStringsTransformer'),
         })),
+        jsonToYamlTransformer: awilix.asClass(json_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         transformers: awilix.asClass(transformers_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             transformers: [
                 container.resolve('jsonToXmlTransformer'),
                 container.resolve('jsonToIosStringsTransformer'),
                 container.resolve('jsonToJsonTransformer'),
+                container.resolve('jsonToYamlTransformer'),
             ],
         })),
     };

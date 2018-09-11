@@ -6,7 +6,7 @@ const fileRepository = {
   saveData: jest.fn(),
 };
 
-describe('FileCreators', () => {
+describe('JsonFilesCreator', () => {
   const jsonFilesCreator = new JsonFilesCreator(fileRepository);
 
   it('does return true if supported type', async () => {

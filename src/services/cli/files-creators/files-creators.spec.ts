@@ -18,6 +18,6 @@ describe('FileCreators', () => {
   it('throws exception when there is no transformer', () => {
     const type = 'xyz';
 
-    expect(() => filesCreators.save('', '.', 'test', type, 'en')).toThrow(`No support for ${type} data type`);
+    expect(() => filesCreators.save('', '.', 'test', type, 'en')).toThrow(`No support for saving ${type} data type`);
   });
 });

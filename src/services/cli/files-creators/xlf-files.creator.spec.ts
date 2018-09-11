@@ -21,6 +21,13 @@ describe('FileCreators', () => {
     expect(result).toBeFalsy();
   });
 
+  it('executes save method once when dataToSave is string', () => {
+    xlfFilesCreator.save('data', '.', 'test');
+
+    expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'xlf', '.');
+    expect(fileRepository.saveData.mock.calls.length).toBe(1);
+  });
+
   it('executes save method for every language', () => {
     const translations = [
       { lang: 'en', content: 'test' },

@@ -10,7 +10,12 @@ export default class XlfFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: Array<{ lang: string; content: string }>, path: string, filename: string): void {
+  public save(dataToSave: Array<{ lang: string; content: string }> | string, path: string, filename: string): void {
+    if (typeof dataToSave === 'string') {
+      this.createFolderAndSave(dataToSave, path, filename);
+      return;
+    }
+
     const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
     dataWithoutTags.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
   }

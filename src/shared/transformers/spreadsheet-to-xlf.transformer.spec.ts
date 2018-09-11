@@ -26,6 +26,16 @@ describe('SpreadsheetToXlfTransformer', () => {
     expect(result).toBeFalsy();
   });
 
+  it('does generate object for given language from spreadsheet', async () => {
+    const object = { test: ['test'] };
+    const langCode = 'en_US';
+
+    spreadsheetToXlfTransformer.transform(object, langCode);
+
+    expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
+    expect(jsonToXlf.transform).toBeCalledWith('spreadsheet return');
+  });
+
   it('does generate languages object in xlf from spreadsheet', async () => {
     const jsonReturned = { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] };
     const spreeadsheetToJson2: ITransformer = {
@@ -38,7 +48,7 @@ describe('SpreadsheetToXlfTransformer', () => {
 
     const result = spreadsheetToXlfTransformer2.transform(object);
 
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
     expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['en']);
     expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['fr']);
     expect(result).toEqual([{ content: 'xlf return', lang: 'en' }, { content: 'xlf return', lang: 'fr' }]);

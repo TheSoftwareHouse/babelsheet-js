@@ -17,7 +17,7 @@ export default class AndroidFilesCreator implements IFilesCreator {
     baseLang: string
   ): void {
     if (typeof dataToSave === 'string') {
-      this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
+      this.createFolderAndSave(dataToSave, path, filename);
       return;
     }
 
@@ -45,12 +45,12 @@ export default class AndroidFilesCreator implements IFilesCreator {
     return languageCode;
   }
 
-  private createFolderAndSave(data: string, folderName: string) {
+  private createFolderAndSave(data: string, folderName: string, filename?: string) {
     if (!fs.existsSync(folderName)) {
       fs.mkdirSync(folderName);
     }
 
-    this.fileRepository.saveData(data, this.defaultFileName, this.supportedExtension, folderName);
+    this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
   }
 
   private generateBaseTranslations(

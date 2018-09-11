@@ -6,10 +6,12 @@ import ErrorHandler from '../../shared/error/handler';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
+import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
 import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
+import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import CachedTranslations from '../../shared/translations/cached-translations';
@@ -18,8 +20,6 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
-import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
-import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

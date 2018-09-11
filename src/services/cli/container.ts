@@ -8,13 +8,16 @@ import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenProvider from '../../shared/token-provider/token-provider';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
+import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spreadsheet-to-ios-strings.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
+import SpreadsheetToXlfTransformer from '../../shared/transformers/spreadsheet-to-xlf.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import AndroidFilesCreator from './files-creators/android-files.creator';
@@ -22,9 +25,6 @@ import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
 import XlfFilesCreator from './files-creators/xlf-files.creator';
-import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
-import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
-import SpreadsheetToXlfTransformer from '../../shared/transformers/spreadsheet-to-xlf.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

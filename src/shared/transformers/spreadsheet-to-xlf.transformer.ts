@@ -14,20 +14,11 @@ export default class SpreadsheetToXlfTransformer implements ITransformer {
     langCode?: string,
     mergeLanguages?: boolean
   ): string | object[] {
-    const json = this.spreadsheetToJson.transform(source, langCode);
+    const json = this.spreadsheetToJson.transform(source);
 
     return Object.keys(json).map(langName => {
       const xlfTranslations = this.jsonToXlf.transform(json[langName]);
       return { lang: langName, content: xlfTranslations };
     });
-    //xlf.transform ({base: ..., translations: ...})
-    //  if (mergeLanguages || langCode) {
-    //    return this.jsonToXml.transform(json);
-    //  }
-
-    //  return Object.keys(json).map(langName => {
-    //    const xmlTranslations = this.jsonToXml.transform(json[langName]);
-    //    return { lang: langName, content: xmlTranslations };
-    //  });
   }
 }

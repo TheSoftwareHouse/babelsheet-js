@@ -1,6 +1,6 @@
 import FlatListToXlfTransformer from './flat-list-to-xlf.transformer';
 
-describe('JsonToXmlTransformer', () => {
+describe('JsonToXlfTransformer', () => {
   const flatListToXlfTransformer = new FlatListToXlfTransformer();
 
   it('does return true if supported type', async () => {
@@ -15,7 +15,7 @@ describe('JsonToXmlTransformer', () => {
     expect(result).toBeFalsy();
   });
 
-  it('does generate xml from proper flat list', async () => {
+  it('does generate xlf from proper flat list', async () => {
     const flatList = [
       { name: 'en_us_core_labels_yes', text: 'yes' },
       { name: 'en_us_core_labels_no', text: 'no' },

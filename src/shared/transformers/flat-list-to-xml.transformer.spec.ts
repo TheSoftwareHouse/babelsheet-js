@@ -1,8 +1,7 @@
-import FlatListToJsonTransformer from './flat-list-to-xml.transformer';
-import ITransformer from './transformer';
+import FlatListToXmlTransformer from './flat-list-to-xml.transformer';
 
 describe('JsonToXmlTransformer', () => {
-  const flatListToXmlTransformer = new FlatListToJsonTransformer();
+  const flatListToXmlTransformer = new FlatListToXmlTransformer();
 
   it('does return true if supported type', async () => {
     const result = flatListToXmlTransformer.supports('flat-list-xml');

@@ -3,3 +3,6 @@ node_js:
   - "lts/*"
 script:
   - npm test
+  - npm run type-check
+  - npm run lint
+  - npm run nsp

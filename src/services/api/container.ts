@@ -31,8 +31,8 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     flatListToIosStringsTransformer: awilix.asClass(FlatListToIosStringsTransformer, {
       lifetime: awilix.Lifetime.SINGLETON,
     }),
-    flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

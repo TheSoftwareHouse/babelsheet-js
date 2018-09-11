@@ -13,22 +13,20 @@ export default class FlatListToXlfTransformer implements ITransformer {
   }
 
   private generateXlf(translations: Array<{ [key: string]: string }>): string {
-    //object with en and proper translations
-    //const baseTranslations = baseWithTranslations.base;
-    //const translations = baseWithTranslations.translations;
     const xml = xmlbuilder
       .create('xliff')
-      .att('xmlns', 'urn:oasis:names:tc:xliff:document:1.2')
-      .att('version', '1.2');
+      .att('version', '1.2')
+      .att('xmlns', 'urn:oasis:names:tc:xliff:document:1.2');
 
-    const body = xml.ele('file', { 'source-language': 'en', datatype: 'plaintext' }).ele('body');
+    const body = xml.ele('file', { datatype: 'plaintext', 'source-language': 'en' }).ele('body');
 
     translations.forEach((translation: any) => {
-      const transUnit = body.ele('trans-unit', { id: translation.name });
-      //transUnit.ele('source', baseTranslations[translation.name]);
+      const keyWithDots = translation.name.replace(/_/g, '.');
+      const transUnit = body.ele('trans-unit', { id: keyWithDots });
+      transUnit.ele('source', keyWithDots);
       transUnit.ele('target', translation.text);
     });
 
-    return xml.end({ pretty: true });
+    return xml.end();
   }
 }

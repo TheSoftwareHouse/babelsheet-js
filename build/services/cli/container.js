@@ -9,14 +9,17 @@ const auth_1 = require("../../shared/google/auth");
 const sheets_1 = require("../../shared/google/sheets");
 const token_provider_1 = require("../../shared/token-provider/token-provider");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
+const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-list-to-xlf.transformer");
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
 const json_to_ios_strings_transformer_1 = require("../../shared/transformers/json-to-ios-strings.transformer");
+const json_to_xlf_transformer_1 = require("../../shared/transformers/json-to-xlf.transformer");
 const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
 const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-yaml.transformer");
 const spreadsheet_to_ios_strings_transformer_1 = require("../../shared/transformers/spreadsheet-to-ios-strings.transformer");
 const spreadsheet_to_json_string_transformer_1 = require("../../shared/transformers/spreadsheet-to-json-string.transformer");
 const spreadsheet_to_json_transformer_1 = require("../../shared/transformers/spreadsheet-to-json.transformer");
+const spreadsheet_to_xlf_transformer_1 = require("../../shared/transformers/spreadsheet-to-xlf.transformer");
 const spreadsheet_to_xml_transformer_1 = require("../../shared/transformers/spreadsheet-to-xml.transformer");
 const spreadsheet_to_yaml_transformer_1 = require("../../shared/transformers/spreadsheet-to-yaml.transformer");
 const transformers_1 = require("../../shared/transformers/transformers");
@@ -24,6 +27,7 @@ const android_files_creator_1 = require("./files-creators/android-files.creator"
 const files_creators_1 = require("./files-creators/files-creators");
 const ios_files_creator_1 = require("./files-creators/ios-files.creator");
 const json_files_creator_1 = require("./files-creators/json-files.creator");
+const xlf_files_creator_1 = require("./files-creators/xlf-files.creator");
 const yaml_files_creator_1 = require("./files-creators/yaml-files.creator");
 function createContainer(options) {
     const container = awilix.createContainer({
@@ -51,6 +55,9 @@ function createContainer(options) {
         jsonFilesCreator: awilix.asClass(json_files_creator_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             fileRepository: container.resolve('fileRepository'),
         })),
+        xlfFilesCreator: awilix.asClass(xlf_files_creator_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            fileRepository: container.resolve('fileRepository'),
+        })),
         yamlFilesCreator: awilix.asClass(yaml_files_creator_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             fileRepository: container.resolve('fileRepository'),
         })),
@@ -59,6 +66,7 @@ function createContainer(options) {
                 container.resolve('androidFilesCreator'),
                 container.resolve('iosFilesCreator'),
                 container.resolve('jsonFilesCreator'),
+                container.resolve('xlfFilesCreator'),
                 container.resolve('yamlFilesCreator'),
             ],
         })),
@@ -67,6 +75,7 @@ function createContainer(options) {
         flatListToIosStringsTransformer: awilix.asClass(flat_list_to_ios_strings_transformer_1.default, {
             lifetime: awilix.Lifetime.SINGLETON,
         }),
+        flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToIosStringsTransformer: awilix
@@ -74,6 +83,10 @@ function createContainer(options) {
             .inject(() => ({
             jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
             flatListToIosStrings: container.resolve('flatListToIosStringsTransformer'),
+        })),
+        jsonToXlfTransformer: awilix.asClass(json_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
+            flatListToXlf: container.resolve('flatListToXlfTransformer'),
         })),
         jsonToXmlTransformer: awilix.asClass(json_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
@@ -92,6 +105,12 @@ function createContainer(options) {
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
         })),
+        spreadsheetToXlfTransformer: awilix
+            .asClass(spreadsheet_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
+            .inject(() => ({
+            spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
+            jsonToXlf: container.resolve('jsonToXlfTransformer'),
+        })),
         spreadsheetToXmlTransformer: awilix
             .asClass(spreadsheet_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
@@ -109,6 +128,7 @@ function createContainer(options) {
                 container.resolve('spreadsheetToJsonStringTransformer'),
                 container.resolve('spreadsheetToXmlTransformer'),
                 container.resolve('spreadsheetToIosStringsTransformer'),
+                container.resolve('spreadsheetToXlfTransformer'),
                 container.resolve('spreadsheetToYamlTransformer'),
             ],
         })),

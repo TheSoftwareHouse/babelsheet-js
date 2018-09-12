@@ -2,9 +2,10 @@
 
 Babelsheet node service allows you to translate all of the UI / app content to specific language. As a user interface we use google spreadsheets and translations are synchronised every 5 minutes by default. This service contains a scheduler to synchronise translations, a web server allowing you to fetch them, and a CLI tools which can generate translations in various formats. What's more there is a cache layer for better performance. Babelsheet supports formats:
 
-- iOS
 - Android
-- json
+- iOS
+- JSON
+- YML
 
 No more dealing with complicated paid translation services or problems with multiple users working at the same time!
 

@@ -13,6 +13,7 @@ import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-s
 import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
+import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import CachedTranslations from '../../shared/translations/cached-translations';
 import MaskedTranslations from '../../shared/translations/masked-translations';
@@ -49,12 +50,14 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
       flatListToXlf: container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
     })),
+    jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
         container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
         container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
         container.resolve<JsonToXlfTransformer>('jsonToXlfTransformer'),
+        container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
       ],
     })),
   };

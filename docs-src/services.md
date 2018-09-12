@@ -5,6 +5,7 @@ Translations files are possible to generate in given formats:
 - Android
 - iOS
 - JSON
+- YML
 
 To run command line tools, you need to install it first:
 
@@ -33,7 +34,7 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
     (default: <code>json</code>)
   </p>
   <p>
-    Format type (_android/ios/json_).
+    Format type (_android/ios/json/yml_).
   </p>
 </details>
 <details>
@@ -150,7 +151,7 @@ Translations can be filtered by using:
 
 - `filters[]` -  e.g. calling `/translations?filters[]=en_US.CORE` will result in getting translations for `en_US` locale and section `CORE`. Other possibility is to use tag as a filter, e.g. `/translations?filters[]=en_US.tag1`.
 
-- `format` - translations can be served in json/android/ios formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
+- `format` - translations can be served in json/android/ios/yml formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
 
 You can run API in docker container - see [Docker](docker.md).
 

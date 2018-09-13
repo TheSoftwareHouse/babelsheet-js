@@ -4,8 +4,9 @@ Babelsheet node service allows you to translate all of the UI / app content to s
 
 - Android
 - iOS
-- JSON
-- YML
+- json
+- yml
+- xlf
 
 No more dealing with complicated paid translation services or problems with multiple users working at the same time!
 

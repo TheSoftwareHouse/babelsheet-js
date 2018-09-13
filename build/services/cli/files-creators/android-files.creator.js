@@ -12,7 +12,7 @@ class AndroidFilesCreator {
     }
     save(dataToSave, path, filename, baseLang) {
         if (typeof dataToSave === 'string') {
-            this.fileRepository.saveData(dataToSave, filename, this.supportedExtension, path);
+            this.createFolderAndSave(dataToSave, path, filename);
             return;
         }
         const dataWithoutTags = dataToSave.filter((translation) => translation.lang !== 'tags');
@@ -33,11 +33,11 @@ class AndroidFilesCreator {
         }
         return languageCode;
     }
-    createFolderAndSave(data, folderName) {
+    createFolderAndSave(data, folderName, filename) {
         if (!fs.existsSync(folderName)) {
             fs.mkdirSync(folderName);
         }
-        this.fileRepository.saveData(data, this.defaultFileName, this.supportedExtension, folderName);
+        this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
     }
     generateBaseTranslations(dataToSave, path, baseLang) {
         const baseTranslations = dataToSave.find((translation) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1);

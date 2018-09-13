@@ -8,14 +8,17 @@ import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
 import TokenProvider from '../../shared/token-provider/token-provider';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
+import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spreadsheet-to-ios-strings.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
+import SpreadsheetToXlfTransformer from '../../shared/transformers/spreadsheet-to-xlf.transformer';
 import SpreadsheetToXmlTransformer from '../../shared/transformers/spreadsheet-to-xml.transformer';
 import SpreadsheetToYamlTransformer from '../../shared/transformers/spreadsheet-to-yaml.transformer';
 import Transformers from '../../shared/transformers/transformers';
@@ -23,6 +26,7 @@ import AndroidFilesCreator from './files-creators/android-files.creator';
 import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
+import XlfFilesCreator from './files-creators/xlf-files.creator';
 import YamlFilesCreator from './files-creators/yaml-files.creator';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
@@ -53,6 +57,9 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     jsonFilesCreator: awilix.asClass(JsonFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       fileRepository: container.resolve<FileRepository>('fileRepository'),
     })),
+    xlfFilesCreator: awilix.asClass(XlfFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
     yamlFilesCreator: awilix.asClass(YamlFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       fileRepository: container.resolve<FileRepository>('fileRepository'),
     })),
@@ -61,6 +68,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<AndroidFilesCreator>('androidFilesCreator'),
         container.resolve<IosFilesCreator>('iosFilesCreator'),
         container.resolve<JsonFilesCreator>('jsonFilesCreator'),
+        container.resolve<XlfFilesCreator>('xlfFilesCreator'),
         container.resolve<YamlFilesCreator>('yamlFilesCreator'),
       ],
     })),
@@ -70,6 +78,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     flatListToIosStringsTransformer: awilix.asClass(FlatListToIosStringsTransformer, {
       lifetime: awilix.Lifetime.SINGLETON,
     }),
+    flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToIosStringsTransformer: awilix
@@ -78,6 +87,10 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
         flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
       })),
+    jsonToXlfTransformer: awilix.asClass(JsonToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+      flatListToXlf: container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
+    })),
     jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
       flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
@@ -94,6 +107,12 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       .asClass(SpreadsheetToJsonStringTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
         spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+      })),
+    spreadsheetToXlfTransformer: awilix
+      .asClass(SpreadsheetToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        spreadsheetToJson: container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+        jsonToXlf: container.resolve<JsonToXlfTransformer>('jsonToXlfTransformer'),
       })),
     spreadsheetToXmlTransformer: awilix
       .asClass(SpreadsheetToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON })
@@ -112,6 +131,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
         container.resolve<SpreadsheetToXmlTransformer>('spreadsheetToXmlTransformer'),
         container.resolve<SpreadsheetToIosStringsTransformer>('spreadsheetToIosStringsTransformer'),
+        container.resolve<SpreadsheetToXlfTransformer>('spreadsheetToXlfTransformer'),
         container.resolve<SpreadsheetToYamlTransformer>('spreadsheetToYamlTransformer'),
       ],
     })),

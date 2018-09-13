@@ -4,6 +4,7 @@ const formatToExtension = {
     android: 'xml',
     ios: 'strings',
     json: 'json',
+    xlf: 'xlf',
     yml: 'yml',
 };
 function getExtension(format) {
@@ -18,6 +19,7 @@ const extensionsFromJson = {
     android: { extension: 'json-xml', documentType: 'application/xml' },
     ios: { extension: 'json-ios-strings', documentType: 'text/plain' },
     json: { extension: 'json', documentType: 'application/json' },
+    xlf: { extension: 'json-xlf', documentType: 'application/xml' },
     yml: { extension: 'json-yml', documentType: 'text/plain' },
 };
 function getExtensionsFromJson(format) {

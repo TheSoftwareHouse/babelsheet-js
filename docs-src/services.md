@@ -34,7 +34,7 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
     (default: <code>json</code>)
   </p>
   <p>
-    Format type (_android/ios/json/yml_).
+    Format type (_android/ios/json/yml/xlf_).
   </p>
 </details>
 <details>
@@ -151,7 +151,7 @@ Translations can be filtered by using:
 
 - `filters[]` -  e.g. calling `/translations?filters[]=en_US.CORE` will result in getting translations for `en_US` locale and section `CORE`. Other possibility is to use tag as a filter, e.g. `/translations?filters[]=en_US.tag1`.
 
-- `format` - translations can be served in json/android/ios/yml formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
+- `format` - translations can be served in json/android/ios/yml/xlf formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
 
 You can run API in docker container - see [Docker](docker.md).
 

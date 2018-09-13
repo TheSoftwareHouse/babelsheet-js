@@ -1,8 +1,9 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
 
-export default class JsonFilesCreator implements IFilesCreator {
-  private supportedExtension = 'json';
+export default class XlfFilesCreator implements IFilesCreator {
+  private supportedExtension = 'xlf';
+
   constructor(private fileRepository: IFileRepository) {}
 
   public supports(extension: string): boolean {
@@ -15,9 +16,8 @@ export default class JsonFilesCreator implements IFilesCreator {
       return;
     }
 
-    dataToSave.forEach((data: any) => {
-      this.createFolderAndSave(data.content, path, data.lang);
-    });
+    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
+    dataWithoutTags.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
   }
 
   private createFolderAndSave(data: string, folderName: string, fileName: string) {

@@ -1,5 +1,5 @@
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
-export default class JsonFilesCreator implements IFilesCreator {
+export default class XlfFilesCreator implements IFilesCreator {
     private fileRepository;
     private supportedExtension;
     constructor(fileRepository: IFileRepository);

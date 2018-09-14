@@ -29,7 +29,16 @@ describe('JsonToXmlTransformer', () => {
     const result = flatListToXmlTransformer.transform(flatList);
 
     expect(result).toBe(
-      `<?xml version="1.0"?><resources><string name="en_us_core_labels_yes">yes</string><string name="en_us_core_labels_no">no</string><string name="en_us_core_labels_save">save</string><string name="en_us_core_labels_cancel">cancel</string><string name="pl_pl_core_labels_yes">tak</string><string name="pl_pl_core_labels_no">nie</string><string name="pl_pl_core_labels_save">zapisz</string></resources>`
+      `<?xml version="1.0"?>
+<resources>
+  <string name="en_us_core_labels_yes">yes</string>
+  <string name="en_us_core_labels_no">no</string>
+  <string name="en_us_core_labels_save">save</string>
+  <string name="en_us_core_labels_cancel">cancel</string>
+  <string name="pl_pl_core_labels_yes">tak</string>
+  <string name="pl_pl_core_labels_no">nie</string>
+  <string name="pl_pl_core_labels_save">zapisz</string>
+</resources>`
     );
   });
 });

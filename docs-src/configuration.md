@@ -101,7 +101,7 @@ LOGGING_LEVEL=debug
 
 1. To generate refresh token, you have to [configure Google Spreadsheet API](#configuring-google-spreadsheet-api) first.
 2. When `CLIENT_ID` and `CLIENT_SECRET` are stored in `.env.babelsheet` file, you are ready to generate refresh-token.
-3. Run `babelsheet generate --config`.
+3. Run `babelsheet init`.
 
 
     <small>If babelsheet is not installed, run `npm i -g babelsheet` to install.</small>
@@ -109,13 +109,13 @@ LOGGING_LEVEL=debug
       <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
       <p>
         You don't have to create .env.babelsheet file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
-        `npm generate --config --client_id <yours-client-id> --client_secret <yours-client-secret>`
+        `npm generate --client_id <yours-client-id> --client_secret <yours-client-secret>`
       </p>
     </details>
     <details>
       <summary>Config in json file</summary>
       <p>
-        You can also generate token in `data.json` file, just by passing `json` parameter option `npm generate --config json`.
+        You can also generate token in `data.json` file, just by passing `json` parameter option `npm init --config-format json`.
       </p>
     </details>
 

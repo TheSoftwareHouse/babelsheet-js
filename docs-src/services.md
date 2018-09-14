@@ -100,31 +100,31 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
 <details>
   <summary>--client_id</summary>
   <p>
-    Client id received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_ID` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client id received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_ID` value. ([see how to obtain](configuration.md#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--client_secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_SECRET` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client secret received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_SECRET` value. ([see how to obtain](configuration.md#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id))
+    Spreadsheet ID from spreadsheet URL. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_ID` value. ([see how to obtain](configuration.md#how-to-get-spreadsheet-id))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Sheet name. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name))
+    Sheet name. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_NAME` value. ([see how to obtain](configuration.md#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `BABELSHEET_REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name))
+    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `BABELSHEET_REDIRECT_URI` value. ([see how to obtain](configuration.md/#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>

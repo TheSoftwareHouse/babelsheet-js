@@ -23,7 +23,7 @@ class FlatListToXlfTransformer {
             transUnit.ele('source', keyWithDots);
             transUnit.ele('target', translation.text);
         });
-        return xml.end();
+        return xml.end({ pretty: true });
     }
 }
 exports.default = FlatListToXlfTransformer;

@@ -37,7 +37,7 @@ class InEnvStorage {
     updateEnvsInFile() {
         const envsForFile = ramda.pick(envFileVars, process.env);
         const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
-        this.fileRepository.saveData(result, '', 'env');
+        this.fileRepository.saveData(result, '', 'env.babelsheet');
     }
     tryParse(value) {
         try {

@@ -5,7 +5,9 @@ const dotenv = require("dotenv");
 const yargs = require("yargs");
 const container_1 = require("./container");
 const fileGenerators_1 = require("./fileGenerators");
+const BABELSHEET_ENV_PATH = '.env.babelsheet';
 dotenv.config();
+dotenv.config({ path: BABELSHEET_ENV_PATH });
 const container = container_1.default();
 process.on('uncaughtException', err => {
     container.resolve('logger').error(err.toString());

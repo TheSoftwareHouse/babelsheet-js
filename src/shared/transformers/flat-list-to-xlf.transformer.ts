@@ -27,6 +27,6 @@ export default class FlatListToXlfTransformer implements ITransformer {
       transUnit.ele('target', translation.text);
     });
 
-    return xml.end();
+    return xml.end({ pretty: true });
   }
 }

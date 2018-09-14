@@ -3,28 +3,28 @@ In order to start using babelsheet, you have to configure your `.env.babelsheet`
 ## Configuration file
 
 ```
-CLIENT_ID=<GOOGLE-CLIENT-ID>
-CLIENT_SECRET=<GOOGLE-CLIENT-SECRET>
-SPREADSHEET_ID=<SPREADSHEET-ID>
-SPREADSHEET_NAME=<SPREADSHEET-NAME>
-REFRESH_TOKEN=<REFRESH-TOKEN>
+BABELSHEET_CLIENT_ID=<GOOGLE-CLIENT-ID>
+BABELSHEET_CLIENT_SECRET=<GOOGLE-CLIENT-SECRET>
+BABELSHEET_SPREADSHEET_ID=<SPREADSHEET-ID>
+BABELSHEET_SPREADSHEET_NAME=<SPREADSHEET-NAME>
+BABELSHEET_REFRESH_TOKEN=<REFRESH-TOKEN>
 
-REDIRECT_URI=http://localhost:3000/oauth2callback
-REDIS_HOST=redis
-REDIS_PORT=6379
-HOST=localhost
-PORT=3000
+BABELSHEET_REDIRECT_URI=http://localhost:3000/oauth2callback
+BABELSHEET_REDIS_HOST=redis
+BABELSHEET_REDIS_PORT=6379
+BABELSHEET_HOST=localhost
+BABELSHEET_PORT=3000
 NODE_ENV=dev
 APP_NAME=babelsheet-node
 LOGGING_LEVEL=debug
 ```
 
 ### Configuration options
-`CLIENT_ID`* - client id received from Google ([see how to config](#configuring-google-spreadsheet-api))
+`BABELSHEET_CLIENT_ID`* - client id received from Google ([see how to config](#configuring-google-spreadsheet-api))
 
-`CLIENT_SECRET`* - client secret received from Google ([see how to config](#configuring-google-spreadsheet-api))
+`BABELSHEET_CLIENT_SECRET`* - client secret received from Google ([see how to config](#configuring-google-spreadsheet-api))
 
-`SPREADSHEET_ID`* - spreadsheet ID from spreadsheet URL
+`BABELSHEET_SPREADSHEET_ID`* - spreadsheet ID from spreadsheet URL
 <details>
   <summary id="how-to-get-spreadsheet-id">How to get spreadsheet ID</summary>
   <p>
@@ -33,7 +33,7 @@ LOGGING_LEVEL=debug
   </p>
 </details>
 
-`SPREADSHEET_NAME`* - sheet name
+`BABELSHEET_SPREADSHEET_NAME`* - sheet name
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>
@@ -42,17 +42,17 @@ LOGGING_LEVEL=debug
   </p>
 </details>
 
-`REFRESH_TOKEN`* - refresh token ([see how to obtain](#generating-refresh-token))
+`BABELSHEET_REFRESH_TOKEN`* - refresh token ([see how to obtain](#generating-refresh-token))
 
-`REDIRECT_URI` - url to which user should be redirected after receiving refresh token
+`BABELSHEET_REDIRECT_URI` - url to which user should be redirected after receiving refresh token
 
-`REDIS_HOST` - host name of redis store
+`BABELSHEET_REDIS_HOST` - host name of redis store
 
-`REDIS_PORT` - port of redis store
+`BABELSHEET_REDIS_PORT` - port of redis store
 
-`HOST` - host name for winston
+`BABELSHEET_HOST` - host name for winston
 
-`PORT` - API port
+`BABELSHEET_PORT` - API port
 
 `NODE_ENV` - environment type
 
@@ -91,24 +91,24 @@ LOGGING_LEVEL=debug
       <p>From previous view, select _Create credentials_.</p>
       ![Screenshot](img/google-config/create-credentials.png)
       <p>Fill the form and click _Done_.</p>
-      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `REDIRECT_URI` in [.env.babelsheet file](#configuration-file).</p>
+      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `BABELSHEET_REDIRECT_URI` in [.env.babelsheet file](#configuration-file).</p>
       ![Screenshot](img/google-config/add-credentials.png)
     </details>
-4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env.babelsheet` file](#configuration-file).
+4. You will be given Client ID and Client secret keys, use them in environment variables `BABELSHEET_CLIENT_ID` and `BABELSHEET_CLIENT_SECRET` in [`.env.babelsheet` file](#configuration-file).
 5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name), then you will be ready to generate translations.
 
 ## Generating refresh token
 
 1. To generate refresh token, you have to [configure Google Spreadsheet API](#configuring-google-spreadsheet-api) first.
-2. When `CLIENT_ID` and `CLIENT_SECRET` are stored in `.env.babelsheet` file, you are ready to generate refresh-token.
+2. When `BABELSHEET_CLIENT_ID` and `BABELSHEET_CLIENT_SECRET` are stored in `.env.babelsheet` file, you are ready to generate refresh-token.
 3. Run `babelsheet init`.
 
 
     <small>If babelsheet is not installed, run `npm i -g babelsheet` to install.</small>
     <details>
-      <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
+      <summary>BABELSHEET_CLIENT_ID and BABELSHEET_CLIENT_SECRET as params</summary>
       <p>
-        You don't have to create .env.babelsheet file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
+        You don't have to create .env.babelsheet file, you can pass BABELSHEET_CLIENT_ID and BABELSHEET_CLIENT_SECRET values as parameters to babelsheet:
         `npm generate --client_id <yours-client-id> --client_secret <yours-client-secret>`
       </p>
     </details>

@@ -6,7 +6,10 @@ export default class InRedisStorage implements IStorage {
   private client: RedisClient;
 
   constructor() {
-    this.client = createClient(Number(process.env.REDIS_PORT) || 6379, process.env.REDIS_HOST || 'db');
+    this.client = createClient(
+      Number(process.env.BABELSHEET_REDIS_PORT) || 6379,
+      process.env.BABELSHEET_REDIS_HOST || 'db'
+    );
   }
 
   public async set(key: string, value: any) {

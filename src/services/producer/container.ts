@@ -40,7 +40,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     logger: awilix.asValue(winstonLogger),
     maskConverter: awilix.asClass(MaskConverter),
     maskInput: awilix.asClass(MaskInput),
-    port: awilix.asValue(process.env.PORT || 3000),
+    port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
     storage: awilix.asClass(InRedisStorage),
     transformer: awilix.asClass(SpreadsheetToJsonTransformer),
     translationsStorage: awilix.asClass(MaskedTranslations),

@@ -68,7 +68,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     maskConverter: awilix.asClass(MaskConverter),
     maskInput: awilix.asClass(MaskInput),
     maskedTranslations: awilix.asClass(MaskedTranslations),
-    port: awilix.asValue(process.env.PORT || 3000),
+    port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
     server: awilix.asClass(Server),
     storage: awilix.asClass(InRedisStorage),
     translationsController: awilix.asClass(TranslationsController),

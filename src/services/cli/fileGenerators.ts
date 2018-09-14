@@ -24,14 +24,20 @@ function checkFolderPermissions(container: AwilixContainer, path: string): void 
 }
 
 function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+  const {
+    BABELSHEET_CLIENT_ID,
+    BABELSHEET_CLIENT_SECRET,
+    BABELSHEET_SPREADSHEET_ID,
+    BABELSHEET_SPREADSHEET_NAME,
+    BABELSHEET_REDIRECT_URI,
+  } = process.env;
 
   const authData = {
-    clientId: args['client-id'] || CLIENT_ID,
-    clientSecret: args['client-secret'] || CLIENT_SECRET,
-    spreadsheetId: args['spreadsheet-id'] || SPREADSHEET_ID,
-    spreadsheetName: args['spreadsheet-name'] || SPREADSHEET_NAME || 'Sheet1',
-    redirectUri: args.redirect_uri || REDIRECT_URI || 'http://localhost:3000/oauth2callback',
+    clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
+    clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
+    spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
+    spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+    redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 
   return authData;
@@ -68,21 +74,26 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
 }
 
 function saveNecessaryEnvToFile(container: AwilixContainer, authData: { [key: string]: string }) {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME } = process.env;
+  const {
+    BABELSHEET_CLIENT_ID,
+    BABELSHEET_CLIENT_SECRET,
+    BABELSHEET_SPREADSHEET_ID,
+    BABELSHEET_SPREADSHEET_NAME,
+  } = process.env;
 
-  if (!authData.clientId || authData.clientId !== CLIENT_ID) {
+  if (!authData.clientId || authData.clientId !== BABELSHEET_CLIENT_ID) {
     container.resolve<InEnvStorage>('inEnvStorage').set('CLIENT_ID', authData.clientId || '');
   }
 
-  if (!authData.clientSecret || authData.clientSecret !== CLIENT_SECRET) {
+  if (!authData.clientSecret || authData.clientSecret !== BABELSHEET_CLIENT_SECRET) {
     container.resolve<InEnvStorage>('inEnvStorage').set('CLIENT_SECRET', authData.clientSecret || '');
   }
 
-  if (!authData.spreadsheetId || authData.spreadsheetId !== SPREADSHEET_ID) {
+  if (!authData.spreadsheetId || authData.spreadsheetId !== BABELSHEET_SPREADSHEET_ID) {
     container.resolve<InEnvStorage>('inEnvStorage').set('SPREADSHEET_ID', authData.spreadsheetId || '');
   }
 
-  if (authData.spreadsheetName !== SPREADSHEET_NAME) {
+  if (authData.spreadsheetName !== BABELSHEET_SPREADSHEET_NAME) {
     container.resolve<InEnvStorage>('inEnvStorage').set('SPREADSHEET_NAME', authData.spreadsheetName);
   }
 }

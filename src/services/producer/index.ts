@@ -24,13 +24,20 @@ process.on('unhandledRejection', err => {
 });
 
 function getAuthDataFromEnv(): { [key: string]: string } {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+  const {
+    BABELSHEET_CLIENT_ID,
+    BABELSHEET_CLIENT_SECRET,
+    BABELSHEET_SPREADSHEET_ID,
+    BABELSHEET_SPREADSHEET_NAME,
+    BABELSHEET_REDIRECT_URI,
+  } = process.env;
+
   const authData = {
-    clientId: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
-    spreadsheetId: SPREADSHEET_ID,
-    spreadsheetName: SPREADSHEET_NAME || 'Sheet1',
-    redirectUri: REDIRECT_URI || 'http://localhost:3000/oauth2callback',
+    clientId: BABELSHEET_CLIENT_ID,
+    clientSecret: BABELSHEET_CLIENT_SECRET,
+    spreadsheetId: BABELSHEET_SPREADSHEET_ID,
+    spreadsheetName: BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+    redirectUri: BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 
   checkAuthParameters(authData);

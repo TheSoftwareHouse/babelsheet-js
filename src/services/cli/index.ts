@@ -10,6 +10,7 @@ import createContainer from './container';
 import { generateConfigFile, generateTranslations } from './fileGenerators';
 
 dotenv.config();
+dotenv.config({ path: '.env.babelsheet' });
 
 const container = createContainer();
 

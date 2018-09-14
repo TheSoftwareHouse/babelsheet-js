@@ -44,7 +44,7 @@ export default class InEnvStorage implements Storage {
     const envsForFile = ramda.pick(envFileVars, process.env);
     const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
 
-    this.fileRepository.saveData(result, '', 'env');
+    this.fileRepository.saveData(result, '', 'env.babelsheet');
   }
 
   private tryParse(value: any) {

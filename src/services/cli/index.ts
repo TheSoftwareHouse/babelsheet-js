@@ -9,8 +9,10 @@ import InFileStorage from '../../infrastructure/storage/in-file';
 import createContainer from './container';
 import { generateConfigFile, generateTranslations } from './fileGenerators';
 
+const BABELSHEET_ENV_PATH = '.env.babelsheet';
+
 dotenv.config();
-dotenv.config({ path: '.env.babelsheet' });
+dotenv.config({ path: BABELSHEET_ENV_PATH });
 
 const container = createContainer();
 

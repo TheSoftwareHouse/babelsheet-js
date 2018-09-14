@@ -363,7 +363,7 @@
   ],
 </code></pre>
 
-<p>First .env file will be checked does it contain <code>REFRESH_TOKEN</code>, if not, next <code>data.json</code> file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.</p>
+<p>First .env.babelsheet file will be checked does it contain <code>REFRESH_TOKEN</code>, if not, next <code>data.json</code> file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.</p>
 <h2 id="set-refresh-token-write-provider">Set refresh token write provider</h2>
 <p>You can set <code>REFRESH_TOKEN</code> write provider in <code>/src/services/cli/container.ts</code> for CLI tool, and in <code>/src/services/producer/container.ts</code> for producer. Notice that producer will only have ability to save <code>REFRESH_TOKEN</code> when you run it locally, not in docker container - browser window will be opened automatically.</p>
 <p><code>writeProvider: container.resolve&lt;InEnvStorage&gt;('inEnvStorage'),</code></p>

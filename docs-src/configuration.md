@@ -1,4 +1,4 @@
-In order to start using babelsheet, you have to configure your `.env` file first.
+In order to start using babelsheet, you have to configure your `.env.babelsheet` file first. If you want, you can keep envs in `.env` file, all variables stored in `.env` will be overwritten by those stored in `.env.babelsheet`.
 
 ## Configuration file
 
@@ -91,16 +91,16 @@ LOGGING_LEVEL=debug
       <p>From previous view, select _Create credentials_.</p>
       ![Screenshot](img/google-config/create-credentials.png)
       <p>Fill the form and click _Done_.</p>
-      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `REDIRECT_URI` in [.env file](#configuration-file).</p>
+      <p><b>IMPORTANT! Remember to add `http://localhost:3000/oauth2callback` to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as `REDIRECT_URI` in [.env.babelsheet file](#configuration-file).</p>
       ![Screenshot](img/google-config/add-credentials.png)
     </details>
-4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env` file](#configuration-file).
+4. You will be given Client ID and Client secret keys, use them in environment variables `CLIENT_ID` and `CLIENT_SECRET` in [`.env.babelsheet` file](#configuration-file).
 5. You can get your [spreadsheet ID](#how-to-get-spreadsheet-id) and [spreadsheet name](#how-to-get-spreadsheet-name), then you will be ready to generate translations.
 
 ## Generating refresh token
 
 1. To generate refresh token, you have to [configure Google Spreadsheet API](#configuring-google-spreadsheet-api) first.
-2. When `CLIENT_ID` and `CLIENT_SECRET` are stored in `.env` file, you are ready to generate refresh-token.
+2. When `CLIENT_ID` and `CLIENT_SECRET` are stored in `.env.babelsheet` file, you are ready to generate refresh-token.
 3. Run `babelsheet generate --config`.
 
 
@@ -108,7 +108,7 @@ LOGGING_LEVEL=debug
     <details>
       <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
       <p>
-        You don't have to create .env file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
+        You don't have to create .env.babelsheet file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
         `npm generate --config --client_id <yours-client-id> --client_secret <yours-client-secret>`
       </p>
     </details>
@@ -121,6 +121,6 @@ LOGGING_LEVEL=debug
 
 
 4. Browser window will be opened automatically. Log in into you Google account and then grant your application an access for reading spreadsheets in your account. You should be given a message `Authentication successful! Please return to the console`.
-5. Refresh token is now stored in `.env` file. You can change storage type [here](development.md#set-refresh-token-write-provider).
+5. Refresh token is now stored in `.env.babelsheet` file. You can change storage type [here](development.md#set-refresh-token-write-provider).
 6. More actions won't be needed because tokens will be refreshed automatically if necessary.
 

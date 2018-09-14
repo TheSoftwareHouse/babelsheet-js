@@ -20,9 +20,9 @@ To generate translations type:
 
 `babelsheet generate [options]`
 
-Remember to [create .env file](configuration.md#configuration-file) before generating translations.
+Remember to [create .env.babelsheet file](configuration.md#configuration-file) before generating translations.
 
-<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](development.md#set-refresh-token-read-providers).</small>
+<small>If you wont provide `REFRESH_TOKEN` in `.env.babelsheet` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](development.md#set-refresh-token-read-providers).</small>
 
 **Options**
 <details>
@@ -88,31 +88,31 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
 <details>
   <summary>--client_id</summary>
   <p>
-    Client id received from Google. Overwrite .env `CLIENT_ID` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client id received from Google. Overwrite .env.babelsheet `CLIENT_ID` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--client_secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env `CLIENT_SECRET` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client secret received from Google. Overwrite .env.babelsheet `CLIENT_SECRET` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env `SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id))
+    Spreadsheet ID from spreadsheet URL. Overwrite .env.babelsheet `SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Sheet name. Overwrite .env `SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name))
+    Sheet name. Overwrite .env.babelsheet `SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env `REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name))
+    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>

@@ -8,7 +8,7 @@ You can set order of `REFRESH_TOKEN` providers in `/src/services/producer/contai
     container.resolve<InRedisStorage>('inRedisStorage'),
   ],
 ```
-First .env file will be checked does it contain `REFRESH_TOKEN`, if not, next `data.json` file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.
+First .env.babelsheet file will be checked does it contain `REFRESH_TOKEN`, if not, next `data.json` file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.
 
 
 ## Set refresh token write provider

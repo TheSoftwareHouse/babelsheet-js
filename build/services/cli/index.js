@@ -20,12 +20,10 @@ process.on('unhandledRejection', err => {
 function configureCli() {
     return yargs
         .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
+        .command('init', 'Generates config file with token for google auth')
+        .option('cf', { alias: 'config-format', describe: 'Config format type', type: 'string' })
         .command('generate', 'Generate file with translations')
         .required(1, 'generate')
-        .option('config', {
-        describe: 'Generates config file with token for google auth',
-        type: 'string',
-    })
         .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
         .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
         .option('l', {
@@ -55,17 +53,10 @@ const getProperStorage = {
     env: container.resolve('inEnvStorage'),
     json: container.resolve('inFileStorage'),
 };
-function getConfigType(config) {
-    if (config !== undefined) {
-        return config.length === 0 ? 'env' : config;
-    }
-    return null;
-}
 async function main() {
     const args = configureCli();
-    const configType = getConfigType(args.config);
-    configType
-        ? await fileGenerators_1.generateConfigFile(container, args, getProperStorage[configType])
+    args._[0] === 'init'
+        ? await fileGenerators_1.generateConfigFile(container, args, getProperStorage[args['config-format'] || 'env'])
         : await fileGenerators_1.generateTranslations(container, args);
     process.exit(0);
 }

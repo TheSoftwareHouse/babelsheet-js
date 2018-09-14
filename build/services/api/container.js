@@ -66,7 +66,7 @@ function createContainer(options) {
         maskConverter: awilix.asClass(mask_converter_1.default),
         maskInput: awilix.asClass(mask_input_1.default),
         maskedTranslations: awilix.asClass(masked_translations_1.default),
-        port: awilix.asValue(process.env.PORT || 3000),
+        port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
         server: awilix.asClass(server_1.default),
         storage: awilix.asClass(in_redis_1.default),
         translationsController: awilix.asClass(translations_controller_1.default),

@@ -1,5 +1,7 @@
-import to from 'await-to-js';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
+import to from 'await-to-js';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
 import { ILogger } from 'tsh-node-common';
@@ -8,8 +10,6 @@ import GoogleSheets from '../../shared/google/sheets';
 import ITransformer from '../../shared/transformers/transformer';
 import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
-
-dotenv.config();
 
 const container = createContainer();
 

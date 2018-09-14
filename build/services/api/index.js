@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv = require("dotenv");
-const container_1 = require("./container");
 dotenv.config();
+const container_1 = require("./container");
 const container = container_1.default();
 process.on('uncaughtException', err => {
     container.resolve('logger').error(err.toString());

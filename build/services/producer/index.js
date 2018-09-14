@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const await_to_js_1 = require("await-to-js");
 const dotenv = require("dotenv");
+dotenv.config();
+const await_to_js_1 = require("await-to-js");
 const schedule = require("node-schedule");
 const ramda = require("ramda");
 const checkAuthParams_1 = require("../../shared/checkAuthParams");
 const container_1 = require("./container");
-dotenv.config();
 const container = container_1.default();
 process.on('uncaughtException', err => {
     container.resolve('logger').error(err.toString());

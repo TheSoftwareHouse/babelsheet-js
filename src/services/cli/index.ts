@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-
 import * as dotenv from 'dotenv';
+
+const BABELSHEET_ENV_PATH = '.env.babelsheet';
+dotenv.config();
+dotenv.config({ path: BABELSHEET_ENV_PATH });
+
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
@@ -8,11 +12,6 @@ import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
 import createContainer from './container';
 import { generateConfigFile, generateTranslations } from './fileGenerators';
-
-const BABELSHEET_ENV_PATH = '.env.babelsheet';
-
-dotenv.config();
-dotenv.config({ path: BABELSHEET_ENV_PATH });
 
 const container = createContainer();
 

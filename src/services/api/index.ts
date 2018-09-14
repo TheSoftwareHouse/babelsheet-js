@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { ILogger } from 'tsh-node-common';
 import createContainer from './container';
 import Server from './server/server';
-
-dotenv.config();
 
 const container = createContainer();
 

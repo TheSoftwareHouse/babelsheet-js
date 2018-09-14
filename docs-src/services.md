@@ -26,6 +26,18 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
 
 **Options**
 <details>
+  <summary>--config-format</summary>
+  <p>
+    (alias: <code>-cf</code>)
+  </p>
+  <p>
+    (default: <code>env</code>)
+  </p>
+  <p>
+    Where to store config (refresh token) env/json.
+  </p>
+</details>
+<details>
   <summary>--format</summary>
   <p>
     (alias: <code>-f</code>)

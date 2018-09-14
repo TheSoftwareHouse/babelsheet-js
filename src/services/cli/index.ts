@@ -29,7 +29,7 @@ function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
     .command('init', 'Generates config file with token for google auth')
-    .option('cf', { alias: 'config-format', describe: 'Config format type', type: 'string' })
+    .option('cf', { alias: 'config-format', default: 'env', describe: 'Config format type', type: 'string' })
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
@@ -70,7 +70,7 @@ async function main() {
   const args: Arguments = configureCli();
 
   args._[0] === 'init'
-    ? await generateConfigFile(container, args, getProperStorage[args['config-format'] || 'env'])
+    ? await generateConfigFile(container, args, getProperStorage[args['config-format']])
     : await generateTranslations(container, args);
   process.exit(0);
 }

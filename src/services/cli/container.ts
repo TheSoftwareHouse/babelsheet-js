@@ -143,7 +143,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     googleSheets: awilix.asClass(GoogleSheets),
     logger: awilix.asValue(winstonLogger),
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
-    port: awilix.asValue(process.env.PORT || 3000),
+    port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
     ...tokenProviders,
     ...transformersRegistry,
     ...fileCreatorsRegistry,

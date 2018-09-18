@@ -1,5 +1,7 @@
-import to from 'await-to-js';
 import * as dotenv from 'dotenv';
+dotenv.config();
+
+import to from 'await-to-js';
 import * as schedule from 'node-schedule';
 import * as ramda from 'ramda';
 import { ILogger } from 'tsh-node-common';
@@ -8,8 +10,6 @@ import GoogleSheets from '../../shared/google/sheets';
 import ITransformer from '../../shared/transformers/transformer';
 import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
-
-dotenv.config();
 
 const container = createContainer();
 
@@ -24,13 +24,20 @@ process.on('unhandledRejection', err => {
 });
 
 function getAuthDataFromEnv(): { [key: string]: string } {
-  const { CLIENT_ID, CLIENT_SECRET, SPREADSHEET_ID, SPREADSHEET_NAME, REDIRECT_URI } = process.env;
+  const {
+    BABELSHEET_CLIENT_ID,
+    BABELSHEET_CLIENT_SECRET,
+    BABELSHEET_SPREADSHEET_ID,
+    BABELSHEET_SPREADSHEET_NAME,
+    BABELSHEET_REDIRECT_URI,
+  } = process.env;
+
   const authData = {
-    clientId: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
-    spreadsheetId: SPREADSHEET_ID,
-    spreadsheetName: SPREADSHEET_NAME || 'Sheet1',
-    redirectUri: REDIRECT_URI || 'http://localhost:3000/oauth2callback',
+    clientId: BABELSHEET_CLIENT_ID,
+    clientSecret: BABELSHEET_CLIENT_SECRET,
+    spreadsheetId: BABELSHEET_SPREADSHEET_ID,
+    spreadsheetName: BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+    redirectUri: BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 
   checkAuthParameters(authData);

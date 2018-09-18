@@ -1,6 +1,7 @@
 .idea
 node_modules
 .env
+.env.babelsheet
 data.json
 coverage
 docker-compose.yml

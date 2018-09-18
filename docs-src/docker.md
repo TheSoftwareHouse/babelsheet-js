@@ -9,6 +9,7 @@ services:
     image: tsh/babelsheet-api
     env_file:
       - .env
+      - .env.babelsheet
     ports:
       - "3000:3000"
     depends_on:
@@ -17,6 +18,7 @@ services:
     image: tsh/babelsheet-producer
     env_file:
       - .env
+      - .env.babelsheet
     depends_on:
       - redis
   redis:
@@ -25,7 +27,7 @@ services:
       - "6379:6379"
 ```
 
-Next, make sure you have proper [.env](configuration.md#configuration-file) file in the same directory, then run `docker-compose up`, and API should be working now.
+Next, make sure you have proper [.env.babelsheet](configuration.md#configuration-file) file in the same directory, then run `docker-compose up`, and API should be working now.
 
 ## Redis
   To run redis as a docker container type

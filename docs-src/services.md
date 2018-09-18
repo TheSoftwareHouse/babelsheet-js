@@ -1,5 +1,5 @@
 ## CLI
-Command line tool is used to obtain `REFRESH_TOKEN`, as well as to generate translations files.
+Command line tool is used to obtain `BABELSHEET_REFRESH_TOKEN`, as well as to generate translations files.
 Translations files are possible to generate in given formats:
 
 - Android
@@ -12,7 +12,7 @@ To run command line tools, you need to install it first:
 `npm i -g babelsheet`
 
 
-If you want to obtain `REFRESH_TOKEN` then see [generating refresh token](configuration.md#generating-refresh-token) section.
+If you want to obtain `BABELSHEET_REFRESH_TOKEN` then see [generating refresh token](configuration.md#generating-refresh-token) section.
 
 ### Generating translations files
 
@@ -20,11 +20,23 @@ To generate translations type:
 
 `babelsheet generate [options]`
 
-Remember to [create .env file](configuration.md#configuration-file) before generating translations.
+Remember to [create .env.babelsheet file](configuration.md#configuration-file) before generating translations.
 
-<small>If you wont provide `REFRESH_TOKEN` in `.env` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](development.md#set-refresh-token-read-providers).</small>
+<small>If you wont provide `BABELSHEET_REFRESH_TOKEN` in `.env.babelsheet` file or `data.json` file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it [here](development.md#set-refresh-token-read-providers).</small>
 
 **Options**
+<details>
+  <summary>--config-format</summary>
+  <p>
+    (alias: <code>-cf</code>)
+  </p>
+  <p>
+    (default: <code>env</code>)
+  </p>
+  <p>
+    Where to store config (refresh token) env/json.
+  </p>
+</details>
 <details>
   <summary>--format</summary>
   <p>
@@ -88,31 +100,31 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
 <details>
   <summary>--client_id</summary>
   <p>
-    Client id received from Google. Overwrite .env `CLIENT_ID` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client id received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_ID` value. ([see how to obtain](configuration.md#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--client_secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env `CLIENT_SECRET` value. ([see how to obtain](/../configuration#configuring-google-spreadsheet-api))
+    Client secret received from Google. Overwrite .env.babelsheet `BABELSHEET_CLIENT_SECRET` value. ([see how to obtain](configuration.md#configuring-google-spreadsheet-api))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env `SPREADSHEET_ID` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-id))
+    Spreadsheet ID from spreadsheet URL. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_ID` value. ([see how to obtain](configuration.md#how-to-get-spreadsheet-id))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Sheet name. Overwrite .env `SPREADSHEET_NAME` value. ([see how to obtain](/../configuration#how-to-get-spreadsheet-name))
+    Sheet name. Overwrite .env.babelsheet `BABELSHEET_SPREADSHEET_NAME` value. ([see how to obtain](configuration.md#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
   <summary>--spreadsheet_name</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env `REDIRECT_URI` value. ([see how to obtain](/../configuration/#how-to-get-spreadsheet-name))
+    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `BABELSHEET_REDIRECT_URI` value. ([see how to obtain](configuration.md/#how-to-get-spreadsheet-name))
   </p>
 </details>
 <details>
@@ -129,7 +141,7 @@ Remember to [create .env file](configuration.md#configuration-file) before gener
 `babelsheet generate --format ios --path ./translations` - generates translations in iOS format in `./translations` folder.
 
 ## Producer
-Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as `CLIENT_ID`, `CLIENT_SECRET` and `REFRESH_TOKEN` then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.
+Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as `BABELSHEET_CLIENT_ID`, `BABELSHEET_CLIENT_SECRET` and `BABELSHEET_REFRESH_TOKEN` then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.
 
 You can run Producer in docker container - see [Docker](docker.md).
 
@@ -141,7 +153,7 @@ If you want to run producer locally, first remember about [setting environment v
 
 Producer should be working now.
 
-You can change `REFRESH_TOKEN` read and write providers, check it [here](development.md#set-refresh-token-read-providers).
+You can change `BABELSHEET_REFRESH_TOKEN` read and write providers, check it [here](development.md#set-refresh-token-read-providers).
 
 You can also change translations storage from redis to file, check it [here](development.md#change-translations-storage-from-redis-to-file).
 

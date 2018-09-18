@@ -1,6 +1,10 @@
 #!/usr/bin/env node
-
 import * as dotenv from 'dotenv';
+
+const BABELSHEET_ENV_PATH = '.env.babelsheet';
+dotenv.config();
+dotenv.config({ path: BABELSHEET_ENV_PATH });
+
 import { ILogger } from 'tsh-node-common';
 import * as yargs from 'yargs';
 import { Arguments } from 'yargs';
@@ -8,8 +12,6 @@ import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
 import createContainer from './container';
 import { generateConfigFile, generateTranslations } from './fileGenerators';
-
-dotenv.config();
 
 const container = createContainer();
 
@@ -26,12 +28,10 @@ process.on('unhandledRejection', err => {
 function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
+    .command('init', 'Generates config file with token for google auth')
+    .option('cf', { alias: 'config-format', default: 'env', describe: 'Config format type', type: 'string' })
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
-    .option('config', {
-      describe: 'Generates config file with token for google auth',
-      type: 'string',
-    })
     .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string' })
     .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
     .option('l', {
@@ -66,18 +66,11 @@ const getProperStorage: { [key: string]: any } = {
   json: container.resolve<InFileStorage>('inFileStorage'),
 };
 
-function getConfigType(config: string | undefined): string | null {
-  if (config !== undefined) {
-    return config.length === 0 ? 'env' : config;
-  }
-  return null;
-}
-
 async function main() {
   const args: Arguments = configureCli();
-  const configType = getConfigType(args.config);
-  configType
-    ? await generateConfigFile(container, args, getProperStorage[configType])
+
+  args._[0] === 'init'
+    ? await generateConfigFile(container, args, getProperStorage[args['config-format']])
     : await generateTranslations(container, args);
   process.exit(0);
 }

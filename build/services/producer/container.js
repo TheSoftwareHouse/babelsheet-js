@@ -38,7 +38,7 @@ function createContainer(options) {
         logger: awilix.asValue(tsh_node_common_1.winstonLogger),
         maskConverter: awilix.asClass(mask_converter_1.default),
         maskInput: awilix.asClass(mask_input_1.default),
-        port: awilix.asValue(process.env.PORT || 3000),
+        port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
         storage: awilix.asClass(in_redis_1.default),
         transformer: awilix.asClass(spreadsheet_to_json_transformer_1.default),
         translationsStorage: awilix.asClass(masked_translations_1.default),

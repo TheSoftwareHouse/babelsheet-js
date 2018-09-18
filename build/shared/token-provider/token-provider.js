@@ -11,10 +11,10 @@ class TokenProvider {
     }
     async getRefreshToken() {
         if (this.currentReadProvider) {
-            return this.currentReadProvider.get('refresh_token');
+            return this.currentReadProvider.get('babelsheet_refresh_token');
         }
         for (const readProvider of this.readProviders) {
-            const value = await readProvider.get('refresh_token');
+            const value = await readProvider.get('babelsheet_refresh_token');
             if (value) {
                 this.currentReadProvider = readProvider;
                 return value;

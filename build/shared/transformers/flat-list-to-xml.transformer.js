@@ -14,7 +14,7 @@ class FlatListToXmlTransformer {
     generateXml(translations) {
         const xml = xmlbuilder.create('resources');
         translations.forEach(translation => xml.ele('string', { name: translation.name }, translation.text));
-        return xml.end();
+        return xml.end({ pretty: true });
     }
 }
 exports.default = FlatListToXmlTransformer;

@@ -366,28 +366,28 @@
                 
                   <h1>Configuration</h1>
                 
-                <p>In order to start using babelsheet, you have to configure your <code>.env</code> file first.</p>
+                <p>In order to start using babelsheet, you have to configure your <code>.env.babelsheet</code> file first. If you want, you can keep envs in <code>.env</code> file, all variables stored in <code>.env</code> will be overwritten by those stored in <code>.env.babelsheet</code>.</p>
 <h2 id="configuration-file">Configuration file</h2>
-<pre><code>CLIENT_ID=&lt;GOOGLE-CLIENT-ID&gt;
-CLIENT_SECRET=&lt;GOOGLE-CLIENT-SECRET&gt;
-SPREADSHEET_ID=&lt;SPREADSHEET-ID&gt;
-SPREADSHEET_NAME=&lt;SPREADSHEET-NAME&gt;
-REFRESH_TOKEN=&lt;REFRESH-TOKEN&gt;
+<pre><code>BABELSHEET_CLIENT_ID=&lt;GOOGLE-CLIENT-ID&gt;
+BABELSHEET_CLIENT_SECRET=&lt;GOOGLE-CLIENT-SECRET&gt;
+BABELSHEET_SPREADSHEET_ID=&lt;SPREADSHEET-ID&gt;
+BABELSHEET_SPREADSHEET_NAME=&lt;SPREADSHEET-NAME&gt;
+BABELSHEET_REFRESH_TOKEN=&lt;REFRESH-TOKEN&gt;
 
-REDIRECT_URI=http://localhost:3000/oauth2callback
-REDIS_HOST=redis
-REDIS_PORT=6379
-HOST=localhost
-PORT=3000
+BABELSHEET_REDIRECT_URI=http://localhost:3000/oauth2callback
+BABELSHEET_REDIS_HOST=redis
+BABELSHEET_REDIS_PORT=6379
+BABELSHEET_HOST=localhost
+BABELSHEET_PORT=3000
 NODE_ENV=dev
 APP_NAME=babelsheet-node
 LOGGING_LEVEL=debug
 </code></pre>
 
 <h3 id="configuration-options">Configuration options</h3>
-<p><code>CLIENT_ID</code>* - client id received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
-<p><code>CLIENT_SECRET</code>* - client secret received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
-<p><code>SPREADSHEET_ID</code>* - spreadsheet ID from spreadsheet URL
+<p><code>BABELSHEET_CLIENT_ID</code>* - client id received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
+<p><code>BABELSHEET_CLIENT_SECRET</code>* - client secret received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
+<p><code>BABELSHEET_SPREADSHEET_ID</code>* - spreadsheet ID from spreadsheet URL
 <details>
   <summary id="how-to-get-spreadsheet-id">How to get spreadsheet ID</summary>
   <p>
@@ -395,7 +395,7 @@ LOGGING_LEVEL=debug
     <code>https://docs.google.com/spreadsheets/d/&lt;spreadsheet-id&gt;/</code>
   </p>
 </details></p>
-<p><code>SPREADSHEET_NAME</code>* - sheet name
+<p><code>BABELSHEET_SPREADSHEET_NAME</code>* - sheet name
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>
@@ -403,12 +403,12 @@ LOGGING_LEVEL=debug
     <img alt="Screenshot" src="../img/spreadsheet-name.png" />
   </p>
 </details></p>
-<p><code>REFRESH_TOKEN</code>* - refresh token (<a href="#generating-refresh-token">see how to obtain</a>)</p>
-<p><code>REDIRECT_URI</code> - url to which user should be redirected after receiving refresh token</p>
-<p><code>REDIS_HOST</code> - host name of redis store</p>
-<p><code>REDIS_PORT</code> - port of redis store</p>
-<p><code>HOST</code> - host name for winston</p>
-<p><code>PORT</code> - API port</p>
+<p><code>BABELSHEET_REFRESH_TOKEN</code>* - refresh token (<a href="#generating-refresh-token">see how to obtain</a>)</p>
+<p><code>BABELSHEET_REDIRECT_URI</code> - url to which user should be redirected after receiving refresh token</p>
+<p><code>BABELSHEET_REDIS_HOST</code> - host name of redis store</p>
+<p><code>BABELSHEET_REDIS_PORT</code> - port of redis store</p>
+<p><code>BABELSHEET_HOST</code> - host name for winston</p>
+<p><code>BABELSHEET_PORT</code> - API port</p>
 <p><code>NODE_ENV</code> - environment type</p>
 <p><code>APP_NAME</code> - name which indentify app</p>
 <p><code>LOGGING_LEVEL</code> - Log level debug/error/info</p>
@@ -441,37 +441,37 @@ LOGGING_LEVEL=debug
       <p>From previous view, select <em>Create credentials</em>.</p>
       <img alt="Screenshot" src="../img/google-config/create-credentials.png" />
       <p>Fill the form and click <em>Done</em>.</p>
-      <p><b>IMPORTANT! Remember to add <code>http://localhost:3000/oauth2callback</code> to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as <code>REDIRECT_URI</code> in <a href="#configuration-file">.env file</a>.</p>
+      <p><b>IMPORTANT! Remember to add <code>http://localhost:3000/oauth2callback</code> to 'Authorised redirect URIs'</b>, you can add any other redirect uri, later passing it as <code>BABELSHEET_REDIRECT_URI</code> in <a href="#configuration-file">.env.babelsheet file</a>.</p>
       <img alt="Screenshot" src="../img/google-config/add-credentials.png" />
     </details></li>
-<li>You will be given Client ID and Client secret keys, use them in environment variables <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> in <a href="#configuration-file"><code>.env</code> file</a>.</li>
+<li>You will be given Client ID and Client secret keys, use them in environment variables <code>BABELSHEET_CLIENT_ID</code> and <code>BABELSHEET_CLIENT_SECRET</code> in <a href="#configuration-file"><code>.env.babelsheet</code> file</a>.</li>
 <li>You can get your <a href="#how-to-get-spreadsheet-id">spreadsheet ID</a> and <a href="#how-to-get-spreadsheet-name">spreadsheet name</a>, then you will be ready to generate translations.</li>
 </ol>
 <h2 id="generating-refresh-token">Generating refresh token</h2>
 <ol>
 <li>To generate refresh token, you have to <a href="#configuring-google-spreadsheet-api">configure Google Spreadsheet API</a> first.</li>
-<li>When <code>CLIENT_ID</code> and <code>CLIENT_SECRET</code> are stored in <code>.env</code> file, you are ready to generate refresh-token.</li>
+<li>When <code>BABELSHEET_CLIENT_ID</code> and <code>BABELSHEET_CLIENT_SECRET</code> are stored in <code>.env.babelsheet</code> file, you are ready to generate refresh-token.</li>
 <li>
-<p>Run <code>babelsheet generate --config</code>.</p>
+<p>Run <code>babelsheet init</code>.</p>
 <p><small>If babelsheet is not installed, run <code>npm i -g babelsheet</code> to install.</small>
 <details>
-  <summary>CLIENT_ID and CLIENT_SECRET as params</summary>
+  <summary>BABELSHEET_CLIENT_ID and BABELSHEET_CLIENT_SECRET as params</summary>
   <p>
-    You don't have to create .env file, you can pass CLIENT_ID and CLIENT_SECRET values as parameters to babelsheet:
-    <code>npm generate --config --client_id &lt;yours-client-id&gt; --client_secret &lt;yours-client-secret&gt;</code>
+    You don't have to create .env.babelsheet file, you can pass BABELSHEET_CLIENT_ID and BABELSHEET_CLIENT_SECRET values as parameters to babelsheet:
+    <code>npm generate --client_id &lt;yours-client-id&gt; --client_secret &lt;yours-client-secret&gt;</code>
   </p>
 </details>
 <details>
   <summary>Config in json file</summary>
   <p>
-    You can also generate token in <code>data.json</code> file, just by passing <code>json</code> parameter option <code>npm generate --config json</code>.
+    You can also generate token in <code>data.json</code> file, just by passing <code>json</code> parameter option <code>npm init --config-format json</code>.
   </p>
 </details></p>
 </li>
 <li>
 <p>Browser window will be opened automatically. Log in into you Google account and then grant your application an access for reading spreadsheets in your account. You should be given a message <code>Authentication successful! Please return to the console</code>.</p>
 </li>
-<li>Refresh token is now stored in <code>.env</code> file. You can change storage type <a href="../development/#set-refresh-token-write-provider">here</a>.</li>
+<li>Refresh token is now stored in <code>.env.babelsheet</code> file. You can change storage type <a href="../development/#set-refresh-token-write-provider">here</a>.</li>
 <li>More actions won't be needed because tokens will be refreshed automatically if necessary.</li>
 </ol>
                 

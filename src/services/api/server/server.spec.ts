@@ -367,7 +367,10 @@ describe('Server', () => {
       .then(res => {
         expect(res.header['content-type']).toEqual('application/xml; charset=utf-8');
         expect(res.text).toEqual(
-          `<?xml version=\"1.0\"?><resources><string name=\"en_us_common_sth1\">Some message ...</string></resources>`
+          `<?xml version=\"1.0\"?>
+<resources>
+  <string name=\"en_us_common_sth1\">Some message ...</string>
+</resources>`
         );
       });
   });

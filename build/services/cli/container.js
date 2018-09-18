@@ -139,7 +139,7 @@ function createContainer(options) {
         googleSheets: awilix.asClass(sheets_1.default),
         logger: awilix.asValue(tsh_node_common_1.winstonLogger),
         inEnvStorage: awilix.asClass(in_env_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
-        port: awilix.asValue(process.env.PORT || 3000),
+        port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
         ...tokenProviders,
         ...transformersRegistry,
         ...fileCreatorsRegistry,

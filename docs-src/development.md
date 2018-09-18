@@ -1,5 +1,5 @@
 ## Set refresh token read providers
-You can set order of `REFRESH_TOKEN` providers in `/src/services/producer/container.ts` for producer, and in `/src/services/cli/container.ts` for CLI tool:
+You can set order of `BABELSHEET_REFRESH_TOKEN` providers in `/src/services/producer/container.ts` for producer, and in `/src/services/cli/container.ts` for CLI tool:
 
 ```
   readProviders: [
@@ -8,11 +8,11 @@ You can set order of `REFRESH_TOKEN` providers in `/src/services/producer/contai
     container.resolve<InRedisStorage>('inRedisStorage'),
   ],
 ```
-First .env file will be checked does it contain `REFRESH_TOKEN`, if not, next `data.json` file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.
+First .env.babelsheet file will be checked does it contain `BABELSHEET_REFRESH_TOKEN`, if not, next `data.json` file will be checked, and the last one will be redis storage. Feel free to change order of those providers, or creating new ones.
 
 
 ## Set refresh token write provider
-You can set `REFRESH_TOKEN` write provider in `/src/services/cli/container.ts` for CLI tool, and in `/src/services/producer/container.ts` for producer. Notice that producer will only have ability to save `REFRESH_TOKEN` when you run it locally, not in docker container - browser window will be opened automatically.
+You can set `BABELSHEET_REFRESH_TOKEN` write provider in `/src/services/cli/container.ts` for CLI tool, and in `/src/services/producer/container.ts` for producer. Notice that producer will only have ability to save `BABELSHEET_REFRESH_TOKEN` when you run it locally, not in docker container - browser window will be opened automatically.
 
 `writeProvider: container.resolve<InEnvStorage>('inEnvStorage'),`
 

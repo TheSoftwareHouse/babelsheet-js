@@ -2,16 +2,16 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const ramda = require("ramda");
 const envFileVars = [
-    'CLIENT_ID',
-    'CLIENT_SECRET',
-    'SPREADSHEET_ID',
-    'SPREADSHEET_NAME',
-    'REFRESH_TOKEN',
-    'REDIRECT_URI',
-    'REDIS_HOST',
-    'REDIS_PORT',
-    'HOST',
-    'PORT',
+    'BABELSHEET_CLIENT_ID',
+    'BABELSHEET_CLIENT_SECRET',
+    'BABELSHEET_SPREADSHEET_ID',
+    'BABELSHEET_SPREADSHEET_NAME',
+    'BABELSHEET_REFRESH_TOKEN',
+    'BABELSHEET_REDIRECT_URI',
+    'BABELSHEET_REDIS_HOST',
+    'BABELSHEET_REDIS_PORT',
+    'BABELSHEET_HOST',
+    'BABELSHEET_PORT',
     'NODE_ENV',
     'APP_NAME',
     'LOGGING_LEVEL',
@@ -37,7 +37,7 @@ class InEnvStorage {
     updateEnvsInFile() {
         const envsForFile = ramda.pick(envFileVars, process.env);
         const result = Object.keys(envsForFile).reduce((sum, val) => `${sum}${val}=${envsForFile[val]}\n`, '');
-        this.fileRepository.saveData(result, '', 'env');
+        this.fileRepository.saveData(result, '', 'env.babelsheet');
     }
     tryParse(value) {
         try {

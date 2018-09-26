@@ -1,17 +1,25 @@
 version: '3'
 services:
   babelsheet-api:
-    image: tsh/babelsheet-api
+    image: tshio/babelsheet-api:latest
+    build:
+      context: .
+      dockerfile: docker/api/Dockerfile
     env_file:
       - .env
+      - .env.babelsheet
     ports:
       - "3000:3000"
     depends_on:
       - redis
   babelsheet-producer:
-    image: tsh/babelsheet-producer
+    image: tshio/babelsheet-producer:latest
+    build:
+      context: .
+      dockerfile: docker/producer/Dockerfile
     env_file:
       - .env
+      - .env.babelsheet
     depends_on:
       - redis
   redis:

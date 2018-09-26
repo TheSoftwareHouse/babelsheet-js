@@ -6,7 +6,7 @@ COPY package.json .
 
 RUN npm i --production
 
-COPY . /app
+COPY ./build /app/build
 
 EXPOSE 3000
 

@@ -133,6 +133,6 @@ export async function generateConfigFile(container: AwilixContainer, args: Argum
   const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
 
   info('Saving token...');
-  storage.set('refresh_token', refreshToken);
+  storage.set('babelsheet_refresh_token', refreshToken);
   info('Refresh token saved');
 }

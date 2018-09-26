@@ -68,6 +68,6 @@ describe('fileGenerators', async () => {
 
     await generateConfigFile(container, args, inEnvStorage);
 
-    expect(mockInEnvStorage.set).toBeCalledWith('refresh_token', 'test-token');
+    expect(mockInEnvStorage.set).toBeCalledWith('babelsheet_refresh_token', 'test-token');
   });
 });

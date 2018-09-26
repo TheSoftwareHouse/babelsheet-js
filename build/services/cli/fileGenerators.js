@@ -82,7 +82,7 @@ async function generateConfigFile(container, args, storage) {
     info('Acquiring refresh token...');
     const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
     info('Saving token...');
-    storage.set('refresh_token', refreshToken);
+    storage.set('babelsheet_refresh_token', refreshToken);
     info('Refresh token saved');
 }
 exports.generateConfigFile = generateConfigFile;

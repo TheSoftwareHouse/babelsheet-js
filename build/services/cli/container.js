@@ -16,6 +16,7 @@ const json_to_ios_strings_transformer_1 = require("../../shared/transformers/jso
 const json_to_xlf_transformer_1 = require("../../shared/transformers/json-to-xlf.transformer");
 const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
 const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-yaml.transformer");
+const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const spreadsheet_to_ios_strings_transformer_1 = require("../../shared/transformers/spreadsheet-to-ios-strings.transformer");
 const spreadsheet_to_json_string_transformer_1 = require("../../shared/transformers/spreadsheet-to-json-string.transformer");
 const spreadsheet_to_json_transformer_1 = require("../../shared/transformers/spreadsheet-to-json.transformer");
@@ -29,6 +30,8 @@ const ios_files_creator_1 = require("./files-creators/ios-files.creator");
 const json_files_creator_1 = require("./files-creators/json-files.creator");
 const xlf_files_creator_1 = require("./files-creators/xlf-files.creator");
 const yaml_files_creator_1 = require("./files-creators/yaml-files.creator");
+const mask_converter_1 = require("../../shared/mask/mask.converter");
+const mask_input_1 = require("../../shared/mask/mask.input");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,
@@ -72,6 +75,10 @@ function createContainer(options) {
         })),
     };
     const transformersRegistry = {
+        maskConverter: awilix.asClass(mask_converter_1.default),
+        maskInput: awilix.asClass(mask_input_1.default),
+        jsonToJsonMaskedTransformer: awilix
+            .asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToIosStringsTransformer: awilix.asClass(flat_list_to_ios_strings_transformer_1.default, {
             lifetime: awilix.Lifetime.SINGLETON,
         }),
@@ -99,29 +106,34 @@ function createContainer(options) {
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
             jsonToIosStrings: container.resolve('jsonToIosStringsTransformer'),
+            jsonToJsonMasked: container.resolve('jsonToJsonMaskedTransformer'),
         })),
         spreadsheetToJsonStringTransformer: awilix
             .asClass(spreadsheet_to_json_string_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
+            jsonToJsonMasked: container.resolve('jsonToJsonMaskedTransformer'),
         })),
         spreadsheetToXlfTransformer: awilix
             .asClass(spreadsheet_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
             jsonToXlf: container.resolve('jsonToXlfTransformer'),
+            jsonToJsonMasked: container.resolve('jsonToJsonMaskedTransformer'),
         })),
         spreadsheetToXmlTransformer: awilix
             .asClass(spreadsheet_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
             jsonToXml: container.resolve('jsonToXmlTransformer'),
+            jsonToJsonMasked: container.resolve('jsonToJsonMaskedTransformer'),
         })),
         spreadsheetToYamlTransformer: awilix
             .asClass(spreadsheet_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
             spreadsheetToJson: container.resolve('spreadsheetToJsonTransformer'),
             jsonToYaml: container.resolve('jsonToYamlTransformer'),
+            jsonToJsonMasked: container.resolve('jsonToJsonMaskedTransformer'),
         })),
         transformers: awilix.asClass(transformers_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             transformers: [

@@ -23,6 +23,7 @@ const args = {
   merge: false,
   filename: 'test-filename',
   base: 'pl',
+  filters: []
 };
 
 describe('fileGenerators', async () => {
@@ -49,7 +50,7 @@ describe('fileGenerators', async () => {
     await generateTranslations(container, args);
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
-    expect(mockTransformers.transform).toBeCalledWith('fetchSpreadsheetReturn', 'json', args.language, args.merge);
+    expect(mockTransformers.transform).toBeCalledWith('fetchSpreadsheetReturn', 'json', args.language, args.merge, args.filters);
     expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
   });
 

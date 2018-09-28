@@ -11,8 +11,13 @@ const jsonToYaml: ITransformer = {
   transform: jest.fn(() => 'yaml return'),
 };
 
+const jsonToMaskedJson: ITransformer = {
+  supports: type => false,
+  transform: jest.fn(() => 'json masked return'),
+};
+
 describe('SpreadsheetToYamlTransformer', () => {
-  const spreadsheetToYamlTransformer = new SpreadsheetToYamlTransformer(spreadsheetToJson, jsonToYaml);
+  const spreadsheetToYamlTransformer = new SpreadsheetToYamlTransformer(spreadsheetToJson, jsonToYaml, jsonToMaskedJson);
 
   it('does return true if supported type', async () => {
     const result = spreadsheetToYamlTransformer.supports('yml');
@@ -33,7 +38,8 @@ describe('SpreadsheetToYamlTransformer', () => {
     spreadsheetToYamlTransformer.transform(object, langCode);
 
     expect(spreadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToYaml.transform).toBeCalledWith('spreadsheet return');
+    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return',undefined,undefined,undefined);    
+    expect(jsonToYaml.transform).toBeCalledWith('json masked return');
   });
 
   it('does generate languages object from spreadsheet', async () => {
@@ -42,13 +48,20 @@ describe('SpreadsheetToYamlTransformer', () => {
       transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
     };
 
-    const spreadsheetToYamlTransformer2 = new SpreadsheetToYamlTransformer(spreeadsheetToJson2, jsonToYaml);
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(json => json),
+    };
+
+    const spreadsheetToYamlTransformer2 = new SpreadsheetToYamlTransformer(spreeadsheetToJson2, jsonToYaml, jsonToMaskedJson2);
     const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToYamlTransformer2.transform(object);
 
     expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
-    expect(jsonToYaml.transform).toBeCalledWith('spreadsheet return');
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },undefined,undefined,undefined);
+    expect(jsonToYaml.transform).toBeCalledWith([{ test: 'test' }])
+    expect(jsonToYaml.transform).toBeCalledWith([{ test2: 'test2' }]);
     expect(result).toEqual([{ content: 'yaml return', lang: 'en' }, { content: 'yaml return', lang: 'fr' }]);
   });
 });

@@ -3,7 +3,10 @@ import ITransformer from './transformer';
 export default class SpreadsheetToXmlTransformer implements ITransformer {
   private readonly supportedType = 'xml';
 
-  constructor(private spreadsheetToJson: ITransformer, private jsonToXml: ITransformer) {}
+  constructor(
+    private spreadsheetToJson: ITransformer, 
+    private jsonToXml: ITransformer,
+    private jsonToJsonMasked: ITransformer) { }
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -12,9 +15,11 @@ export default class SpreadsheetToXmlTransformer implements ITransformer {
   public transform(
     source: { [key: string]: string[] },
     langCode?: string,
-    mergeLanguages?: boolean
+    mergeLanguages?: boolean,
+    filters?: string[],
   ): string | object[] {
-    const json = this.spreadsheetToJson.transform(source, langCode);
+    let json = this.spreadsheetToJson.transform(source, langCode);
+    json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
 
     if (mergeLanguages || langCode) {
       return this.jsonToXml.transform(json);

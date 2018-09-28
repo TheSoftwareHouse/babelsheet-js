@@ -1,16 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SpreadsheetToYamlTransformer {
-    constructor(spreadsheetToJson, jsonToYaml) {
+    constructor(spreadsheetToJson, jsonToYaml, jsonToJsonMasked) {
         this.spreadsheetToJson = spreadsheetToJson;
         this.jsonToYaml = jsonToYaml;
+        this.jsonToJsonMasked = jsonToJsonMasked;
         this.supportedType = 'yml';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode, mergeLanguages) {
-        const json = this.spreadsheetToJson.transform(source, langCode);
+    transform(source, langCode, mergeLanguages, filters) {
+        let json = this.spreadsheetToJson.transform(source, langCode);
+        json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
         if (mergeLanguages || langCode) {
             return this.jsonToYaml.transform(json);
         }

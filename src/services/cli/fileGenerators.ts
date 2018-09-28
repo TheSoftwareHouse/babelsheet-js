@@ -65,9 +65,9 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('Formatting spreadsheet...');
   const dataToSave = await container
     .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language, args.merge);
+    .transform(spreadsheetData, extension, args.language, args.merge, args.filters);
   info('Spreadsheet formatted.');
-
+  
   info(`Saving translations...`);
   container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);
   info('File successfully saved.');

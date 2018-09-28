@@ -52,10 +52,11 @@ function configureCli(): Arguments {
     .option('spreadsheet-id', { describe: 'Spreadsheet ID', type: 'string' })
     .option('spreadsheet-name', { describe: 'Spreadsheet name', type: 'string' })
     .option('redirect-uri', { describe: 'The URI to redirect after completing the auth request' })
+    .option('filters', {describe: 'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)', type: 'array'})
     .help('?')
     .alias('?', 'help')
     .example(
-      '$0 generate -f xml -n my-data -p ./result -l en_US --merge',
+      '$0 generate -f android -n my-data -p ./result -l en_US --merge',
       'Generate my-data.xml with english translations in folder /result'
     )
     .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format').argv;

@@ -1,16 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SpreadsheetToXlfTransformer {
-    constructor(spreadsheetToJson, jsonToXlf) {
+    constructor(spreadsheetToJson, jsonToXlf, jsonToJsonMasked) {
         this.spreadsheetToJson = spreadsheetToJson;
         this.jsonToXlf = jsonToXlf;
+        this.jsonToJsonMasked = jsonToJsonMasked;
         this.supportedType = 'xlf';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode, mergeLanguages) {
-        const json = this.spreadsheetToJson.transform(source, langCode);
+    transform(source, langCode, mergeLanguages, filters) {
+        let json = this.spreadsheetToJson.transform(source, langCode);
+        json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
         if (mergeLanguages || langCode) {
             return this.jsonToXlf.transform(json);
         }

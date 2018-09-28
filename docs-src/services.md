@@ -83,6 +83,18 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
   </p>
 </details>
 <details>
+  <summary>--filters</summary>
+  <p>
+    (alias: <code>-n</code>)
+  </p>
+  <p>
+    (default: <code>none</code>)
+  </p>
+  <p>
+    Filters. Passed as space separated list, with keys separated by dots. (--filters en_US.CORE.COMMON en_US.CORE.SPECIFIC)
+  </p>
+</details>
+<details>
   <summary>--base</summary>
   <p>
     (default: <code>EN</code>)

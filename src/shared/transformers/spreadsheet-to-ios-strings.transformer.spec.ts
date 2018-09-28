@@ -11,10 +11,16 @@ const jsonToIosStrings: ITransformer = {
   transform: jest.fn(() => 'ios string return'),
 };
 
+const jsonToMaskedJson: ITransformer = {
+  supports: type => false,
+  transform: jest.fn(() => 'json masked return'),
+}
+
 describe('SpreadsheetToIosStringsTransformer', () => {
   const spreadsheetToIosStringsTransformer = new SpreadsheetToIosStringsTransformer(
     spreeadsheetToJson,
-    jsonToIosStrings
+    jsonToIosStrings,
+    jsonToMaskedJson
   );
 
   it('does return true if supported type', async () => {
@@ -36,7 +42,8 @@ describe('SpreadsheetToIosStringsTransformer', () => {
     spreadsheetToIosStringsTransformer.transform(object, langCode);
 
     expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToIosStrings.transform).toBeCalledWith('spreadsheet return');
+    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return',undefined,undefined,undefined);    
+    expect(jsonToIosStrings.transform).toBeCalledWith('json masked return');
   });
 
   it('does generate languages object from spreadsheet', async () => {
@@ -45,16 +52,24 @@ describe('SpreadsheetToIosStringsTransformer', () => {
       transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
     };
 
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn((json)=>json),
+    }    
+
     const spreadsheetToIosStringsTransformer2 = new SpreadsheetToIosStringsTransformer(
       spreeadsheetToJson2,
-      jsonToIosStrings
+      jsonToIosStrings,
+      jsonToMaskedJson2,      
     );
     const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToIosStringsTransformer2.transform(object);
 
     expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
-    expect(jsonToIosStrings.transform).toBeCalledWith('spreadsheet return');
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },undefined,undefined,undefined);    
+    expect(jsonToIosStrings.transform).toBeCalledWith([{ test: 'test' }]);
+    expect(jsonToIosStrings.transform).toBeCalledWith([{ test2: 'test2' }]);
     expect(result).toEqual([
       { content: 'ios string return', lang: 'en' },
       { content: 'ios string return', lang: 'fr' },

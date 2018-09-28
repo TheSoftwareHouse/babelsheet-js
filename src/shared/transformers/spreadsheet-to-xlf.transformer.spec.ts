@@ -11,8 +11,13 @@ const jsonToXlf: ITransformer = {
   transform: jest.fn(() => 'xlf return'),
 };
 
+const jsonToMaskedJson: ITransformer = {
+  supports: type => false,
+  transform: jest.fn(() => 'json masked return'),
+}
+
 describe('SpreadsheetToXlfTransformer', () => {
-  const spreadsheetToXlfTransformer = new SpreadsheetToXlfTransformer(spreeadsheetToJson, jsonToXlf);
+  const spreadsheetToXlfTransformer = new SpreadsheetToXlfTransformer(spreeadsheetToJson, jsonToXlf, jsonToMaskedJson);
 
   it('does return true if supported type', async () => {
     const result = spreadsheetToXlfTransformer.supports('xlf');
@@ -33,7 +38,10 @@ describe('SpreadsheetToXlfTransformer', () => {
     spreadsheetToXlfTransformer.transform(object, langCode);
 
     expect(spreeadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToXlf.transform).toBeCalledWith('spreadsheet return');
+    
+    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return',undefined,undefined,undefined);
+    
+    expect(jsonToXlf.transform).toBeCalledWith('json masked return');
   });
 
   it('does generate languages object in xlf from spreadsheet', async () => {
@@ -42,13 +50,18 @@ describe('SpreadsheetToXlfTransformer', () => {
       supports: type => false,
       transform: jest.fn(() => jsonReturned),
     };
-
-    const spreadsheetToXlfTransformer2 = new SpreadsheetToXlfTransformer(spreeadsheetToJson2, jsonToXlf);
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(json => json),
+    }
+    
+    const spreadsheetToXlfTransformer2 = new SpreadsheetToXlfTransformer(spreeadsheetToJson2, jsonToXlf,jsonToMaskedJson2);
     const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToXlfTransformer2.transform(object);
 
     expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith(jsonReturned,undefined,undefined,undefined);
     expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['en']);
     expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['fr']);
     expect(result).toEqual([{ content: 'xlf return', lang: 'en' }, { content: 'xlf return', lang: 'fr' }]);

@@ -38,7 +38,7 @@ async function generateTranslations(container, args) {
     info('Formatting spreadsheet...');
     const dataToSave = await container
         .resolve('transformers')
-        .transform(spreadsheetData, extension, args.language, args.merge);
+        .transform(spreadsheetData, extension, args.language, args.merge, args.filters);
     info('Spreadsheet formatted.');
     info(`Saving translations...`);
     container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);

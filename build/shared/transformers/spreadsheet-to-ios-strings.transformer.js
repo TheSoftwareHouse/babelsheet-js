@@ -1,16 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SpreadsheetToIosStringsTransformer {
-    constructor(spreadsheetToJson, jsonToIosStrings) {
+    constructor(spreadsheetToJson, jsonToIosStrings, jsonToJsonMasked) {
         this.spreadsheetToJson = spreadsheetToJson;
         this.jsonToIosStrings = jsonToIosStrings;
+        this.jsonToJsonMasked = jsonToJsonMasked;
         this.supportedType = 'strings';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode, mergeLanguages) {
-        const json = this.spreadsheetToJson.transform(source, langCode);
+    transform(source, langCode, mergeLanguages, filters) {
+        let json = this.spreadsheetToJson.transform(source, langCode);
+        json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
         if (mergeLanguages || langCode) {
             return this.jsonToIosStrings.transform(json);
         }

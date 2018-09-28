@@ -37,7 +37,10 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     injectionMode: awilix.InjectionMode.CLASSIC,
     ...options,
   });
-
+  const maskProviders = {
+    maskConverter: awilix.asClass(MaskConverter),
+    maskInput: awilix.asClass(MaskInput), 
+  };
   const tokenProviders = {
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     inFileStorage: awilix.asClass(InFileStorage, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -78,8 +81,6 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
   };
 
   const transformersRegistry = {
-    maskConverter: awilix.asClass(MaskConverter),
-    maskInput: awilix.asClass(MaskInput),
     jsonToJsonMaskedTransformer: awilix
     .asClass(JsonToJsonMaskedTransformer, {lifetime: awilix.Lifetime.SINGLETON}),
     flatListToIosStringsTransformer: awilix.asClass(FlatListToIosStringsTransformer, {
@@ -156,6 +157,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     logger: awilix.asValue(winstonLogger),
     inEnvStorage: awilix.asClass(InEnvStorage, { lifetime: awilix.Lifetime.SINGLETON }),
     port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
+    ...maskProviders,
     ...tokenProviders,
     ...transformersRegistry,
     ...fileCreatorsRegistry,

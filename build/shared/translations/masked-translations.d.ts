@@ -1,6 +1,6 @@
 import IStorage from '../../infrastructure/storage/storage';
 import ITranslations from './translations';
-import ITransformer from "../transformers/transformer";
+import ITransformer from '../transformers/transformer';
 export default class MaskedTranslations implements ITranslations {
     private storage;
     private jsonToJsonMaskedTransformer;

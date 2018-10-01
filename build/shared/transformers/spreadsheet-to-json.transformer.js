@@ -12,7 +12,7 @@ class SpreadsheetToJsonTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode) {
+    transform(source, { langCode } = {}) {
         const sourceValues = ramda.values(source);
         const metaIndex = sourceValues.findIndex(row => row.some(value => value === this.metaTranslationKey));
         if (metaIndex > -1) {

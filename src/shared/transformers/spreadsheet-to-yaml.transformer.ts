@@ -4,9 +4,10 @@ export default class SpreadsheetToYamlTransformer implements ITransformer {
   private readonly supportedType = 'yml';
 
   constructor(
-    private spreadsheetToJson: ITransformer, 
+    private spreadsheetToJson: ITransformer,
     private jsonToYaml: ITransformer,
-    private jsonToJsonMasked: ITransformer) {}
+    private jsonToJsonMasked: ITransformer
+  ) {}
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -14,13 +15,19 @@ export default class SpreadsheetToYamlTransformer implements ITransformer {
 
   public transform(
     source: { [key: string]: string[] },
-    langCode?: string,
-    mergeLanguages?: boolean,
-    filters?: string[],    
+    {
+      langCode,
+      mergeLanguages,
+      filters,
+    }: {
+      langCode?: string;
+      mergeLanguages?: boolean;
+      filters?: string[];
+    } = {}
   ): string | object[] {
-    let json = this.spreadsheetToJson.transform(source, langCode);
-    json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
-    
+    let json = this.spreadsheetToJson.transform(source, { langCode });
+    json = this.jsonToJsonMasked.transform(json, { filters });
+
     if (mergeLanguages || langCode) {
       return this.jsonToYaml.transform(json);
     }

@@ -3,9 +3,11 @@ import ITransformer from './transformer';
 export default class SpreadsheetToXlfTransformer implements ITransformer {
   private readonly supportedType = 'xlf';
 
-  constructor(private spreadsheetToJson: ITransformer, 
+  constructor(
+    private spreadsheetToJson: ITransformer,
     private jsonToXlf: ITransformer,
-  private jsonToJsonMasked: ITransformer,) {}
+    private jsonToJsonMasked: ITransformer
+  ) {}
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -13,12 +15,18 @@ export default class SpreadsheetToXlfTransformer implements ITransformer {
 
   public transform(
     source: { [key: string]: string[] },
-    langCode?: string,
-    mergeLanguages?: boolean,
-    filters?: string[],
+    {
+      langCode,
+      mergeLanguages,
+      filters,
+    }: {
+      langCode?: string;
+      mergeLanguages?: boolean;
+      filters?: string[];
+    } = {}
   ): string | object[] {
-    let json = this.spreadsheetToJson.transform(source, langCode);
-    json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
+    let json = this.spreadsheetToJson.transform(source, { langCode });
+    json = this.jsonToJsonMasked.transform(json, { filters });
 
     if (mergeLanguages || langCode) {
       return this.jsonToXlf.transform(json);

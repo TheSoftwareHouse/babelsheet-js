@@ -17,7 +17,11 @@ const jsonToMaskedJson: ITransformer = {
 };
 
 describe('SpreadsheetToYamlTransformer', () => {
-  const spreadsheetToYamlTransformer = new SpreadsheetToYamlTransformer(spreadsheetToJson, jsonToYaml, jsonToMaskedJson);
+  const spreadsheetToYamlTransformer = new SpreadsheetToYamlTransformer(
+    spreadsheetToJson,
+    jsonToYaml,
+    jsonToMaskedJson
+  );
 
   it('does return true if supported type', async () => {
     const result = spreadsheetToYamlTransformer.supports('yml');
@@ -35,10 +39,10 @@ describe('SpreadsheetToYamlTransformer', () => {
     const object = { test: ['test'] };
     const langCode = 'en_US';
 
-    spreadsheetToYamlTransformer.transform(object, langCode);
+    spreadsheetToYamlTransformer.transform(object, { langCode });
 
-    expect(spreadsheetToJson.transform).toBeCalledWith(object, langCode);
-    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return',undefined,undefined,undefined);    
+    expect(spreadsheetToJson.transform).toBeCalledWith(object, { langCode });
+    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return', { filters: undefined });
     expect(jsonToYaml.transform).toBeCalledWith('json masked return');
   });
 
@@ -53,14 +57,50 @@ describe('SpreadsheetToYamlTransformer', () => {
       transform: jest.fn(json => json),
     };
 
-    const spreadsheetToYamlTransformer2 = new SpreadsheetToYamlTransformer(spreeadsheetToJson2, jsonToYaml, jsonToMaskedJson2);
+    const spreadsheetToYamlTransformer2 = new SpreadsheetToYamlTransformer(
+      spreeadsheetToJson2,
+      jsonToYaml,
+      jsonToMaskedJson2
+    );
     const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToYamlTransformer2.transform(object);
 
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
-    expect(jsonToMaskedJson2.transform).toBeCalledWith({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },undefined,undefined,undefined);
-    expect(jsonToYaml.transform).toBeCalledWith([{ test: 'test' }])
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
+    expect(jsonToMaskedJson2.transform).toBeCalledWith(
+      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
+      { filters: undefined }
+    );
+    expect(jsonToYaml.transform).toBeCalledWith([{ test: 'test' }]);
+    expect(jsonToYaml.transform).toBeCalledWith([{ test2: 'test2' }]);
+    expect(result).toEqual([{ content: 'yaml return', lang: 'en' }, { content: 'yaml return', lang: 'fr' }]);
+  });
+  it('does pass filters to json to json transformer', async () => {
+    const spreeadsheetToJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+    };
+
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(json => json),
+    };
+
+    const spreadsheetToYamlTransformer2 = new SpreadsheetToYamlTransformer(
+      spreeadsheetToJson2,
+      jsonToYaml,
+      jsonToMaskedJson2
+    );
+    const object = { '11': ['', 'CORE'] };
+    const filters = ['en.test'];
+    const result = spreadsheetToYamlTransformer2.transform(object, { filters });
+
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
+    expect(jsonToMaskedJson2.transform).toBeCalledWith(
+      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
+      { filters }
+    );
+    expect(jsonToYaml.transform).toBeCalledWith([{ test: 'test' }]);
     expect(jsonToYaml.transform).toBeCalledWith([{ test2: 'test2' }]);
     expect(result).toEqual([{ content: 'yaml return', lang: 'en' }, { content: 'yaml return', lang: 'fr' }]);
   });

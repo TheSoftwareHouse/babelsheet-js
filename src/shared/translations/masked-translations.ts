@@ -1,13 +1,12 @@
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
 import ITranslations from './translations';
-import ITransformer from "../transformers/transformer";
+import ITransformer from '../transformers/transformer';
 
 export default class MaskedTranslations implements ITranslations {
   private readonly translationsKey = 'translations';
 
-  constructor(private storage: IStorage,
-    private jsonToJsonMaskedTransformer: ITransformer) {}
+  constructor(private storage: IStorage, private jsonToJsonMaskedTransformer: ITransformer) {}
 
   public async clearTranslations() {
     return this.storage.clear();
@@ -24,7 +23,7 @@ export default class MaskedTranslations implements ITranslations {
       return Promise.reject(new NotFoundError('Translations not found'));
     }
 
-    const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags,undefined,undefined, filters);
+    const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
 
     return Promise.resolve(maskedTranslations);
   }

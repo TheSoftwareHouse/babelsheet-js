@@ -7,7 +7,9 @@ export default class SpreadsheetToJsonTransformer implements ITransformer {
     supports(type: string): boolean;
     transform(source: {
         [key: string]: string[];
-    }, langCode?: string): object;
+    }, { langCode }?: {
+        langCode?: string;
+    }): object;
     private getLanguageTranslations;
     private extractTags;
     private valueHasLocale;

@@ -79,8 +79,7 @@ function createContainer(options) {
         })),
     };
     const transformersRegistry = {
-        jsonToJsonMaskedTransformer: awilix
-            .asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToIosStringsTransformer: awilix.asClass(flat_list_to_ios_strings_transformer_1.default, {
             lifetime: awilix.Lifetime.SINGLETON,
         }),

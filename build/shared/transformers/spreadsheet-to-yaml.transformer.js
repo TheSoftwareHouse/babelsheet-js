@@ -10,9 +10,9 @@ class SpreadsheetToYamlTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode, mergeLanguages, filters) {
-        let json = this.spreadsheetToJson.transform(source, langCode);
-        json = this.jsonToJsonMasked.transform(json, undefined, undefined, filters);
+    transform(source, { langCode, mergeLanguages, filters, } = {}) {
+        let json = this.spreadsheetToJson.transform(source, { langCode });
+        json = this.jsonToJsonMasked.transform(json, { filters });
         if (mergeLanguages || langCode) {
             return this.jsonToYaml.transform(json);
         }

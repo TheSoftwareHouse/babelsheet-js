@@ -6,5 +6,9 @@ export default interface ITransformer {
         [key: string]: string;
     }> | {
         [key: string]: object;
-    }, langCode?: string, mergeLanguages?: boolean, filters?: string[]): any;
+    }, options?: {
+        langCode?: string;
+        mergeLanguages?: boolean;
+        filters?: string[];
+    }): any;
 }

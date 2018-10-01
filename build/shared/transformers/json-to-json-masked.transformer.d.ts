@@ -9,7 +9,11 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
     supports(type: string): boolean;
     transform(source: {
         [key: string]: object;
-    }, langCode: string, mergeLanguages: boolean, filters: string[]): {
+    }, { langCode, mergeLanguages, filters, }: {
+        langCode?: string;
+        mergeLanguages?: boolean;
+        filters?: string[];
+    }): {
         [key: string]: object;
     };
 }

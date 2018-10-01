@@ -18,7 +18,7 @@ class MaskedTranslations {
         if (!translationsWithTags) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }
-        const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, undefined, undefined, filters);
+        const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
         return Promise.resolve(maskedTranslations);
     }
 }

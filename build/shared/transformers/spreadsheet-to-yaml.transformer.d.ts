@@ -8,5 +8,9 @@ export default class SpreadsheetToYamlTransformer implements ITransformer {
     supports(type: string): boolean;
     transform(source: {
         [key: string]: string[];
-    }, langCode?: string, mergeLanguages?: boolean, filters?: string[]): string | object[];
+    }, { langCode, mergeLanguages, filters, }?: {
+        langCode?: string;
+        mergeLanguages?: boolean;
+        filters?: string[];
+    }): string | object[];
 }

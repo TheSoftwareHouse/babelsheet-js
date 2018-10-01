@@ -9,7 +9,7 @@ class Transformers {
         if (!transformer) {
             throw new Error(`No support for ${type} data type`);
         }
-        return await transformer.transform(data, langCode, mergeLanguages, filters);
+        return await transformer.transform(data, { langCode, mergeLanguages, filters });
     }
 }
 exports.default = Transformers;

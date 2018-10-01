@@ -21,7 +21,7 @@ import TranslationsKeyGenerator from '../../shared/translations/translations.key
 import Server from './server/server';
 import TranslationsController from './translations/translations.controller';
 import TranslationsRouting from './translations/translations.routing';
-import JsonToJsonMaskedTransformer from "../../shared/transformers/json-to-json-masked.transformer";
+import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

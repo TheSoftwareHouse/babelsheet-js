@@ -22,6 +22,7 @@ const translations_key_generator_1 = require("../../shared/translations/translat
 const server_1 = require("./server/server");
 const translations_controller_1 = require("./translations/translations.controller");
 const translations_routing_1 = require("./translations/translations.routing");
+const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,
@@ -33,6 +34,7 @@ function createContainer(options) {
         }),
         flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToJsonTransformer: awilix.asClass(json_to_json_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToXmlTransformer: awilix.asClass(json_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

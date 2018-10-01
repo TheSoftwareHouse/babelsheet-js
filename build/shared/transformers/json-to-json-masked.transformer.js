@@ -11,14 +11,15 @@ class JsonToJsonMaskedTransformer {
         return type.toLowerCase() === this.supportedType;
     }
     transform(source, langCode, mergeLanguages, filters) {
+        const { tags, ...translations } = source;
         if (filters && filters.length > 0) {
-            const { tags, ...translations } = source;
             const maskInput = this.maskInput.convert(filters);
+            console.log(maskInput);
             const filtersMask = this.maskConverter.convert(maskInput, tags);
             const maskedTranslations = mask(translations, filtersMask);
             return maskedTranslations;
         }
-        return source;
+        return translations;
     }
 }
 exports.default = JsonToJsonMaskedTransformer;

@@ -16,8 +16,8 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
   public transform(source: { [key: string]: object }, langCode: string,
     mergeLanguages: boolean, filters: string[]): { [key: string]: object } {
       
+    const { tags, ...translations } = source;
     if (filters && filters.length > 0) {
-      const { tags, ...translations } = source;
 
       const maskInput = this.maskInput.convert(filters);
       const filtersMask = this.maskConverter.convert(maskInput, tags);
@@ -25,6 +25,6 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
 
       return maskedTranslations;
     }
-    return source;
+    return translations;
   }
 }

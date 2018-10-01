@@ -16,4 +16,5 @@ process.on('unhandledRejection', err => {
     process.exit(1);
 });
 const server = container.resolve('server').getApp();
+console.log(container.resolve('port'));
 server.listen(container.resolve('port'));

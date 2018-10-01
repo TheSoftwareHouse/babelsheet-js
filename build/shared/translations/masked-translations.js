@@ -1,12 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mask = require("json-mask");
 const not_found_1 = require("../error/not-found");
 class MaskedTranslations {
-    constructor(storage, maskInput, maskConverter) {
+    constructor(storage, jsonToJsonMaskedTransformer) {
         this.storage = storage;
-        this.maskInput = maskInput;
-        this.maskConverter = maskConverter;
+        this.jsonToJsonMaskedTransformer = jsonToJsonMaskedTransformer;
         this.translationsKey = 'translations';
     }
     async clearTranslations() {
@@ -20,10 +18,7 @@ class MaskedTranslations {
         if (!translationsWithTags) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }
-        const { tags, ...translations } = translationsWithTags;
-        const maskInput = this.maskInput.convert(filters);
-        const filtersMask = this.maskConverter.convert(maskInput, tags);
-        const maskedTranslations = mask(translations, filtersMask);
+        const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, undefined, undefined, filters);
         return Promise.resolve(maskedTranslations);
     }
 }

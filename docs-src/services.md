@@ -91,7 +91,7 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
     (default: <code>none</code>)
   </p>
   <p>
-    Filters. Passed as space separated list, with keys separated by dots. (--filters en_US.CORE.COMMON en_US.CORE.SPECIFIC)
+    Filters. Passed as space separated list, with keys separated by dots. (--filters en_US.CORE.COMMON en_US.CORE.SPECIFIC). Can include tags, as a second part of the filter expression (--filters en_US.tag1.CORE).
   </p>
 </details>
 <details>

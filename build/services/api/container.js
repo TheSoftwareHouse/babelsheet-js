@@ -11,6 +11,7 @@ const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-l
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
 const json_to_ios_strings_transformer_1 = require("../../shared/transformers/json-to-ios-strings.transformer");
+const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const json_to_json_transformer_1 = require("../../shared/transformers/json-to-json.transformer");
 const json_to_xlf_transformer_1 = require("../../shared/transformers/json-to-xlf.transformer");
 const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
@@ -22,7 +23,6 @@ const translations_key_generator_1 = require("../../shared/translations/translat
 const server_1 = require("./server/server");
 const translations_controller_1 = require("./translations/translations.controller");
 const translations_routing_1 = require("./translations/translations.routing");
-const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,

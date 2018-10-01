@@ -25,15 +25,15 @@ export default class SpreadsheetToIosStringsTransformer implements ITransformer 
       filters?: string[];
     } = {}
   ): string | object[] {
-    let json = this.spreadsheetToJson.transform(source, { langCode });
-    json = this.jsonToJsonMasked.transform(json, { filters });
+    const json = this.spreadsheetToJson.transform(source, { langCode });
+    const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
 
     if (mergeLanguages || langCode) {
-      return this.jsonToIosStrings.transform(json);
+      return this.jsonToIosStrings.transform(jsonMasked);
     }
 
-    return Object.keys(json).map(langName => {
-      const iosStrings = this.jsonToIosStrings.transform(json[langName]);
+    return Object.keys(jsonMasked).map(langName => {
+      const iosStrings = this.jsonToIosStrings.transform(jsonMasked[langName]);
       return { lang: langName, content: iosStrings };
     });
   }

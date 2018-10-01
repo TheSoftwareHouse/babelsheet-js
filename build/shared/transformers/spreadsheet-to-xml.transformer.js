@@ -11,13 +11,13 @@ class SpreadsheetToXmlTransformer {
         return type.toLowerCase() === this.supportedType;
     }
     transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        let json = this.spreadsheetToJson.transform(source, { langCode });
-        json = this.jsonToJsonMasked.transform(json, { filters });
+        const json = this.spreadsheetToJson.transform(source, { langCode });
+        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
         if (mergeLanguages || langCode) {
-            return this.jsonToXml.transform(json);
+            return this.jsonToXml.transform(jsonMasked);
         }
-        return Object.keys(json).map(langName => {
-            const xmlTranslations = this.jsonToXml.transform(json[langName]);
+        return Object.keys(jsonMasked).map(langName => {
+            const xmlTranslations = this.jsonToXml.transform(jsonMasked[langName]);
             return { lang: langName, content: xmlTranslations };
         });
     }

@@ -12,7 +12,7 @@ class JsonToJsonMaskedTransformer {
     }
     transform(source, { langCode, mergeLanguages, filters, }) {
         const { tags, ...translations } = source;
-        if (filters && filters.length > 0) {
+        if (filters && filters.length) {
             const maskInput = this.maskInput.convert(filters);
             const filtersMask = this.maskConverter.convert(maskInput, tags);
             const maskedTranslations = mask(translations, filtersMask);

@@ -25,6 +25,6 @@ export default class MaskedTranslations implements ITranslations {
 
     const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
 
-    return Promise.resolve(maskedTranslations);
+    return maskedTranslations;
   }
 }

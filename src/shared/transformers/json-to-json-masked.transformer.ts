@@ -1,12 +1,12 @@
-import ITransformer from './transformer';
 import * as mask from 'json-mask';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
+import ITransformer from './transformer';
 
 export default class JsonToJsonMaskedTransformer implements ITransformer {
-  constructor(private maskInput: MaskInput, private maskConverter: MaskConverter) {}
-
   private readonly supportedType = 'json';
+  
+  constructor(private maskInput: MaskInput, private maskConverter: MaskConverter) {}
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;

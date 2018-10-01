@@ -6,16 +6,18 @@ import InEnvStorage from '../../infrastructure/storage/in-env';
 import InFileStorage from '../../infrastructure/storage/in-file';
 import GoogleAuth from '../../shared/google/auth';
 import GoogleSheets from '../../shared/google/sheets';
+import MaskConverter from '../../shared/mask/mask.converter';
+import MaskInput from '../../shared/mask/mask.input';
 import TokenProvider from '../../shared/token-provider/token-provider';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
 import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
-import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import SpreadsheetToIosStringsTransformer from '../../shared/transformers/spreadsheet-to-ios-strings.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
@@ -29,8 +31,6 @@ import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
 import XlfFilesCreator from './files-creators/xlf-files.creator';
 import YamlFilesCreator from './files-creators/yaml-files.creator';
-import MaskConverter from '../../shared/mask/mask.converter';
-import MaskInput from '../../shared/mask/mask.input';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

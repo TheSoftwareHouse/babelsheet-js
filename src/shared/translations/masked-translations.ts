@@ -1,7 +1,7 @@
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import ITranslations from './translations';
 import ITransformer from '../transformers/transformer';
+import ITranslations from './translations';
 
 export default class MaskedTranslations implements ITranslations {
   private readonly translationsKey = 'translations';

@@ -14,7 +14,6 @@ class JsonToJsonMaskedTransformer {
         const { tags, ...translations } = source;
         if (filters && filters.length > 0) {
             const maskInput = this.maskInput.convert(filters);
-            console.log(maskInput);
             const filtersMask = this.maskConverter.convert(maskInput, tags);
             const maskedTranslations = mask(translations, filtersMask);
             return maskedTranslations;

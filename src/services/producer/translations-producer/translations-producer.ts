@@ -6,24 +6,23 @@ import ITransformer from '../../../shared/transformers/transformer';
 import TranslationsStorage from '../../../shared/translations/translations';
 
 export default class TranslationsProducer {
-    constructor(
-        private logger: ILogger,
-        private googleSheets: GoogleSheets, 
-        private transformer: ITransformer,
-        private translationsStorage: TranslationsStorage){}
-    public async produce(authData: any,) {
-        const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
-        const transformedData = await this.transformer.transform(spreadsheetData);
-        
-        const [, actualTranslations] = await to(
-          this.translationsStorage.getTranslations([])
-        );
-      
-        if (!ramda.equals(transformedData, actualTranslations)) {
-          await this.translationsStorage.clearTranslations();
-          await this.translationsStorage.setTranslations([], transformedData);
-      
-          this.logger.info('Translations were refreshed');
-        }
-      }
+  constructor(
+    private logger: ILogger,
+    private googleSheets: GoogleSheets,
+    private transformer: ITransformer,
+    private translationsStorage: TranslationsStorage
+  ) {}
+  public async produce(authData: any) {
+    const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
+    const transformedData = await this.transformer.transform(spreadsheetData);
+
+    const [, actualTranslations] = await to(this.translationsStorage.getTranslations([]));
+
+    if (!ramda.equals(transformedData, actualTranslations)) {
+      await this.translationsStorage.clearTranslations();
+      await this.translationsStorage.setTranslations([], transformedData);
+
+      this.logger.info('Translations were refreshed');
+    }
+  }
 }

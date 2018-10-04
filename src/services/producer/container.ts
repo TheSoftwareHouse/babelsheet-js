@@ -10,10 +10,10 @@ import GoogleSheets from '../../shared/google/sheets';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
 import TokenProvider from '../../shared/token-provider/token-provider';
-import JsonToJsonMaskedTransformer from "../../shared/transformers/json-to-json-masked.transformer";
+import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import MaskedTranslations from '../../shared/translations/masked-translations';
-import TranslationsProducer from "./translations-producer/translations-producer";
+import TranslationsProducer from './translations-producer/translations-producer';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({

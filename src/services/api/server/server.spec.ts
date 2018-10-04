@@ -79,18 +79,18 @@ describe('Server', () => {
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
-            CORE: {
-              LABELS: {
-                YES: 'yes',
-                NO: 'no',
-              },
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
             },
-            COMMON: {
-              STH1: 'Some message ...',
-              FORM: {
-                COMMENT: 'comment',
-              },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
             },
+          },
         });
       });
   });
@@ -105,7 +105,7 @@ describe('Server', () => {
         expect(res.body).toEqual({
           error: 'Bad Request',
           message:
-          'child "filters" fails because ["filters" at position 0 fails because ["0" is not allowed to be empty]]',
+            'child "filters" fails because ["filters" at position 0 fails because ["0" is not allowed to be empty]]',
           statusCode: 400,
           validation: { keys: ['filters.0'], source: 'query' },
         });
@@ -155,15 +155,15 @@ describe('Server', () => {
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
-            CORE: {
-              LABELS: {
-                YES: 'yes',
-                NO: 'no',
-              },
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
             },
-            COMMON: {
-              STH1: 'Some message ...',
-            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         });
       });
   });
@@ -211,9 +211,9 @@ describe('Server', () => {
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
-            COMMON: {
-              STH1: 'Some message ...',
-            },
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         });
       });
   });
@@ -250,18 +250,18 @@ describe('Server', () => {
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
-            COMMON: {
-              STH1: 'Some message ...',
-            },
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         });
       });
 
     expect(await storage.getData()).toEqual({
       translations,
       'translationsCache-en_us.tag1,en_us.common.sth1-json': {
-          COMMON: {
-            STH1: 'Some message ...',
-          },
+        COMMON: {
+          STH1: 'Some message ...',
+        },
       },
     });
   });
@@ -276,9 +276,9 @@ describe('Server', () => {
     await translationsStorage.setTranslations(
       ['en_us.tag1', 'en_us.common.sth1'],
       {
-          COMMON: {
-            STH1: 'Some message ...',
-          },
+        COMMON: {
+          STH1: 'Some message ...',
+        },
       },
       'json'
     );
@@ -288,8 +288,8 @@ describe('Server', () => {
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
-            COMMON: {
-              STH1: 'Some message ...',
+          COMMON: {
+            STH1: 'Some message ...',
           },
         });
       });
@@ -399,8 +399,8 @@ describe('Server', () => {
       pl_PL: {
         CORE: {
           HIDDEN: 'hidden',
-        }
-      }
+        },
+      },
     });
 
     await request(server)
@@ -455,8 +455,8 @@ describe('Server', () => {
       pl_PL: {
         CORE: {
           HIDDEN: 'hidden',
-        }
-      }
+        },
+      },
     });
 
     await request(server)

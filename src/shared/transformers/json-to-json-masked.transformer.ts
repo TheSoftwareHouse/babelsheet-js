@@ -5,7 +5,7 @@ import ITransformer from './transformer';
 
 export default class JsonToJsonMaskedTransformer implements ITransformer {
   private readonly supportedType = 'json';
-  
+
   constructor(private maskInput: MaskInput, private maskConverter: MaskConverter) {}
 
   public supports(type: string): boolean {

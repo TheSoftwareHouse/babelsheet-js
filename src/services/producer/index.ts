@@ -9,7 +9,7 @@ import * as schedule from 'node-schedule';
 import { ILogger } from 'tsh-node-common';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
 import createContainer from './container';
-import TranslationsProducer from "./translations-producer/translations-producer";
+import TranslationsProducer from './translations-producer/translations-producer';
 
 const container = createContainer();
 

@@ -13,12 +13,18 @@ class MaskedTranslations {
     async setTranslations(filters, translations) {
         return this.storage.set(this.translationsKey, translations);
     }
-    async getTranslations(filters) {
+    async getTranslations(filters, { keepLocale } = {}) {
         const translationsWithTags = await this.storage.get(this.translationsKey);
         if (!translationsWithTags) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }
         const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
+        if (!keepLocale) {
+            const localesCount = Object.keys(maskedTranslations).length;
+            if (localesCount === 1) {
+                return maskedTranslations[Object.keys(maskedTranslations)[0]];
+            }
+        }
         return maskedTranslations;
     }
 }

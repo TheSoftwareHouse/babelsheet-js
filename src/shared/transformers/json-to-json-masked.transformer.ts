@@ -15,12 +15,8 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
   public transform(
     source: { [key: string]: object },
     {
-      langCode,
-      mergeLanguages,
       filters,
     }: {
-      langCode?: string;
-      mergeLanguages?: boolean;
       filters?: string[];
     }
   ): { [key: string]: object } {

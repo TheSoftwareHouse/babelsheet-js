@@ -6,7 +6,7 @@ import ITranslations from './translations';
 export default class MaskedTranslations implements ITranslations {
   private readonly translationsKey = 'translations';
 
-  constructor(private storage: IStorage, private jsonToJsonMaskedTransformer: ITransformer) {}
+  constructor(private storage: IStorage, private jsonToJsonMaskedTransformer: ITransformer) { }
 
   public async clearTranslations() {
     return this.storage.clear();
@@ -16,7 +16,7 @@ export default class MaskedTranslations implements ITranslations {
     return this.storage.set(this.translationsKey, translations);
   }
 
-  public async getTranslations(filters: string[]): Promise<{ [key: string]: any }> {
+  public async getTranslations(filters: string[], { keepLocale }: { keepLocale?: boolean } = {}): Promise<{ [key: string]: any }> {
     const translationsWithTags = await this.storage.get(this.translationsKey);
 
     if (!translationsWithTags) {
@@ -25,6 +25,12 @@ export default class MaskedTranslations implements ITranslations {
 
     const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
 
+    if (!keepLocale) {
+      const localesCount = Object.keys(maskedTranslations).length;
+      if (localesCount === 1) {
+        return maskedTranslations[Object.keys(maskedTranslations)[0]];
+      }
+    }
     return maskedTranslations;
   }
 }

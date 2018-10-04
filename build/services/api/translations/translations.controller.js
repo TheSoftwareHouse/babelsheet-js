@@ -9,7 +9,7 @@ class TranslationsController {
     async getTranslations(req, res, next) {
         const queryFilters = req.query.filters || [];
         return this.translationsStorage
-            .getTranslations(queryFilters, req.query.format)
+            .getTranslations(queryFilters, { format: req.query.format, keepLocale: req.query.keepLocale })
             .then(trans => {
             const docType = formatToExtensions_1.getDocumentType(req.query.format);
             res

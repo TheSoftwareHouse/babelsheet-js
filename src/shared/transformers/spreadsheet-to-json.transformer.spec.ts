@@ -255,7 +255,7 @@ describe('SpreadsheetToJsonTransformer', () => {
 
     const transformer = new SpreadsheetToJsonTransformer();
 
-    expect(transformer.transform(source, langCode)).toEqual(expectedResult);
+    expect(transformer.transform(source, { langCode })).toEqual(expectedResult);
   });
 
   it('does throw exception when there are no translations in given language code', () => {
@@ -272,6 +272,8 @@ describe('SpreadsheetToJsonTransformer', () => {
 
     const transformer = new SpreadsheetToJsonTransformer();
 
-    expect(() => transformer.transform(source, langCode)).toThrow(`No translations for '${langCode}' language code`);
+    expect(() => transformer.transform(source, { langCode })).toThrow(
+      `No translations for '${langCode}' language code`
+    );
   });
 });

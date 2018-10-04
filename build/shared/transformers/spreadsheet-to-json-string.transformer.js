@@ -1,20 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class SpreadsheetToJsonStringTransformer {
-    constructor(spreadsheetToJson) {
+    constructor(spreadsheetToJson, jsonToJsonMasked) {
         this.spreadsheetToJson = spreadsheetToJson;
+        this.jsonToJsonMasked = jsonToJsonMasked;
         this.supportedType = 'json';
     }
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, langCode, mergeLanguages) {
-        const json = this.spreadsheetToJson.transform(source, langCode);
+    transform(source, { langCode, mergeLanguages, filters, } = {}) {
+        const json = this.spreadsheetToJson.transform(source, { langCode });
+        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
         if (mergeLanguages || langCode) {
-            return JSON.stringify(json);
+            return JSON.stringify(jsonMasked);
         }
-        return Object.keys(json).map(langName => {
-            const jsonString = JSON.stringify(json[langName]);
+        return Object.keys(jsonMasked).map(langName => {
+            const jsonString = JSON.stringify(jsonMasked[langName]);
             return { lang: langName, content: jsonString };
         });
     }

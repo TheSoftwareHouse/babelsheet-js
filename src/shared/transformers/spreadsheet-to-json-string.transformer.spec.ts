@@ -6,8 +6,15 @@ describe('SpreadsheetToJsonStringTransformer', () => {
     supports: type => false,
     transform: jest.fn(source => source),
   };
+  const jsonToMaskedJson: ITransformer = {
+    supports: type => false,
+    transform: jest.fn(source => source),
+  };
 
-  const spreadsheetToJsonStringTransformer = new SpreadsheetToJsonStringTransformer(spreadSheetToJson);
+  const spreadsheetToJsonStringTransformer = new SpreadsheetToJsonStringTransformer(
+    spreadSheetToJson,
+    jsonToMaskedJson
+  );
 
   it('does return true for supported format', async () => {
     const result = spreadsheetToJsonStringTransformer.supports('json');
@@ -22,7 +29,7 @@ describe('SpreadsheetToJsonStringTransformer', () => {
   });
 
   it('does transform json to string', async () => {
-    const result = spreadsheetToJsonStringTransformer.transform({ en: ['test2'] }, 'en');
+    const result = spreadsheetToJsonStringTransformer.transform({ en: ['test2'] }, { langCode: 'en' });
 
     expect(result).toBe('{"en":["test2"]}');
   });
@@ -30,9 +37,9 @@ describe('SpreadsheetToJsonStringTransformer', () => {
   it('does call spreadsheetToJson.transform with two parameters', async () => {
     const translations = { test: ['test2'] };
     const langCode = 'en_US';
-    const result = spreadsheetToJsonStringTransformer.transform(translations, langCode);
+    const result = spreadsheetToJsonStringTransformer.transform(translations, { langCode });
 
-    expect(spreadSheetToJson.transform).toBeCalledWith(translations, langCode);
+    expect(spreadSheetToJson.transform).toBeCalledWith(translations, { langCode });
   });
 
   it('does generate languages object from spreadsheet', async () => {
@@ -40,13 +47,52 @@ describe('SpreadsheetToJsonStringTransformer', () => {
       supports: type => false,
       transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
     };
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => source),
+    };
 
-    const spreadsheetToJsonStringTransformer2 = new SpreadsheetToJsonStringTransformer(spreeadsheetToJson2);
+    const spreadsheetToJsonStringTransformer2 = new SpreadsheetToJsonStringTransformer(
+      spreeadsheetToJson2,
+      jsonToMaskedJson2
+    );
     const object = { '11': ['', 'CORE'] };
 
     const result = spreadsheetToJsonStringTransformer2.transform(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith(
+      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
+      { filters: undefined }
+    );
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
+    expect(result).toEqual([
+      { lang: 'en', content: JSON.stringify([{ test: 'test' }]) },
+      { lang: 'fr', content: JSON.stringify([{ test2: 'test2' }]) },
+    ]);
+  });
 
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, undefined);
+  it('does pass filters to json to json transformer', async () => {
+    const spreeadsheetToJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+    };
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => source),
+    };
+
+    const spreadsheetToJsonStringTransformer3 = new SpreadsheetToJsonStringTransformer(
+      spreeadsheetToJson2,
+      jsonToMaskedJson2
+    );
+    const object = { '11': ['', 'CORE'] };
+    const filters = ['en.test'];
+
+    const result = spreadsheetToJsonStringTransformer3.transform(object, { filters: ['en.test'] });
+    expect(jsonToMaskedJson2.transform).toBeCalledWith(
+      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
+      { filters }
+    );
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
     expect(result).toEqual([
       { lang: 'en', content: JSON.stringify([{ test: 'test' }]) },
       { lang: 'fr', content: JSON.stringify([{ test2: 'test2' }]) },

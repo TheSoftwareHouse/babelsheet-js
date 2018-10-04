@@ -29,10 +29,22 @@ function configureCli(): Arguments {
   return yargs
     .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
     .command('init', 'Generates config file with token for google auth')
-    .option('cf', { alias: 'config-format', default: 'env', describe: 'Config format type', type: 'string', choices: ['env','json'] })
+    .option('cf', {
+      alias: 'config-format',
+      default: 'env',
+      describe: 'Config format type',
+      type: 'string',
+      choices: ['env', 'json'],
+    })
     .command('generate', 'Generate file with translations')
     .required(1, 'generate')
-    .option('f', { alias: 'format', default: 'json', describe: 'Format type', type: 'string', choices: ['android','json','ios','yml','xlf'] })
+    .option('f', {
+      alias: 'format',
+      default: 'json',
+      describe: 'Format type',
+      type: 'string',
+      choices: ['android', 'json', 'ios', 'yml', 'xlf'],
+    })
     .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
     .option('l', {
       alias: 'language',
@@ -52,10 +64,15 @@ function configureCli(): Arguments {
     .option('spreadsheet-id', { describe: 'Spreadsheet ID', type: 'string' })
     .option('spreadsheet-name', { describe: 'Spreadsheet name', type: 'string' })
     .option('redirect-uri', { describe: 'The URI to redirect after completing the auth request' })
+    .option('filters', {
+      describe:
+        'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)',
+      type: 'array',
+    })
     .help('?')
     .alias('?', 'help')
     .example(
-      '$0 generate -f xml -n my-data -p ./result -l en_US --merge',
+      '$0 generate -f android -n my-data -p ./result -l en_US --merge',
       'Generate my-data.xml with english translations in folder /result'
     )
     .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format').argv;

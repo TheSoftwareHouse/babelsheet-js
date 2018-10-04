@@ -11,6 +11,7 @@ const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-l
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
 const json_to_ios_strings_transformer_1 = require("../../shared/transformers/json-to-ios-strings.transformer");
+const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const json_to_json_transformer_1 = require("../../shared/transformers/json-to-json.transformer");
 const json_to_xlf_transformer_1 = require("../../shared/transformers/json-to-xlf.transformer");
 const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
@@ -33,6 +34,7 @@ function createContainer(options) {
         }),
         flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToJsonTransformer: awilix.asClass(json_to_json_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToXmlTransformer: awilix.asClass(json_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

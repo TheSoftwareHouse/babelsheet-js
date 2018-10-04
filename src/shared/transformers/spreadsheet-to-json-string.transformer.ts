@@ -3,7 +3,7 @@ import ITransformer from './transformer';
 export default class SpreadsheetToJsonStringTransformer implements ITransformer {
   private readonly supportedType = 'json';
 
-  constructor(private spreadsheetToJson: ITransformer) {}
+  constructor(private spreadsheetToJson: ITransformer, private jsonToJsonMasked: ITransformer) {}
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -11,16 +11,25 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
 
   public transform(
     source: { [key: string]: string[] },
-    langCode?: string,
-    mergeLanguages?: boolean
+    {
+      langCode,
+      mergeLanguages,
+      filters,
+    }: {
+      langCode?: string;
+      mergeLanguages?: boolean;
+      filters?: string[];
+    } = {}
   ): string | object[] {
-    const json = this.spreadsheetToJson.transform(source, langCode);
+    const json = this.spreadsheetToJson.transform(source, { langCode });
+    const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
+
     if (mergeLanguages || langCode) {
-      return JSON.stringify(json);
+      return JSON.stringify(jsonMasked);
     }
 
-    return Object.keys(json).map(langName => {
-      const jsonString = JSON.stringify(json[langName]);
+    return Object.keys(jsonMasked).map(langName => {
+      const jsonString = JSON.stringify(jsonMasked[langName]);
       return { lang: langName, content: jsonString };
     });
   }

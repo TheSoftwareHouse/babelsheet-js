@@ -1,14 +1,12 @@
-import * as mask from 'json-mask';
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import MaskConverter from '../mask/mask.converter';
-import MaskInput from '../mask/mask.input';
+import ITransformer from '../transformers/transformer';
 import ITranslations from './translations';
 
 export default class MaskedTranslations implements ITranslations {
   private readonly translationsKey = 'translations';
 
-  constructor(private storage: IStorage, private maskInput: MaskInput, private maskConverter: MaskConverter) {}
+  constructor(private storage: IStorage, private jsonToJsonMaskedTransformer: ITransformer) {}
 
   public async clearTranslations() {
     return this.storage.clear();
@@ -25,12 +23,8 @@ export default class MaskedTranslations implements ITranslations {
       return Promise.reject(new NotFoundError('Translations not found'));
     }
 
-    const { tags, ...translations } = translationsWithTags;
+    const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
 
-    const maskInput = this.maskInput.convert(filters);
-    const filtersMask = this.maskConverter.convert(maskInput, tags);
-    const maskedTranslations = mask(translations, filtersMask);
-
-    return Promise.resolve(maskedTranslations);
+    return maskedTranslations;
   }
 }

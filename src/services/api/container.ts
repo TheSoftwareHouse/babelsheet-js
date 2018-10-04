@@ -10,6 +10,7 @@ import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
+import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
 import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
 import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
@@ -34,6 +35,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     }),
     flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    jsonToJsonMaskedTransformer: awilix.asClass(JsonToJsonMaskedTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

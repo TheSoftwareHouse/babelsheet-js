@@ -18,13 +18,13 @@ class CachedTranslations {
         const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
         return this.storage.set(translationsKey, translations);
     }
-    async getTranslations(filters, format) {
+    async getTranslations(filters, { format, keepLocale }) {
         const extension = formatToExtensions_1.getExtensionsFromJson(format);
         const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
         if (await this.storage.has(translationsKey)) {
             return await this.storage.get(translationsKey);
         }
-        return this.maskedTranslations.getTranslations(filters).then(async (trans) => {
+        return this.maskedTranslations.getTranslations(filters, { keepLocale }).then(async (trans) => {
             if (ramda.isEmpty(trans)) {
                 return Promise.reject(new not_found_1.default('Translations not found'));
             }

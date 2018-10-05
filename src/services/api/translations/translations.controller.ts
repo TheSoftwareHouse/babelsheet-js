@@ -11,7 +11,7 @@ export default class TranslationsController {
     const queryFilters = req.query.filters || [];
 
     return this.translationsStorage
-      .getTranslations(queryFilters, req.query.format)
+      .getTranslations(queryFilters, { format: req.query.format, keepLocale: req.query.keepLocale })
       .then(trans => {
         const docType = getDocumentType(req.query.format);
         res

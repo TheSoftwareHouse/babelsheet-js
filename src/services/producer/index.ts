@@ -5,15 +5,11 @@ const BABELSHEET_ENV_PATH = '.env.babelsheet';
 dotenv.config();
 dotenv.config({ path: BABELSHEET_ENV_PATH });
 
-import to from 'await-to-js';
 import * as schedule from 'node-schedule';
-import * as ramda from 'ramda';
 import { ILogger } from 'tsh-node-common';
 import { checkAuthParameters } from '../../shared/checkAuthParams';
-import GoogleSheets from '../../shared/google/sheets';
-import ITransformer from '../../shared/transformers/transformer';
-import TranslationsStorage from '../../shared/translations/translations';
 import createContainer from './container';
+import TranslationsProducer from './translations-producer/translations-producer';
 
 const container = createContainer();
 
@@ -50,20 +46,7 @@ function getAuthDataFromEnv(): { [key: string]: string } {
 
 async function main() {
   const authData = getAuthDataFromEnv();
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(authData);
-
-  const transformedData = await container.resolve<ITransformer>('transformer').transform(spreadsheetData);
-
-  const [, actualTranslations] = await to(
-    container.resolve<TranslationsStorage>('translationsStorage').getTranslations([])
-  );
-
-  if (!ramda.equals(transformedData, actualTranslations)) {
-    await container.resolve<TranslationsStorage>('translationsStorage').clearTranslations();
-    await container.resolve<TranslationsStorage>('translationsStorage').setTranslations([], transformedData);
-
-    container.resolve<ILogger>('logger').info('Translations were refreshed');
-  }
+  await container.resolve<TranslationsProducer>('translationsProducer').produce(authData);
 }
 
 const everyFiveMinutes = '*/5 * * * *';

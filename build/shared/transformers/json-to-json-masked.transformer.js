@@ -10,7 +10,7 @@ class JsonToJsonMaskedTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, }) {
+    transform(source, { filters, }) {
         const { tags, ...translations } = source;
         if (filters && filters.length) {
             const maskInput = this.maskInput.convert(filters);

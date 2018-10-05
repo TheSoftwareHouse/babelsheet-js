@@ -11,8 +11,10 @@ const sheets_1 = require("../../shared/google/sheets");
 const mask_converter_1 = require("../../shared/mask/mask.converter");
 const mask_input_1 = require("../../shared/mask/mask.input");
 const token_provider_1 = require("../../shared/token-provider/token-provider");
+const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const spreadsheet_to_json_transformer_1 = require("../../shared/transformers/spreadsheet-to-json.transformer");
 const masked_translations_1 = require("../../shared/translations/masked-translations");
+const translations_producer_1 = require("./translations-producer/translations-producer");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,
@@ -41,7 +43,9 @@ function createContainer(options) {
         port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
         storage: awilix.asClass(in_redis_1.default),
         transformer: awilix.asClass(spreadsheet_to_json_transformer_1.default),
+        jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default),
         translationsStorage: awilix.asClass(masked_translations_1.default),
+        translationsProducer: awilix.asClass(translations_producer_1.default),
         ...tokenProviders,
     });
     return container;

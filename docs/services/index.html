@@ -558,6 +558,9 @@ Translations can be filtered by using:</p>
 <li>
 <p><code>format</code> - translations can be served in json/android/ios/yml/xlf formats, just add adtitional parameter e.g. <code>/translations?filters[]=en_US.CORE&amp;format=android</code>.</p>
 </li>
+<li>
+<p><code>keepLocale</code> - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. <code>/translations?keepLocale=true</code>.</p>
+</li>
 </ul>
 <p>You can run API in docker container - see <a href="../docker/">Docker</a>.</p>
 <p>If you want to run API locally, first remember about <a href="../configuration/#configuration-file">setting environment variables</a> and <a href="../docker/#redis">running redis</a>, next type:</p>

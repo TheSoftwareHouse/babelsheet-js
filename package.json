@@ -5,6 +5,7 @@
   "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",
   "scripts": {
+    "prepare-pr": "tsc && jest --coverage && mkdocs build && tslint -c tslint.json 'src/**/*.ts' && nsp check && prettier --write 'src/**/*.ts'",    
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",

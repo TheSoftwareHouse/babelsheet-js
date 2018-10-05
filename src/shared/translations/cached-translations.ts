@@ -26,7 +26,10 @@ export default class CachedTranslations implements ITranslations {
     return this.storage.set(translationsKey, translations);
   }
 
-  public async getTranslations(filters: string[], format: string): Promise<{ [key: string]: any }> {
+  public async getTranslations(
+    filters: string[],
+    { format, keepLocale }: { format: string; keepLocale: boolean }
+  ): Promise<{ [key: string]: any }> {
     const extension = getExtensionsFromJson(format);
     const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
 
@@ -34,7 +37,7 @@ export default class CachedTranslations implements ITranslations {
       return await this.storage.get(translationsKey);
     }
 
-    return this.maskedTranslations.getTranslations(filters).then(async trans => {
+    return this.maskedTranslations.getTranslations(filters, { keepLocale }).then(async trans => {
       if (ramda.isEmpty(trans)) {
         return Promise.reject(new NotFoundError('Translations not found'));
       }

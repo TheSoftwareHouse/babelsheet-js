@@ -5,9 +5,7 @@ const dotenv = require("dotenv");
 const BABELSHEET_ENV_PATH = '.env.babelsheet';
 dotenv.config();
 dotenv.config({ path: BABELSHEET_ENV_PATH });
-const await_to_js_1 = require("await-to-js");
 const schedule = require("node-schedule");
-const ramda = require("ramda");
 const checkAuthParams_1 = require("../../shared/checkAuthParams");
 const container_1 = require("./container");
 const container = container_1.default();
@@ -33,14 +31,7 @@ function getAuthDataFromEnv() {
 }
 async function main() {
     const authData = getAuthDataFromEnv();
-    const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet(authData);
-    const transformedData = await container.resolve('transformer').transform(spreadsheetData);
-    const [, actualTranslations] = await await_to_js_1.default(container.resolve('translationsStorage').getTranslations([]));
-    if (!ramda.equals(transformedData, actualTranslations)) {
-        await container.resolve('translationsStorage').clearTranslations();
-        await container.resolve('translationsStorage').setTranslations([], transformedData);
-        container.resolve('logger').info('Translations were refreshed');
-    }
+    await container.resolve('translationsProducer').produce(authData);
 }
 const everyFiveMinutes = '*/5 * * * *';
 main();

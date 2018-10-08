@@ -1,11 +1,11 @@
 {
   "name": "babelsheet",
-  "version": "1.5.0",
+  "version": "1.6.0-0",
   "description": "",
   "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",
   "scripts": {
-    "prepare-pr": "tsc && jest --coverage && mkdocs build && tslint -c tslint.json 'src/**/*.ts' && nsp check && prettier --write 'src/**/*.ts'",    
+    "prepare-pr": "tsc && jest --coverage && mkdocs build && tslint -c tslint.json 'src/**/*.ts' && nsp check && prettier --write 'src/**/*.ts'",
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",

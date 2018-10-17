@@ -9,3 +9,7 @@ translations.json
 translations.xml
 translations.strings
 /translations
+messages*.xlf
+messages*.yml
+*.lproj
+values*/strings.xml

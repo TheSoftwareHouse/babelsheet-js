@@ -14,6 +14,11 @@ class JsonFilesCreator {
             this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
+        if (dataToSave.meta && dataToSave.meta.langCode) {
+            const translations = dataToSave.result[dataToSave.meta.langCode];
+            this.createFolderAndSave(translations, path, filename);
+            return;
+        }
         dataToSave.result.forEach((data) => {
             this.createFolderAndSave(data.content, path, data.lang);
         });

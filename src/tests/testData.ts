@@ -124,15 +124,15 @@ export const multiLocaleDataset = {
         merged: `en_US:
   CORE:
     LABELS:
-      YES: 'yes'
-      NO: 'no'
+      'YES': 'yes'
+      'NO': 'no'
       SAVE: save
       CANCEL: cancel
 pl_PL:
   CORE:
     LABELS:
-      YES: tak
-      NO: nie
+      'YES': tak
+      'NO': nie
       SAVE: zapisz
 `,
       },
@@ -141,8 +141,8 @@ pl_PL:
           lang: 'en_US',
           content: `CORE:
   LABELS:
-    YES: 'yes' #Affirmative, give consent
-    NO: 'no' #Negative, refuse consent
+    'YES': 'yes' #Affirmative, give consent
+    'NO': 'no' #Negative, refuse consent
     SAVE: save #Persist, save consent
     CANCEL: cancel
 `,
@@ -151,8 +151,8 @@ pl_PL:
           lang: 'pl_PL',
           content: `CORE:
   LABELS:
-    YES: tak #Affirmative, give consent
-    NO: nie #Negative, refuse consent
+    'YES': tak #Affirmative, give consent
+    'NO': nie #Negative, refuse consent
     SAVE: zapisz #Persist, save consent
 `,
         },
@@ -162,8 +162,8 @@ pl_PL:
           lang: 'en_US',
           content: `CORE:
   LABELS:
-    YES: 'yes'
-    NO: 'no'
+    'YES': 'yes'
+    'NO': 'no'
     SAVE: save
     CANCEL: cancel
 `,
@@ -172,8 +172,8 @@ pl_PL:
           lang: 'pl_PL',
           content: `CORE:
   LABELS:
-    YES: tak
-    NO: nie
+    'YES': tak
+    'NO': nie
     SAVE: zapisz
 `,
         },
@@ -212,8 +212,8 @@ export const singleLocaleDataset = {
           lang: 'en_US',
           content: `CORE:
   LABELS:
-    YES: 'yes'
-    NO: 'no'
+    'YES': 'yes'
+    'NO': 'no'
     SAVE: save
     CANCEL: cancel
 `,

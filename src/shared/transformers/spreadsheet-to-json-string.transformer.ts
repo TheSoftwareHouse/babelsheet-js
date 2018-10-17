@@ -17,6 +17,10 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
       return { ...jsonMasked, result: JSON.stringify(jsonMasked.result) };
     }
 
+    if (source.meta.langCode) {
+      return { ...jsonMasked, result: { [source.meta.langCode]: JSON.stringify(jsonMasked.result) } };
+    }
+
     return {
       ...jsonMasked,
       result: Object.keys(jsonMasked.result).map(langName => ({

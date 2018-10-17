@@ -163,7 +163,7 @@ describe('SpreadsheetToJsonStringTransformer', () => {
 
     const object = {
       ...minimalPassingObject,
-      meta: { ...minimalPassingObject.meta, mergeLanguages: true },
+      meta: { ...minimalPassingObject.meta, mergeLanguages: true, langCode: 'en' },
     };
 
     const result = spreadsheetToJsonStringTransformer2.transform(object);

@@ -38,10 +38,10 @@ class JsonToYamlTransformer {
         }
     }
     generateYaml(json, comments, locales) {
-        const jsonToYaml = (current, source, upperKey, context = [], yaml = '', level = 0) => {
+        const jsonToYaml = (current, source, upperKey = "", context = [], yaml = '', level = 0) => {
             // if its an object, go deeper
             if (typeof current === 'object') {
-                return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${upperKey ? upperKey + ':\n' : ''}${Object.keys(current).reduce((accumulator, key) => {
+                return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${upperKey ? this.checkForKeywords(upperKey) ? `'${upperKey}':\n` : `${upperKey}:\n` : ''}${Object.keys(current).reduce((accumulator, key) => {
                     return jsonToYaml(current[key], source, key, [...context, key], accumulator, level + 1);
                 }, '')}`;
             }
@@ -57,7 +57,7 @@ class JsonToYamlTransformer {
                         return previous && previous[key];
                     }, comments);
                 }
-                return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${upperKey}: ${this.checkForKeywords(current) ? "'" + current + "'" : current}${comment ? ` #${comment}` : ''}\n`;
+                return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${this.checkForKeywords(upperKey) ? `'${upperKey}'` : upperKey}: ${this.checkForKeywords(current) ? `'${current}'` : current}${comment ? ` #${comment}` : ''}\n`;
             }
         };
         return jsonToYaml(json, json);

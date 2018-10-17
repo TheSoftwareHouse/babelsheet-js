@@ -15,6 +15,10 @@ class AndroidFilesCreator {
             this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
+        if (dataToSave.meta && dataToSave.meta.langCode) {
+            this.createFolderAndSave((dataToSave.result.find((element) => element.lang === dataToSave.meta.langCode)).content, path, filename);
+            return;
+        }
         dataToSave.result.forEach((data) => {
             const langWithLocale = this.transformLangWithRegion(data.lang);
             const folderName = `${path}/values-${langWithLocale}`;

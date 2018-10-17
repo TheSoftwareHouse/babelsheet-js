@@ -16,7 +16,11 @@ export default class JsonFilesCreator implements IFilesCreator {
       this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
-
+    if (dataToSave.meta && dataToSave.meta.langCode) {
+      const translations = dataToSave.result[dataToSave.meta.langCode];
+      this.createFolderAndSave(translations, path, filename);
+      return;
+    }
     dataToSave.result.forEach((data: any) => {
       this.createFolderAndSave(data.content, path, data.lang);
     });

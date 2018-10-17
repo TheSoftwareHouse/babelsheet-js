@@ -17,7 +17,14 @@ export default class YamlFilesCreator implements IFilesCreator {
       this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
-
+    if (dataToSave.meta && dataToSave.meta.langCode) {
+      this.createFolderAndSave(
+        dataToSave.result.find((element: any) => element.lang === dataToSave.meta.langCode).content,
+        path,
+        filename
+      );
+      return;
+    }
     dataToSave.result.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
   }
 

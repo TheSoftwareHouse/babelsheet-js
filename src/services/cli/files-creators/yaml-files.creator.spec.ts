@@ -26,8 +26,16 @@ describe('YamlFilesCreator', () => {
     expect(result).toBeFalsy();
   });
 
-  it('executes save method once when dataToSave is string', () => {
-    yamlFilesCreator.save('data', '.', 'test');
+  it('executes save method once when dataToSave is merged', () => {
+    yamlFilesCreator.save(
+      {
+        result: { merged: 'data' },
+        translations: {},
+        meta: { mergeLanguages: true },
+      },
+      '.',
+      'test'
+    );
 
     expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'yml', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
@@ -39,7 +47,7 @@ describe('YamlFilesCreator', () => {
       { lang: 'en_US', content: 'test2' },
       { lang: 'de', content: 'test3' },
     ];
-    yamlFilesCreator.save(translations, '.', 'test');
+    yamlFilesCreator.save({ result: translations, translations: {}, meta: {} }, '.', 'test');
 
     expect(fileRepository.saveData).toBeCalledWith(
       translations[0].content,

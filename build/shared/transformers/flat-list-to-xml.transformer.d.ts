@@ -1,9 +1,7 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 export default class FlatListToXmlTransformer implements ITransformer {
     private readonly supportedType;
     supports(type: string): boolean;
-    transform(source: Array<{
-        [key: string]: string;
-    }>): string;
+    transform(source: ITranslationsData): ITranslationsData;
     private generateXml;
 }

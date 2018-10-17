@@ -95,6 +95,15 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
   </p>
 </details>
 <details>
+  <summary>--comments</summary>
+  <p>
+    (default: <code>false</code>)
+  </p>
+  <p>
+    Includes comments in result files.
+  </p>
+</details>
+<details>
   <summary>--base</summary>
   <p>
     (default: <code>EN</code>)
@@ -178,6 +187,8 @@ Translations can be filtered by using:
 - `format` - translations can be served in json/android/ios/yml/xlf formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
 
 - `keepLocale` - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. `/translations?keepLocale=true`.
+
+- `comments` - translations can include comments, e.g. `/translations?comments=true`.
 
 You can run API in docker container - see [Docker](docker.md).
 

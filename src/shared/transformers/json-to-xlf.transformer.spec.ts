@@ -1,5 +1,6 @@
 import ITransformer from './transformer';
 import JsonToXlfTransformer from './json-to-xlf.transformer';
+import { minimalPassingObject } from '../../tests/testData';
 
 const jsonToFlatList: ITransformer = {
   supports: type => false,
@@ -27,11 +28,8 @@ describe('JsonToXlfTransformer', () => {
   });
 
   it('does generate xlf from json', async () => {
-    const object = { test: ['test'] };
-
-    jsonToXlfTransformer.transform(object);
-
-    expect(jsonToFlatList.transform).toBeCalledWith(object);
+    jsonToXlfTransformer.transform(minimalPassingObject);
+    expect(jsonToFlatList.transform).toBeCalledWith(minimalPassingObject);
     expect(flatListToXlf.transform).toBeCalledWith('json-flat-list return');
   });
 });

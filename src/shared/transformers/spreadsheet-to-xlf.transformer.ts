@@ -1,4 +1,4 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class SpreadsheetToXlfTransformer implements ITransformer {
   private readonly supportedType = 'xlf';
@@ -13,28 +13,9 @@ export default class SpreadsheetToXlfTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(
-    source: { [key: string]: string[] },
-    {
-      langCode,
-      mergeLanguages,
-      filters,
-    }: {
-      langCode?: string;
-      mergeLanguages?: boolean;
-      filters?: string[];
-    } = {}
-  ): string | object[] {
-    const json = this.spreadsheetToJson.transform(source, { langCode });
-    const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-
-    if (mergeLanguages || langCode) {
-      return this.jsonToXlf.transform(jsonMasked);
-    }
-
-    return Object.keys(jsonMasked).map(langName => {
-      const xlfTranslations = this.jsonToXlf.transform(jsonMasked[langName]);
-      return { lang: langName, content: xlfTranslations };
-    });
+  public transform(source: ITranslationsData): ITranslationsData {
+    const json = this.spreadsheetToJson.transform(source);
+    const jsonMasked = this.jsonToJsonMasked.transform(json);
+    return this.jsonToXlf.transform(jsonMasked);
   }
 }

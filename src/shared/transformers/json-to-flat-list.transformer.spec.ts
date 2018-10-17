@@ -1,5 +1,6 @@
 import JsonToFlatListTransformer from './json-to-flat-list.transformer';
 import ITransformer from './transformer';
+import { multiLocaleDataset, singleLocaleDataset } from '../../tests/testData';
 
 describe('FlatListToIosStringsTransformer', () => {
   const jsonToFlatListTransformer = new JsonToFlatListTransformer();
@@ -16,39 +17,75 @@ describe('FlatListToIosStringsTransformer', () => {
     expect(result).toBeFalsy();
   });
 
-  it('does generate proper string from flat list', async () => {
+  it('does generate proper string from json when merging languages', async () => {
     const object = {
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-            SAVE: 'save',
-            CANCEL: 'cancel',
-          },
-        },
-      },
-      pl_PL: {
-        CORE: {
-          LABELS: {
-            YES: 'tak',
-            NO: 'nie',
-            SAVE: 'zapisz',
-          },
-        },
-      },
+      meta: { ...multiLocaleDataset.meta, mergeLanguages: true },
+      translations: multiLocaleDataset.translations,
+      result: multiLocaleDataset.translations,
     };
 
     const result = jsonToFlatListTransformer.transform(object);
 
-    expect(result).toEqual([
-      { name: 'en_us_core_labels_yes', text: 'yes' },
-      { name: 'en_us_core_labels_no', text: 'no' },
-      { name: 'en_us_core_labels_save', text: 'save' },
-      { name: 'en_us_core_labels_cancel', text: 'cancel' },
-      { name: 'pl_pl_core_labels_yes', text: 'tak' },
-      { name: 'pl_pl_core_labels_no', text: 'nie' },
-      { name: 'pl_pl_core_labels_save', text: 'zapisz' },
-    ]);
+    expect(result).toEqual({
+      ...object,
+      result: {
+        merged: [
+          { name: 'en_us_core_labels_yes', text: 'yes' },
+          { name: 'en_us_core_labels_no', text: 'no' },
+          { name: 'en_us_core_labels_save', text: 'save' },
+          { name: 'en_us_core_labels_cancel', text: 'cancel' },
+          { name: 'pl_pl_core_labels_yes', text: 'tak' },
+          { name: 'pl_pl_core_labels_no', text: 'nie' },
+          { name: 'pl_pl_core_labels_save', text: 'zapisz' },
+        ],
+      },
+    });
+  });
+  it('does generate proper string from json with comments, without merging languages', async () => {
+    const object = {
+      comments: multiLocaleDataset.comments,
+      meta: { ...multiLocaleDataset.meta, includeComments: true },
+      translations: multiLocaleDataset.translations,
+      result: multiLocaleDataset.translations,
+    };
+
+    const result = jsonToFlatListTransformer.transform(object);
+
+    expect(result).toEqual({
+      ...object,
+      result: multiLocaleDataset.flatList.multiLanguageNonMergedWithComments,
+    });
+  });
+
+  it('does generate proper string from json with comments, when merging languages', async () => {
+    const object = {
+      comments: multiLocaleDataset.comments,
+      meta: { ...multiLocaleDataset.meta, mergeLanguages: true, includeComments: true },
+      translations: multiLocaleDataset.translations,
+      result: multiLocaleDataset.translations,
+    };
+
+    const result = jsonToFlatListTransformer.transform(object);
+
+    expect(result).toEqual({
+      ...object,
+      result: multiLocaleDataset.flatList.multiLanguageMergedWithComments,
+    });
+  });
+
+  it('does generate proper string from json with comments when single langCode is forced', async () => {
+    const object = {
+      comments: singleLocaleDataset.comments,
+      meta: { ...singleLocaleDataset.meta, includeComments: true },
+      translations: singleLocaleDataset.translations,
+      result: singleLocaleDataset.translations,
+    };
+
+    const result = jsonToFlatListTransformer.transform(object);
+
+    expect(result).toEqual({
+      ...object,
+      result: singleLocaleDataset.flatList.singleLanguageWithComments,
+    });
   });
 });

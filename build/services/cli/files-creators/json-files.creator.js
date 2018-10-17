@@ -10,11 +10,11 @@ class JsonFilesCreator {
         return extension.toLowerCase() === this.supportedExtension;
     }
     save(dataToSave, path, filename) {
-        if (typeof dataToSave === 'string') {
-            this.createFolderAndSave(dataToSave, path, filename);
+        if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+            this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
-        dataToSave.forEach((data) => {
+        dataToSave.result.forEach((data) => {
             this.createFolderAndSave(data.content, path, data.lang);
         });
     }

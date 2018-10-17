@@ -69,6 +69,11 @@ function configureCli(): Arguments {
         'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)',
       type: 'array',
     })
+    .options('comments', {
+      describe: 'Include comments in the outputs',
+      type: 'boolean',
+      default: false,
+    })
     .help('?')
     .alias('?', 'help')
     .example(

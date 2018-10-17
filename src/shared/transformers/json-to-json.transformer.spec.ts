@@ -1,4 +1,5 @@
 import JsonToJsonTransformer from './json-to-json.transformer';
+import { minimalPassingObject } from '../../tests/testData';
 
 describe('JsonToJsonTransformer', () => {
   const jsonToJsonTransformer = new JsonToJsonTransformer();
@@ -16,10 +17,8 @@ describe('JsonToJsonTransformer', () => {
   });
 
   it('does generate ios strings from json', async () => {
-    const object = { test: ['test'] };
+    const result = jsonToJsonTransformer.transform(minimalPassingObject);
 
-    const result = jsonToJsonTransformer.transform(object);
-
-    expect(result).toBe(object);
+    expect(result).toBe(minimalPassingObject);
   });
 });

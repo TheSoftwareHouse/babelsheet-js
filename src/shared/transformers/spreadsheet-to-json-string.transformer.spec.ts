@@ -1,5 +1,6 @@
 import SpreadsheetToJsonStringTransformer from './spreadsheet-to-json-string.transformer';
 import ITransformer from './transformer';
+import { minimalPassingObject } from '../../tests/testData';
 
 describe('SpreadsheetToJsonStringTransformer', () => {
   const spreadSheetToJson = {
@@ -29,24 +30,26 @@ describe('SpreadsheetToJsonStringTransformer', () => {
   });
 
   it('does transform json to string', async () => {
-    const result = spreadsheetToJsonStringTransformer.transform({ en: ['test2'] }, { langCode: 'en' });
+    const object = {
+      ...minimalPassingObject,
+      meta: {
+        ...minimalPassingObject.meta,
+        mergeLanguages: true,
+      },
+    };
 
-    expect(result).toBe('{"en":["test2"]}');
+    const result = spreadsheetToJsonStringTransformer.transform(object);
+
+    expect(result).toEqual({ ...object, result: JSON.stringify(minimalPassingObject.result) });
   });
 
-  it('does call spreadsheetToJson.transform with two parameters', async () => {
-    const translations = { test: ['test2'] };
-    const langCode = 'en_US';
-    const result = spreadsheetToJsonStringTransformer.transform(translations, { langCode });
-
-    expect(spreadSheetToJson.transform).toBeCalledWith(translations, { langCode });
-  });
-
-  it('does generate languages object from spreadsheet', async () => {
+  it('does pass the source through the transformers', async () => {
     const spreeadsheetToJson2: ITransformer = {
       supports: type => false,
-      transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+      // transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+      transform: jest.fn(source => ({ ...source, result: { en: { test: 'test' }, fr: { test2: 'test2' } } })),
     };
+
     const jsonToMaskedJson2: ITransformer = {
       supports: type => false,
       transform: jest.fn(source => source),
@@ -56,46 +59,116 @@ describe('SpreadsheetToJsonStringTransformer', () => {
       spreeadsheetToJson2,
       jsonToMaskedJson2
     );
-    const object = { '11': ['', 'CORE'] };
+
+    const object = {
+      ...minimalPassingObject,
+    };
 
     const result = spreadsheetToJsonStringTransformer2.transform(object);
-    expect(jsonToMaskedJson2.transform).toBeCalledWith(
-      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
-      { filters: undefined }
-    );
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
-    expect(result).toEqual([
-      { lang: 'en', content: JSON.stringify([{ test: 'test' }]) },
-      { lang: 'fr', content: JSON.stringify([{ test2: 'test2' }]) },
-    ]);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({
+      ...object,
+      result: { en: { test: 'test' }, fr: { test2: 'test2' } },
+    });
+    expect(result).toEqual({
+      ...object,
+      result: [
+        { lang: 'en', content: JSON.stringify({ test: 'test' }) },
+        { lang: 'fr', content: JSON.stringify({ test2: 'test2' }) },
+      ],
+    });
   });
 
-  it('does pass filters to json to json transformer', async () => {
+  it('does transform json to string, with multiple keys', async () => {
     const spreeadsheetToJson2: ITransformer = {
       supports: type => false,
-      transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+      transform: jest.fn(source => ({ ...source, result: { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] } })),
     };
+
     const jsonToMaskedJson2: ITransformer = {
       supports: type => false,
       transform: jest.fn(source => source),
     };
 
-    const spreadsheetToJsonStringTransformer3 = new SpreadsheetToJsonStringTransformer(
+    const spreadsheetToJsonStringTransformer2 = new SpreadsheetToJsonStringTransformer(
       spreeadsheetToJson2,
       jsonToMaskedJson2
     );
-    const object = { '11': ['', 'CORE'] };
-    const filters = ['en.test'];
 
-    const result = spreadsheetToJsonStringTransformer3.transform(object, { filters: ['en.test'] });
-    expect(jsonToMaskedJson2.transform).toBeCalledWith(
-      { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
-      { filters }
+    const object = {
+      ...minimalPassingObject,
+    };
+
+    const result = spreadsheetToJsonStringTransformer2.transform(object);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({
+      ...object,
+      result: { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] },
+    });
+    expect(result).toEqual({
+      ...object,
+      result: [
+        { lang: 'en', content: JSON.stringify([{ test: 'test' }]) },
+        { lang: 'fr', content: JSON.stringify([{ test2: 'test2' }]) },
+      ],
+    });
+  });
+
+  it('does transform json to string when merging languages', async () => {
+    const spreeadsheetToJson2: ITransformer = {
+      supports: type => false,
+      // transform: jest.fn(() => ({ en: [{ test: 'test' }], fr: [{ test2: 'test2' }] })),
+      transform: jest.fn(source => ({ ...source, result: { en: { test: 'test' }, fr: { test2: 'test2' } } })),
+    };
+
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => source),
+    };
+
+    const spreadsheetToJsonStringTransformer2 = new SpreadsheetToJsonStringTransformer(
+      spreeadsheetToJson2,
+      jsonToMaskedJson2
     );
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
-    expect(result).toEqual([
-      { lang: 'en', content: JSON.stringify([{ test: 'test' }]) },
-      { lang: 'fr', content: JSON.stringify([{ test2: 'test2' }]) },
-    ]);
+
+    const object = {
+      ...minimalPassingObject,
+      meta: { ...minimalPassingObject.meta, mergeLanguages: true },
+    };
+
+    const result = spreadsheetToJsonStringTransformer2.transform(object);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({
+      ...object,
+      result: { en: { test: 'test' }, fr: { test2: 'test2' } },
+    });
+    expect(result).toEqual({ ...object, result: JSON.stringify({ en: { test: 'test' }, fr: { test2: 'test2' } }) });
+  });
+
+  it('does transform json to string when selecting single locale', async () => {
+    const spreeadsheetToJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => ({ ...source, result: { en: { test: 'test' } } })),
+    };
+
+    const jsonToMaskedJson2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => source),
+    };
+
+    const spreadsheetToJsonStringTransformer2 = new SpreadsheetToJsonStringTransformer(
+      spreeadsheetToJson2,
+      jsonToMaskedJson2
+    );
+
+    const object = {
+      ...minimalPassingObject,
+      meta: { ...minimalPassingObject.meta, mergeLanguages: true },
+    };
+
+    const result = spreadsheetToJsonStringTransformer2.transform(object);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({ ...object, result: { en: { test: 'test' } } });
+    expect(result).toEqual({ ...object, result: JSON.stringify({ en: { test: 'test' } }) });
   });
 });

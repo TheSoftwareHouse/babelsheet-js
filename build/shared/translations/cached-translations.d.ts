@@ -13,9 +13,10 @@ export default class CachedTranslations implements ITranslations {
     setTranslations(filters: string[], translations: {
         [key: string]: any;
     }, format?: string): Promise<void>;
-    getTranslations(filters: string[], { format, keepLocale }: {
+    getTranslations(filters: string[], { format, keepLocale, comments }: {
         format: string;
         keepLocale: boolean;
+        comments: boolean;
     }): Promise<{
         [key: string]: any;
     }>;

@@ -1,8 +1,11 @@
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
+
 export default class FilesCreators {
   constructor(private filesCreators: IFilesCreator[]) {}
 
   public save(
-    dataToSave: Array<{ lang: string; content: string }> | string,
+    dataToSave: ITranslationsData,
     path: string,
     filename: string,
     extension: string,

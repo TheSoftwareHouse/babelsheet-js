@@ -1,6 +1,6 @@
 import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
-import ITransformer from '../transformers/transformer';
+import ITransformer, { ITranslationsData } from '../transformers/transformer';
 import ITranslations from './translations';
 
 export default class MaskedTranslations implements ITranslations {
@@ -18,20 +18,30 @@ export default class MaskedTranslations implements ITranslations {
 
   public async getTranslations(
     filters: string[],
-    { keepLocale }: { keepLocale?: boolean } = {}
-  ): Promise<{ [key: string]: any }> {
-    const translationsWithTags = await this.storage.get(this.translationsKey);
-
-    if (!translationsWithTags) {
+    { keepLocale, comments }: { keepLocale?: boolean; comments?: boolean } = {}
+  ): Promise<ITranslationsData> {
+    const source = await this.storage.get(this.translationsKey);
+    if (!source) {
       return Promise.reject(new NotFoundError('Translations not found'));
     }
 
-    const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
-
+    const maskedTranslations = this.jsonToJsonMaskedTransformer.transform({
+      ...source,
+      meta: { ...source.meta, includeComments: comments, filters, mergeLanguages: true },
+    });
+    // if not keeping locales and there is only one key on the first level of result, and it can be found in locales list
     if (!keepLocale) {
-      const localesCount = Object.keys(maskedTranslations).length;
-      if (localesCount === 1) {
-        return maskedTranslations[Object.keys(maskedTranslations)[0]];
+      const keys = Object.keys(maskedTranslations.result);
+      if (
+        keys.length === 1 &&
+        maskedTranslations.meta.locales &&
+        maskedTranslations.meta.locales.some((locale: string) => locale === keys[0])
+      ) {
+        return {
+          ...maskedTranslations,
+          result: maskedTranslations.result[keys[0]],
+          meta: { ...maskedTranslations.meta },
+        };
       }
     }
     return maskedTranslations;

@@ -11,17 +11,16 @@ class IosFilesCreator {
         return extension.toLowerCase() === this.supportedExtension;
     }
     save(dataToSave, path, filename, baseLang) {
-        if (typeof dataToSave === 'string') {
-            this.createFolderAndSave(dataToSave, path, filename);
+        if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+            this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
-        const dataWithoutTags = dataToSave.filter((translations) => translations.lang !== 'tags');
-        dataWithoutTags.forEach((data) => {
+        dataToSave.result.forEach((data) => {
             const langWithLocale = this.transformLangWithRegion(data.lang);
             const folderName = `${path}/${langWithLocale}.lproj`;
             this.createFolderAndSave(data.content, folderName);
         });
-        this.generateBaseTranslations(dataToSave, path, baseLang);
+        this.generateBaseTranslations(dataToSave.result, path, baseLang);
     }
     transformLangWithRegion(languageCode) {
         const langWithLocale = languageCode.split(/[-_]{1}/);

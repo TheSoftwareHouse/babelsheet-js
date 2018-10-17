@@ -11,13 +11,17 @@ export default class TranslationsController {
     const queryFilters = req.query.filters || [];
 
     return this.translationsStorage
-      .getTranslations(queryFilters, { format: req.query.format, keepLocale: req.query.keepLocale })
+      .getTranslations(queryFilters, {
+        format: req.query.format,
+        keepLocale: req.query.keepLocale,
+        comments: req.query.comments,
+      })
       .then(trans => {
         const docType = getDocumentType(req.query.format);
         res
           .status(200)
           .type(docType)
-          .send(trans);
+          .send(trans.result.merged ? trans.result.merged : trans.result);
       })
       .catch(next);
   }

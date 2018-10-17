@@ -6,6 +6,7 @@ import TranslationsStorage from '../../../shared/translations/translations';
 import createContainer from '../container';
 import Server from './server';
 import { getLoggerMock } from '../../../tests/loggerMock';
+import { minimalPassingObject } from '../../../tests/testData';
 
 const loggerMock = getLoggerMock();
 
@@ -24,7 +25,6 @@ describe('Server', () => {
   it('returns 404 when there are no translations', async () => {
     const server = container.resolve<Server>('server').getApp();
     const translationsStorage = container.resolve<TranslationsStorage>('translationsStorage');
-
     await request(server)
       .get('/translations')
       .expect(404)
@@ -40,58 +40,13 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
-          },
-        },
-        tag2: {
-          CORE: {
-            LABELS: {
-              YES: null,
-            },
-          },
-          COMMON: {
-            STH1: null,
-          },
-        },
-      },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-      },
-    });
+    await maskedTranslations.setTranslations([], minimalPassingObject);
 
     await request(server)
       .get('/translations')
       .expect(200)
       .then(res => {
-        expect(res.body).toEqual({
-          CORE: {
-            LABELS: {
-              YES: 'yes',
-              NO: 'no',
-            },
-          },
-          COMMON: {
-            STH1: 'Some message ...',
-            FORM: {
-              COMMENT: 'comment',
-            },
-          },
-        });
+        expect(res.body).toEqual(minimalPassingObject.result.en_US);
       });
   });
 
@@ -117,6 +72,9 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US'],
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -134,24 +92,26 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
           },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
     });
 
     await request(server)
-      .get('/translations?filters[]=en_US.CORE.LABELS&filters[]=en_US.COMMON.STH1')
+      .get('/translations?filters[]=en_US.CORE&filters[]=en_US.COMMON.STH1')
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
@@ -173,6 +133,9 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US'],
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -190,17 +153,19 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
           },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
@@ -224,6 +189,10 @@ describe('Server', () => {
     const storage = container.resolve<InMemoryStorage>('storage');
 
     const translations = {
+      meta: {
+        locales: ['en_US'],
+        includeComments: false,
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -231,11 +200,13 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+      result: {
+        en_US: {
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
@@ -259,8 +230,16 @@ describe('Server', () => {
     expect(await storage.getData()).toEqual({
       translations,
       'translationsCache-en_us.tag1,en_us.common.sth1-json': {
-        COMMON: {
-          STH1: 'Some message ...',
+        ...translations,
+        meta: {
+          ...translations.meta,
+          mergeLanguages: true,
+          filters: ['en_US.tag1', 'en_US.COMMON.STH1'],
+        },
+        result: {
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         },
       },
     });
@@ -276,8 +255,11 @@ describe('Server', () => {
     await translationsStorage.setTranslations(
       ['en_us.tag1', 'en_us.common.sth1'],
       {
-        COMMON: {
-          STH1: 'Some message ...',
+        meta: { locales: ['en_US'] },
+        result: {
+          COMMON: {
+            STH1: 'Some message ...',
+          },
         },
       },
       'json'
@@ -314,6 +296,9 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US'],
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -331,17 +316,19 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
           },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
@@ -365,6 +352,9 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US', 'pl_PL'],
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -382,23 +372,25 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+        pl_PL: {
+          CORE: {
+            HIDDEN: 'hidden',
           },
-        },
-      },
-      pl_PL: {
-        CORE: {
-          HIDDEN: 'hidden',
         },
       },
     });
@@ -421,6 +413,10 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US', 'pl_PL'],
+      },
+
       tags: {
         tag1: {
           COMMON: {
@@ -438,23 +434,25 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+        pl_PL: {
+          CORE: {
+            HIDDEN: 'hidden',
           },
-        },
-      },
-      pl_PL: {
-        CORE: {
-          HIDDEN: 'hidden',
         },
       },
     });
@@ -477,6 +475,9 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
     await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US', 'en_UK'],
+      },
       tags: {
         tag1: {
           COMMON: {
@@ -494,31 +495,33 @@ describe('Server', () => {
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+        en_UK: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
           },
-        },
-      },
-      en_UK: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
@@ -539,6 +542,90 @@ describe('Server', () => {
   <string name=\"en_uk_core_labels_yes\">yes</string>
   <string name=\"en_uk_core_labels_no\">no</string>
   <string name=\"en_uk_common_sth1\">Some message ...</string>
+  <string name=\"en_uk_common_form_comment\">comment</string>
+</resources>`
+        );
+      });
+  });
+  it('returns translations with comments', async () => {
+    const server = container.resolve<Server>('server').getApp();
+    const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
+
+    await maskedTranslations.setTranslations([], {
+      meta: {
+        locales: ['en_US', 'en_UK'],
+      },
+      comments: {
+        COMMON: {
+          STH1: 'test comment',
+        },
+      },
+      tags: {
+        tag1: {
+          COMMON: {
+            STH1: null,
+          },
+        },
+        tag2: {
+          CORE: {
+            LABELS: {
+              YES: null,
+            },
+          },
+          COMMON: {
+            STH1: null,
+          },
+        },
+      },
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
+          },
+        },
+        en_UK: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+            },
+          },
+          COMMON: {
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
+          },
+        },
+      },
+    });
+
+    await request(server)
+      .get('/translations?format=android&comments=true')
+      .expect(200)
+      .then(res => {
+        expect(res.header['content-type']).toEqual('application/xml; charset=utf-8');
+        expect(res.text).toEqual(
+          `<?xml version=\"1.0\"?>
+<resources>
+  <string name=\"en_us_core_labels_yes\">yes</string>
+  <string name=\"en_us_core_labels_no\">no</string>
+  <string name=\"en_us_common_sth1\">Some message ...</string>
+  <!-- test comment -->
+  <string name=\"en_us_common_form_comment\">comment</string>
+  <string name=\"en_uk_core_labels_yes\">yes</string>
+  <string name=\"en_uk_core_labels_no\">no</string>
+  <string name=\"en_uk_common_sth1\">Some message ...</string>
+  <!-- test comment -->
   <string name=\"en_uk_common_form_comment\">comment</string>
 </resources>`
         );

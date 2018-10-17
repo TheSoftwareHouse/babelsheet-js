@@ -14,7 +14,13 @@ export default class TranslationsProducer {
   ) {}
   public async produce(authData: any) {
     const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
-    const transformedData = await this.transformer.transform(spreadsheetData);
+    const transformedData = await this.transformer.transform({
+      translations: {},
+      meta: {
+        mergeLanguages: true,
+      },
+      result: spreadsheetData,
+    });
 
     const [, actualTranslations] = await to(this.translationsStorage.getTranslations([]));
 

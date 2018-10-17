@@ -480,6 +480,15 @@ Translations files are possible to generate in given formats:</p>
   </p>
 </details>
 <details>
+  <summary>--comments</summary>
+  <p>
+    (default: <code>false</code>)
+  </p>
+  <p>
+    Includes comments in result files.
+  </p>
+</details>
+<details>
   <summary>--base</summary>
   <p>
     (default: <code>EN</code>)
@@ -560,6 +569,9 @@ Translations can be filtered by using:</p>
 </li>
 <li>
 <p><code>keepLocale</code> - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. <code>/translations?keepLocale=true</code>.</p>
+</li>
+<li>
+<p><code>comments</code> - translations can include comments, e.g. <code>/translations?comments=true</code>.</p>
 </li>
 </ul>
 <p>You can run API in docker container - see <a href="../docker/">Docker</a>.</p>

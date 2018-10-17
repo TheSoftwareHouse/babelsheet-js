@@ -1,5 +1,5 @@
 import * as xmlbuilder from 'xmlbuilder';
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class FlatListToXmlTransformer implements ITransformer {
   private readonly supportedType = 'flat-list-xml';
@@ -8,14 +8,43 @@ export default class FlatListToXmlTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: Array<{ [key: string]: string }>): string {
-    return this.generateXml(source);
+  public transform(source: ITranslationsData): ITranslationsData {
+    if (source.meta.mergeLanguages) {
+      return {
+        ...source,
+        result: {
+          merged: this.generateXml(source.result.merged, source.meta.includeComments),
+        },
+      };
+    } else {
+      return {
+        ...source,
+        result: source.result.map(({ lang, content }: { lang: any; content: any }) => ({
+          lang,
+          content: this.generateXml(content, source.meta.includeComments),
+        })),
+      };
+    }
   }
 
-  private generateXml(translations: Array<{ [key: string]: string }>): string {
+  private generateXml(
+    translations: Array<{ name: string; text: string; comment?: string }>,
+    includeComments?: boolean
+  ): string {
     const xml = xmlbuilder.create('resources');
 
-    translations.forEach(translation => xml.ele('string', { name: translation.name }, translation.text));
+    translations.forEach(result => {
+      const element: { '@name': string; '#text': string } = { '@name': result.name, '#text': result.text };
+      if (result.comment) {
+        return xml.ele({
+          string: element,
+          '#comment': result.comment,
+        });
+      }
+      return xml.ele({
+        string: element,
+      });
+    });
 
     return xml.end({ pretty: true });
   }

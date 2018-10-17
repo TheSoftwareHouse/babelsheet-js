@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
 
 export default class JsonFilesCreator implements IFilesCreator {
   private supportedExtension = 'json';
@@ -9,13 +11,13 @@ export default class JsonFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: Array<{ lang: string; content: string }> | string, path: string, filename: string): void {
-    if (typeof dataToSave === 'string') {
-      this.createFolderAndSave(dataToSave, path, filename);
+  public save(dataToSave: ITranslationsData, path: string, filename: string): void {
+    if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+      this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
 
-    dataToSave.forEach((data: any) => {
+    dataToSave.result.forEach((data: any) => {
       this.createFolderAndSave(data.content, path, data.lang);
     });
   }

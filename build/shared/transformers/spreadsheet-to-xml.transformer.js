@@ -10,16 +10,10 @@ class SpreadsheetToXmlTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        const json = this.spreadsheetToJson.transform(source, { langCode });
-        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-        if (mergeLanguages || langCode) {
-            return this.jsonToXml.transform(jsonMasked);
-        }
-        return Object.keys(jsonMasked).map(langName => {
-            const xmlTranslations = this.jsonToXml.transform(jsonMasked[langName]);
-            return { lang: langName, content: xmlTranslations };
-        });
+    transform(source) {
+        const json = this.spreadsheetToJson.transform(source);
+        const jsonMasked = this.jsonToJsonMasked.transform(json);
+        return this.jsonToXml.transform(jsonMasked);
     }
 }
 exports.default = SpreadsheetToXmlTransformer;

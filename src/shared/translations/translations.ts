@@ -3,6 +3,6 @@ export default interface ITranslations {
   setTranslations(filters: string[], translations: { [key: string]: any }, format?: string): Promise<void>;
   getTranslations(
     filters: string[],
-    options?: { format?: string; keepLocale?: boolean }
+    options?: { format?: string; keepLocale?: boolean; comments?: boolean }
   ): Promise<{ [key: string]: any }>;
 }

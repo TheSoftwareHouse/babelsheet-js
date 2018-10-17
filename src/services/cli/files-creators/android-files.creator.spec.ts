@@ -28,8 +28,8 @@ describe('AndroidFilesCreator', () => {
     expect(result).toBeFalsy();
   });
 
-  it('executes save method once when dataToSave is string', () => {
-    androidFilesCreator.save('data', '.', 'test', 'en');
+  it('executes save method once when mergeLanguages is true', () => {
+    androidFilesCreator.save({ result: { merged: 'data' }, meta: { mergeLanguages: true } }, '.', 'test', 'en');
 
     expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'xml', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
@@ -41,7 +41,7 @@ describe('AndroidFilesCreator', () => {
       { lang: 'en_US', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
-    androidFilesCreator.save(translations, '.', 'test', 'en');
+    androidFilesCreator.save({ result: translations, meta: {} }, '.', 'test', 'en');
 
     const firstPathName = './values-pl';
     const secondPathName = './values-en-rUS';
@@ -63,7 +63,7 @@ describe('AndroidFilesCreator', () => {
       { lang: 'en_US', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
-    androidFilesCreator.save(translations, '.', 'test', 'test2');
+    androidFilesCreator.save({ result: translations }, '.', 'test', 'test2');
 
     const firstPathName = './values-pl';
     const secondPathName = './values-en-rUS';

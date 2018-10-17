@@ -1,4 +1,4 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class SpreadsheetToJsonStringTransformer implements ITransformer {
   private readonly supportedType = 'json';
@@ -9,28 +9,20 @@ export default class SpreadsheetToJsonStringTransformer implements ITransformer 
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(
-    source: { [key: string]: string[] },
-    {
-      langCode,
-      mergeLanguages,
-      filters,
-    }: {
-      langCode?: string;
-      mergeLanguages?: boolean;
-      filters?: string[];
-    } = {}
-  ): string | object[] {
-    const json = this.spreadsheetToJson.transform(source, { langCode });
-    const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
+  public transform(source: ITranslationsData): ITranslationsData {
+    const json = this.spreadsheetToJson.transform(source);
+    const jsonMasked = this.jsonToJsonMasked.transform(json);
 
-    if (mergeLanguages || langCode) {
-      return JSON.stringify(jsonMasked);
+    if (source.meta.mergeLanguages) {
+      return { ...jsonMasked, result: JSON.stringify(jsonMasked.result) };
     }
 
-    return Object.keys(jsonMasked).map(langName => {
-      const jsonString = JSON.stringify(jsonMasked[langName]);
-      return { lang: langName, content: jsonString };
-    });
+    return {
+      ...jsonMasked,
+      result: Object.keys(jsonMasked.result).map(langName => ({
+        lang: langName,
+        content: JSON.stringify(jsonMasked.result[langName]),
+      })),
+    };
   }
 }

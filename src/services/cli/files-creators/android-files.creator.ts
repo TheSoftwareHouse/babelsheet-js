@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
 
 export default class AndroidFilesCreator implements IFilesCreator {
   private supportedExtension = 'xml';
@@ -10,26 +12,20 @@ export default class AndroidFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(
-    dataToSave: Array<{ lang: string; content: string }> | string,
-    path: string,
-    filename: string,
-    baseLang: string
-  ): void {
-    if (typeof dataToSave === 'string') {
-      this.createFolderAndSave(dataToSave, path, filename);
+  public save(dataToSave: ITranslationsData, path: string, filename: string, baseLang: string): void {
+    if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+      this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
 
-    const dataWithoutTags = dataToSave.filter((translation: any) => translation.lang !== 'tags');
-    dataWithoutTags.forEach((data: any) => {
+    dataToSave.result.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/values-${langWithLocale}`;
 
       this.createFolderAndSave(data.content, folderName);
     });
 
-    this.generateBaseTranslations(dataToSave, path, baseLang);
+    this.generateBaseTranslations(dataToSave.result, path, baseLang);
   }
 
   private transformLangWithRegion(languageCode: string): string {

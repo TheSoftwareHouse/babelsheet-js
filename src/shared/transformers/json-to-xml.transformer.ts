@@ -1,4 +1,4 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class JsonToXmlTransformer implements ITransformer {
   private readonly supportedType = 'json-xml';
@@ -9,7 +9,7 @@ export default class JsonToXmlTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }): string {
+  public transform(source: ITranslationsData): ITranslationsData {
     const flatList = this.jsonToFlatList.transform(source);
     return this.flatListToXml.transform(flatList);
   }

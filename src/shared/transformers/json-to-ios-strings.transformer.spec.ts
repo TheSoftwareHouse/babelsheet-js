@@ -1,5 +1,6 @@
 import JsonToIosStringsTransformer from './json-to-ios-strings.transformer';
 import ITransformer from './transformer';
+import { multiLocaleDataset } from '../../tests/testData';
 
 const jsonToFlatList: ITransformer = {
   supports: type => false,
@@ -27,7 +28,11 @@ describe('JsonToXmlTransformer', () => {
   });
 
   it('does generate ios strings from json', async () => {
-    const object = { test: ['test'] };
+    const object = {
+      meta: multiLocaleDataset.meta,
+      result: multiLocaleDataset.translations,
+      translations: multiLocaleDataset.translations,
+    };
 
     jsonToIosStrings.transform(object);
 

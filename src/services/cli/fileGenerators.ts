@@ -63,9 +63,19 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
-  const dataToSave = await container
-    .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language, args.merge, args.filters);
+  const dataToSave = await container.resolve<Transformers>('transformers').transform(
+    {
+      result: spreadsheetData,
+      translations: {},
+      meta: {
+        includeComments: args.comments,
+        langCode: args.language,
+        mergeLanguages: args.merge,
+        filters: args.filters,
+      },
+    },
+    extension
+  );
   info('Spreadsheet formatted.');
 
   info(`Saving translations...`);

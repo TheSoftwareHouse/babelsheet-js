@@ -21,8 +21,12 @@ describe('JsonFilesCreator', () => {
     expect(result).toBeFalsy();
   });
 
-  it('executes save method once when dataToSave is string', () => {
-    jsonFilesCreator.save('data', '.', 'test');
+  it('executes save method once when dataToSave is merged', () => {
+    jsonFilesCreator.save(
+      { translations: {}, result: { merged: 'data' }, meta: { mergeLanguages: true } },
+      '.',
+      'test'
+    );
 
     expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'json', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
@@ -34,7 +38,7 @@ describe('JsonFilesCreator', () => {
       { lang: 'pl', content: 'test2' },
       { lang: 'de', content: 'test3' },
     ];
-    jsonFilesCreator.save(translations, '.', 'test');
+    jsonFilesCreator.save({ translations: {}, result: translations, meta: {} }, '.', 'test');
 
     expect(fileRepository.saveData).toBeCalledWith(translations[0].content, translations[0].lang, 'json', '.');
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, translations[1].lang, 'json', '.');

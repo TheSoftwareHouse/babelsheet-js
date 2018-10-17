@@ -1,7 +1,7 @@
 import * as mask from 'json-mask';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class JsonToJsonMaskedTransformer implements ITransformer {
   private readonly supportedType = 'json';
@@ -12,22 +12,13 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(
-    source: { [key: string]: object },
-    {
-      filters,
-    }: {
-      filters?: string[];
+  public transform(source: ITranslationsData): ITranslationsData {
+    if (source.meta.filters && source.meta.filters.length) {
+      const maskInput = this.maskInput.convert(source.meta.filters);
+      const filtersMask = this.maskConverter.convert(maskInput, source.tags || {});
+      const maskedTranslations = mask(source.result, filtersMask);
+      return { ...source, result: maskedTranslations };
     }
-  ): { [key: string]: object } {
-    const { tags, ...translations } = source;
-    if (filters && filters.length) {
-      const maskInput = this.maskInput.convert(filters);
-      const filtersMask = this.maskConverter.convert(maskInput, tags);
-      const maskedTranslations = mask(translations, filtersMask);
-
-      return maskedTranslations;
-    }
-    return translations;
+    return source;
   }
 }

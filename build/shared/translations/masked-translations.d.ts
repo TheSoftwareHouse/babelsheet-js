@@ -1,5 +1,5 @@
 import IStorage from '../../infrastructure/storage/storage';
-import ITransformer from '../transformers/transformer';
+import ITransformer, { ITranslationsData } from '../transformers/transformer';
 import ITranslations from './translations';
 export default class MaskedTranslations implements ITranslations {
     private storage;
@@ -10,9 +10,8 @@ export default class MaskedTranslations implements ITranslations {
     setTranslations(filters: string[], translations: {
         [key: string]: any;
     }): Promise<void>;
-    getTranslations(filters: string[], { keepLocale }?: {
+    getTranslations(filters: string[], { keepLocale, comments }?: {
         keepLocale?: boolean;
-    }): Promise<{
-        [key: string]: any;
-    }>;
+        comments?: boolean;
+    }): Promise<ITranslationsData>;
 }

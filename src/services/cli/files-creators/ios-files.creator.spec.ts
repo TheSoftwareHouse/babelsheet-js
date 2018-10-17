@@ -29,8 +29,8 @@ describe('IosFilesCreator', () => {
     expect(result).toBeFalsy();
   });
 
-  it('executes save method once when dataToSave is string', () => {
-    iosFilesCreator.save('data', '.', 'test', 'en');
+  it('executes save method once when dataToSave is merged', () => {
+    iosFilesCreator.save({ result: { merged: 'data' }, meta: { mergeLanguages: true } }, '.', 'test', 'en');
 
     expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'strings', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
@@ -42,7 +42,7 @@ describe('IosFilesCreator', () => {
       { lang: 'en_US', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
-    iosFilesCreator.save(translations, '.', 'test', 'en');
+    iosFilesCreator.save({ result: translations }, '.', 'test', 'en');
 
     const firstPathName = './pl.lproj';
     const secondPathName = './en-US.lproj';
@@ -64,7 +64,7 @@ describe('IosFilesCreator', () => {
       { lang: 'fr', content: 'test' },
       { lang: 'de', content: 'test3' },
     ];
-    iosFilesCreator.save(translations, '.', 'test', 'test2');
+    iosFilesCreator.save({ result: translations }, '.', 'test', 'test2');
 
     const firstPathName = './pl.lproj';
     const secondPathName = './fr.lproj';

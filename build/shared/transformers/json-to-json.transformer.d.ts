@@ -1,10 +1,6 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 export default class JsonToJsonTransformer implements ITransformer {
     private readonly supportedType;
     supports(type: string): boolean;
-    transform(source: {
-        [key: string]: string[];
-    }): {
-        [key: string]: string[];
-    };
+    transform(source: ITranslationsData): ITranslationsData;
 }

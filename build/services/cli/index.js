@@ -60,6 +60,11 @@ function configureCli() {
         describe: 'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)',
         type: 'array',
     })
+        .options('comments', {
+        describe: 'Include comments in the outputs',
+        type: 'boolean',
+        default: false,
+    })
         .help('?')
         .alias('?', 'help')
         .example('$0 generate -f android -n my-data -p ./result -l en_US --merge', 'Generate my-data.xml with english translations in folder /result')

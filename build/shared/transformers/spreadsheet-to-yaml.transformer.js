@@ -10,16 +10,10 @@ class SpreadsheetToYamlTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        const json = this.spreadsheetToJson.transform(source, { langCode });
-        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-        if (mergeLanguages || langCode) {
-            return this.jsonToYaml.transform(jsonMasked);
-        }
-        return Object.keys(jsonMasked).map(langName => {
-            const yamlTranslations = this.jsonToYaml.transform(jsonMasked[langName]);
-            return { lang: langName, content: yamlTranslations };
-        });
+    transform(source) {
+        const json = this.spreadsheetToJson.transform(source);
+        const jsonMasked = this.jsonToJsonMasked.transform(json);
+        return this.jsonToYaml.transform(jsonMasked);
     }
 }
 exports.default = SpreadsheetToYamlTransformer;

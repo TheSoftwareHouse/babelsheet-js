@@ -20,8 +20,20 @@ export default class CachedTranslations implements ITranslations {
     return this.storage.clear();
   }
 
-  public async setTranslations(filters: string[], translations: { [key: string]: any }, format?: string) {
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
+  public async setTranslations(
+    filters: string[],
+    translations: { [key: string]: any },
+    format?: string,
+    keepLocale?: boolean,
+    comments?: boolean
+  ) {
+    const translationsKey = this.translationsKeyGenerator.generateKey(
+      this.translationsCachePrefix,
+      filters,
+      format,
+      keepLocale,
+      comments
+    );
     return this.storage.set(translationsKey, translations);
   }
 
@@ -30,8 +42,13 @@ export default class CachedTranslations implements ITranslations {
     { format, keepLocale, comments }: { format: string; keepLocale: boolean; comments: boolean }
   ): Promise<{ [key: string]: any }> {
     const extension = getExtensionsFromJson(format);
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
-
+    const translationsKey = this.translationsKeyGenerator.generateKey(
+      this.translationsCachePrefix,
+      filters,
+      format,
+      keepLocale,
+      comments
+    );
     if (await this.storage.has(translationsKey)) {
       return await this.storage.get(translationsKey);
     }

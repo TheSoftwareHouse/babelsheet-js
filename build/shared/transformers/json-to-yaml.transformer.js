@@ -11,7 +11,7 @@ class JsonToYamlTransformer {
         if (source.meta.mergeLanguages) {
             return {
                 ...source,
-                result: { merged: this.generateYaml(source.result, source.meta.includeComments ? source.comments : undefined) },
+                result: { merged: this.generateYaml(source.result, source.meta.includeComments ? source.comments : undefined, source.meta.locales) },
             };
         }
         else if (source.meta.langCode) {
@@ -20,7 +20,7 @@ class JsonToYamlTransformer {
                 result: [
                     {
                         lang: source.meta.langCode,
-                        content: this.generateYaml(source.result, source.meta.includeComments ? source.comments : undefined),
+                        content: this.generateYaml(source.result, source.meta.includeComments ? source.comments : undefined, source.meta.locales),
                     },
                 ],
             };
@@ -30,12 +30,12 @@ class JsonToYamlTransformer {
                 ...source,
                 result: Object.keys(source.result).map(lang => ({
                     lang,
-                    content: this.generateYaml(source.result[lang], source.meta.includeComments ? source.comments : undefined),
+                    content: this.generateYaml(source.result[lang], source.meta.includeComments ? source.comments : undefined, source.meta.locales),
                 })),
             };
         }
     }
-    generateYaml(json, comments) {
+    generateYaml(json, comments, locales) {
         const jsonToYaml = (current, source, upperKey, context = [], yaml = '', level = 0) => {
             // if its an object, go deeper
             if (typeof current === 'object') {
@@ -47,7 +47,11 @@ class JsonToYamlTransformer {
             else {
                 let comment;
                 if (comments) {
-                    comment = context.reduce((previous, key) => {
+                    comment = context.reduce((previous, key, index) => {
+                        // if first key is an locale, skip it
+                        if (index === 0 && locales && locales.some(locale => locale === key)) {
+                            return previous;
+                        }
                         return previous && previous[key];
                     }, comments);
                 }

@@ -122,7 +122,8 @@ exports.multiLocaleDataset = {
     },
     transformed: {
         yml: {
-            mergedNoComments: { merged: `en_US:
+            mergedNoComments: {
+                merged: `en_US:
   CORE:
     LABELS:
       YES: yes
@@ -135,44 +136,52 @@ pl_PL:
       YES: tak
       NO: nie
       SAVE: zapisz
-` },
-            withComments: [{
-                    lang: 'en_US', content: `CORE:
+`,
+            },
+            withComments: [
+                {
+                    lang: 'en_US',
+                    content: `CORE:
   LABELS:
     YES: yes #Affirmative, give consent
     NO: no #Negative, refuse consent
     SAVE: save #Persist, save consent
     CANCEL: cancel
-`
-                }, {
-                    lang: 'pl_PL', content: `CORE:
+`,
+                },
+                {
+                    lang: 'pl_PL',
+                    content: `CORE:
   LABELS:
     YES: tak #Affirmative, give consent
     NO: nie #Negative, refuse consent
     SAVE: zapisz #Persist, save consent
-`
-                }
+`,
+                },
             ],
             noComments: [
                 {
-                    lang: 'en_US', content: `CORE:
+                    lang: 'en_US',
+                    content: `CORE:
   LABELS:
     YES: yes
     NO: no
     SAVE: save
     CANCEL: cancel
-`
-                }, {
-                    lang: 'pl_PL', content: `CORE:
+`,
+                },
+                {
+                    lang: 'pl_PL',
+                    content: `CORE:
   LABELS:
     YES: tak
     NO: nie
     SAVE: zapisz
-`
-                }
-            ]
-        }
-    }
+`,
+                },
+            ],
+        },
+    },
 };
 exports.singleLocaleDataset = {
     meta: {
@@ -200,7 +209,8 @@ exports.singleLocaleDataset = {
     },
     transformed: {
         yml: {
-            noComments: [{
+            noComments: [
+                {
                     lang: 'en_US',
                     content: `CORE:
   LABELS:
@@ -209,8 +219,9 @@ exports.singleLocaleDataset = {
     SAVE: save
     CANCEL: cancel
 `,
-                }]
-        }
+                },
+            ],
+        },
     },
     flatList: {
         singleLanguage: [

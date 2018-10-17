@@ -229,7 +229,7 @@ describe('Server', () => {
 
     expect(await storage.getData()).toEqual({
       translations,
-      'translationsCache-en_us.tag1,en_us.common.sth1-json': {
+      'translationsCache-en_us.tag1,en_us.common.sth1-json-0-0': {
         ...translations,
         meta: {
           ...translations.meta,

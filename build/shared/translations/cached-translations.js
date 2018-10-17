@@ -14,13 +14,13 @@ class CachedTranslations {
     async clearTranslations() {
         return this.storage.clear();
     }
-    async setTranslations(filters, translations, format) {
-        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
+    async setTranslations(filters, translations, format, keepLocale, comments) {
+        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format, keepLocale, comments);
         return this.storage.set(translationsKey, translations);
     }
     async getTranslations(filters, { format, keepLocale, comments }) {
         const extension = formatToExtensions_1.getExtensionsFromJson(format);
-        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
+        const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format, keepLocale, comments);
         if (await this.storage.has(translationsKey)) {
             return await this.storage.get(translationsKey);
         }

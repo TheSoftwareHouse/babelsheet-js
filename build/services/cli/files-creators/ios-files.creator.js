@@ -16,7 +16,7 @@ class IosFilesCreator {
             return;
         }
         if (dataToSave.meta && dataToSave.meta.langCode) {
-            this.createFolderAndSave((dataToSave.result.find((element) => element.lang === dataToSave.meta.langCode)).content, path, filename);
+            this.createFolderAndSave(dataToSave.result.find((element) => element.lang === dataToSave.meta.langCode).content, path, filename);
             return;
         }
         dataToSave.result.forEach((data) => {

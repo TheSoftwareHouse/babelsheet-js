@@ -253,16 +253,16 @@
                   <h1>How it works</h1>
                 
                 <p>For BabelSheet to know how to handle your translations, you need to stick with very simple spreadsheet markup.</p>
-<p><strong>Metadata</strong>:</p>
-<ul>
-<li><code>###</code> - determines column with optional tags, each tag describes whole row, there might be more tags per row and they should be separated by a comma</li>
-<li><code>&gt;&gt;&gt;</code> - determines column with translation key, there might be more such columns placed one after another, each column makes another key which is nested, e.g. <code>CORE.LABELS</code> or <code>FRONT.HEADER.TITLE</code>.</li>
-<li>locale, e.g. <code>en_US</code>, <code>pl_PL</code> and others - determines column with translations for specific locale</li>
-</ul>
+<p><strong>Metadata</strong>:
+<em> <code>$$$</code> - determines column with optional comments, each comment describes whole row
+</em> <code>###</code> - determines column with optional tags, each tag describes whole row, there might be more tags per row and they should be separated by a comma
+<em> <code>&gt;&gt;&gt;</code> - determines column with translation key, there might be more such columns placed one after another, each column makes another key which is nested, e.g. <code>CORE.LABELS</code> or <code>FRONT.HEADER.TITLE</code>.
+</em> locale, e.g. <code>en_US</code>, <code>pl_PL</code> and others - determines column with translations for specific locale</p>
 <p>Example:</p>
 <table>
 <thead>
 <tr>
+<th>$$$</th>
 <th>###</th>
 <th>&gt;&gt;&gt;</th>
 <th>&gt;&gt;&gt;</th>
@@ -274,6 +274,7 @@
 <tbody>
 <tr>
 <td></td>
+<td></td>
 <td>CORE</td>
 <td></td>
 <td></td>
@@ -283,12 +284,14 @@
 <tr>
 <td></td>
 <td></td>
+<td></td>
 <td>LABELS</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
+<td>comment1</td>
 <td>tag1, tag2</td>
 <td></td>
 <td></td>
@@ -297,6 +300,7 @@
 <td>Tak</td>
 </tr>
 <tr>
+<td>comment2</td>
 <td>tag1</td>
 <td></td>
 <td></td>
@@ -305,6 +309,7 @@
 <td>Nie</td>
 </tr>
 <tr>
+<td></td>
 <td></td>
 <td>FRONT</td>
 <td></td>
@@ -315,12 +320,14 @@
 <tr>
 <td></td>
 <td></td>
+<td></td>
 <td>HEADER</td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
+<td></td>
 <td></td>
 <td></td>
 <td></td>

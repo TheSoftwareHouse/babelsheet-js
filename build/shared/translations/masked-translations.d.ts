@@ -10,8 +10,8 @@ export default class MaskedTranslations implements ITranslations {
     setTranslations(filters: string[], translations: {
         [key: string]: any;
     }): Promise<void>;
-    getTranslations(filters: string[], { keepLocale, comments }?: {
+    getTranslations(filters: string[], { keepLocale, includeComments }?: {
         keepLocale?: boolean;
-        comments?: boolean;
+        includeComments?: boolean;
     }): Promise<ITranslationsData>;
 }

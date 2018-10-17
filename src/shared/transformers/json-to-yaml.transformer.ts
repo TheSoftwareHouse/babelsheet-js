@@ -77,9 +77,17 @@ export default class JsonToYamlTransformer implements ITransofrmer {
             return previous && previous[key];
           }, comments);
         }
-        return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${upperKey}: ${current}${comment ? ` #${comment}` : ''}\n`;
+        return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${upperKey}: ${
+          this.checkForKeywords(current) ? "'" + current + "'" : current
+        }${comment ? ` #${comment}` : ''}\n`;
       }
     };
     return jsonToYaml(json, json);
+  }
+
+  private checkForKeywords(text: string) {
+    // restricted words in yaml: http://yaml.org/type/bool.html
+    const expression = /^(y|Y|yes|Yes|YES|n|N|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)$/m;
+    return expression.test(text);
   }
 }

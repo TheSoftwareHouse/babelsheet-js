@@ -4,4 +4,5 @@ export default class JsonToYamlTransformer implements ITransofrmer {
     supports(type: string): boolean;
     transform(source: ITranslationsData): ITranslationsData;
     generateYaml(json: object, comments: any, locales?: string[]): string;
+    private checkForKeywords;
 }

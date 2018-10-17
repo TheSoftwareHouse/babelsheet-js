@@ -12,7 +12,7 @@ class TranslationsController {
             .getTranslations(queryFilters, {
             format: req.query.format,
             keepLocale: req.query.keepLocale,
-            comments: req.query.comments,
+            includeComments: req.query.comments,
         })
             .then(trans => {
             const docType = formatToExtensions_1.getDocumentType(req.query.format);

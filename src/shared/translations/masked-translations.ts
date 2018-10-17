@@ -18,7 +18,7 @@ export default class MaskedTranslations implements ITranslations {
 
   public async getTranslations(
     filters: string[],
-    { keepLocale, comments }: { keepLocale?: boolean; comments?: boolean } = {}
+    { keepLocale, includeComments }: { keepLocale?: boolean; includeComments?: boolean } = {}
   ): Promise<ITranslationsData> {
     const source = await this.storage.get(this.translationsKey);
     if (!source) {
@@ -27,7 +27,7 @@ export default class MaskedTranslations implements ITranslations {
 
     const maskedTranslations = this.jsonToJsonMaskedTransformer.transform({
       ...source,
-      meta: { ...source.meta, includeComments: comments, filters, mergeLanguages: true },
+      meta: { ...source.meta, includeComments, filters, mergeLanguages: true },
     });
     // if not keeping locales and there is only one key on the first level of result, and it can be found in locales list
     if (!keepLocale) {

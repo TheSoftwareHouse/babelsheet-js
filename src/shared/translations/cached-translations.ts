@@ -25,21 +25,21 @@ export default class CachedTranslations implements ITranslations {
     translations: { [key: string]: any },
     format?: string,
     keepLocale?: boolean,
-    comments?: boolean
+    includeComments?: boolean
   ) {
     const translationsKey = this.translationsKeyGenerator.generateKey(
       this.translationsCachePrefix,
       filters,
       format,
       keepLocale,
-      comments
+      includeComments
     );
     return this.storage.set(translationsKey, translations);
   }
 
   public async getTranslations(
     filters: string[],
-    { format, keepLocale, comments }: { format: string; keepLocale: boolean; comments: boolean }
+    { format, keepLocale, includeComments }: { format: string; keepLocale: boolean; includeComments: boolean }
   ): Promise<{ [key: string]: any }> {
     const extension = getExtensionsFromJson(format);
     const translationsKey = this.translationsKeyGenerator.generateKey(
@@ -47,13 +47,13 @@ export default class CachedTranslations implements ITranslations {
       filters,
       format,
       keepLocale,
-      comments
+      includeComments
     );
     if (await this.storage.has(translationsKey)) {
       return await this.storage.get(translationsKey);
     }
 
-    return this.maskedTranslations.getTranslations(filters, { keepLocale, comments }).then(async trans => {
+    return this.maskedTranslations.getTranslations(filters, { keepLocale, includeComments }).then(async trans => {
       if (ramda.isEmpty(trans)) {
         return Promise.reject(new NotFoundError('Translations not found'));
       }

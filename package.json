@@ -5,10 +5,8 @@
   "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",
   "scripts": {
-    "get-yml": "'./build/services/cli/index.js' generate -f yml",
     "prepare-pr": "tsc && jest --coverage && mkdocs build && tslint -c tslint.json 'src/**/*.ts' && nsp check && prettier --write 'src/**/*.ts'",
     "test": "jest --coverage",
-    "test-nocoverage": "jest -i",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",
     "type-check": "tsc --noEmit",

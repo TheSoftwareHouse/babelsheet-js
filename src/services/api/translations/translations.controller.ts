@@ -14,7 +14,7 @@ export default class TranslationsController {
       .getTranslations(queryFilters, {
         format: req.query.format,
         keepLocale: req.query.keepLocale,
-        comments: req.query.comments,
+        includeComments: req.query.comments,
       })
       .then(trans => {
         const docType = getDocumentType(req.query.format);

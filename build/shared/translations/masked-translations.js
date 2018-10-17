@@ -13,14 +13,14 @@ class MaskedTranslations {
     async setTranslations(filters, translations) {
         return this.storage.set(this.translationsKey, translations);
     }
-    async getTranslations(filters, { keepLocale, comments } = {}) {
+    async getTranslations(filters, { keepLocale, includeComments } = {}) {
         const source = await this.storage.get(this.translationsKey);
         if (!source) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }
         const maskedTranslations = this.jsonToJsonMaskedTransformer.transform({
             ...source,
-            meta: { ...source.meta, includeComments: comments, filters, mergeLanguages: true },
+            meta: { ...source.meta, includeComments, filters, mergeLanguages: true },
         });
         // if not keeping locales and there is only one key on the first level of result, and it can be found in locales list
         if (!keepLocale) {

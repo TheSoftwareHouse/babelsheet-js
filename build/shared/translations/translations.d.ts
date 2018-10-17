@@ -6,7 +6,7 @@ export default interface ITranslations {
     getTranslations(filters: string[], options?: {
         format?: string;
         keepLocale?: boolean;
-        comments?: boolean;
+        includeComments?: boolean;
     }): Promise<{
         [key: string]: any;
     }>;

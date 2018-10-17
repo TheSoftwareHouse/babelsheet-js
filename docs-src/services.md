@@ -100,7 +100,7 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
     (default: <code>false</code>)
   </p>
   <p>
-    Includes comments in result files.
+    Includes comments in result files. JSON files don't include comments.
   </p>
 </details>
 <details>
@@ -188,7 +188,7 @@ Translations can be filtered by using:
 
 - `keepLocale` - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. `/translations?keepLocale=true`.
 
-- `comments` - translations can include comments, e.g. `/translations?comments=true`.
+- `comments` - translations can include comments, e.g. `/translations?comments=true`. JSON results don't include comments.
 
 You can run API in docker container - see [Docker](docker.md).
 

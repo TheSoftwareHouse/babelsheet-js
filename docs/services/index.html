@@ -485,7 +485,7 @@ Translations files are possible to generate in given formats:</p>
     (default: <code>false</code>)
   </p>
   <p>
-    Includes comments in result files.
+    Includes comments in result files. JSON files don't include comments.
   </p>
 </details>
 <details>
@@ -571,7 +571,7 @@ Translations can be filtered by using:</p>
 <p><code>keepLocale</code> - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. <code>/translations?keepLocale=true</code>.</p>
 </li>
 <li>
-<p><code>comments</code> - translations can include comments, e.g. <code>/translations?comments=true</code>.</p>
+<p><code>comments</code> - translations can include comments, e.g. <code>/translations?comments=true</code>. JSON results don't include comments.</p>
 </li>
 </ul>
 <p>You can run API in docker container - see <a href="../docker/">Docker</a>.</p>

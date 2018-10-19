@@ -33,8 +33,80 @@ describe('MaskConverter', () => {
 
     const converter = new MaskConverter();
 
-    expect(converter.convert(source, {})).toEqual(
+    expect(converter.convert(source, {}, {})).toEqual(
       'tag1(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT,PREV,LAST))),tag2(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT)),BACK(MAILS(REGISTER(FOOTER))))'
+    );
+  });
+  it('converts object to proper mask string when language is selected', () => {
+    const source = {
+      en: {
+        tag1: {
+          COMMON: {
+            STH1: null,
+          },
+          FRONT: {
+            PAGINATION: {
+              FIRST: null,
+              NEXT: null,
+              PREV: null,
+              LAST: null,
+            },
+          },
+        },
+      },
+      tag2: {
+        COMMON: {
+          STH1: null,
+        },
+        FRONT: {
+          PAGINATION: {
+            FIRST: null,
+            NEXT: null,
+          },
+        },
+        BACK: { MAILS: { REGISTER: { FOOTER: null } } },
+      },
+    };
+
+    const converter = new MaskConverter();
+
+    expect(converter.convert(source, {}, { langCode: 'en', locales: ['en', 'pl'] })).toEqual(
+      'tag1(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT,PREV,LAST))),tag2(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT)),BACK(MAILS(REGISTER(FOOTER))))'
+    );
+  });
+  it('converts object to proper mask string when language is not passed nor present in filter', () => {
+    const source = {
+      tag1: {
+        COMMON: {
+          STH1: null,
+        },
+        FRONT: {
+          PAGINATION: {
+            FIRST: null,
+            NEXT: null,
+            PREV: null,
+            LAST: null,
+          },
+        },
+      },
+      tag2: {
+        COMMON: {
+          STH1: null,
+        },
+        FRONT: {
+          PAGINATION: {
+            FIRST: null,
+            NEXT: null,
+          },
+        },
+        BACK: { MAILS: { REGISTER: { FOOTER: null } } },
+      },
+    };
+
+    const converter = new MaskConverter();
+
+    expect(converter.convert(source, {}, { locales: ['en', 'pl'] })).toEqual(
+      'en(tag1(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT,PREV,LAST))),tag2(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT)),BACK(MAILS(REGISTER(FOOTER))))),pl(tag1(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT,PREV,LAST))),tag2(COMMON(STH1),FRONT(PAGINATION(FIRST,NEXT)),BACK(MAILS(REGISTER(FOOTER)))))'
     );
   });
 });

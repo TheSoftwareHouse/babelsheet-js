@@ -91,7 +91,7 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
     (default: <code>none</code>)
   </p>
   <p>
-    Filters. Passed as space separated list, with keys separated by dots. (--filters en_US.CORE.COMMON en_US.CORE.SPECIFIC). Can include tags, as a second part of the filter expression (--filters en_US.tag1.CORE).
+    Filters. Passed as space separated list, with keys separated by dots. (--filters en_US.CORE.COMMON en_US.CORE.SPECIFIC). Can include tags, as a second part of the filter expression (--filters en_US.tag1.CORE), or first if locale is ommited (--filters tag1.CORE). If there is no locale in the filter, the filter is applied to every locale.
   </p>
 </details>
 <details>
@@ -184,7 +184,7 @@ Translations can be filtered by using:
 
 - `filters[]` -  e.g. calling `/translations?filters[]=en_US.CORE` will result in getting translations for `en_US` locale and section `CORE`. Other possibility is to use tag as a filter, e.g. `/translations?filters[]=en_US.tag1`.
 
-- `format` - translations can be served in json/android/ios/yml/xlf formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`.
+- `format` - translations can be served in json/android/ios/yml/xlf formats, just add adtitional parameter e.g. `/translations?filters[]=en_US.CORE&format=android`. Can include tags, as a second part of the filter expression (en_US.tag1.CORE), or first if locale is ommited (tag1.CORE). If there is no locale present, the filter is applied to each locale.
 
 - `keepLocale` - translations can include locale prefixes, even when single locale is returned if this is set to true, e.g. `/translations?keepLocale=true`.
 

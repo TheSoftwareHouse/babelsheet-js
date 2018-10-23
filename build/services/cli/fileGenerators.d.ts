@@ -1,5 +1,11 @@
-import { AwilixContainer } from 'awilix';
+import { ILogger } from 'tsh-node-common';
 import { Arguments } from 'yargs';
+import IFileRepository from '../../infrastructure/repository/file-repository.types';
+import InEnvStorage from '../../infrastructure/storage/in-env';
 import IStorage from '../../infrastructure/storage/storage';
-export declare function generateTranslations(container: AwilixContainer, args: Arguments): Promise<void>;
-export declare function generateConfigFile(container: AwilixContainer, args: Arguments, storage: IStorage): Promise<void>;
+import GoogleAuth from '../../shared/google/auth';
+import GoogleSheets from '../../shared/google/sheets';
+import Transformers from '../../shared/transformers/transformers';
+import FilesCreators from './files-creators/files-creators';
+export declare function generateTranslations(logger: ILogger, fileRepository: IFileRepository, googleSheets: GoogleSheets, transformers: Transformers, filesCreators: FilesCreators, args: Arguments): Promise<void>;
+export declare function generateConfigFile(logger: ILogger, inEnvStorage: InEnvStorage, googleAuth: GoogleAuth, args: Arguments, storage: IStorage): Promise<void>;

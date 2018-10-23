@@ -32,6 +32,7 @@ const ios_files_creator_1 = require("./files-creators/ios-files.creator");
 const json_files_creator_1 = require("./files-creators/json-files.creator");
 const xlf_files_creator_1 = require("./files-creators/xlf-files.creator");
 const yaml_files_creator_1 = require("./files-creators/yaml-files.creator");
+const interpreter_1 = require("./interpreter/interpreter");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,
@@ -147,6 +148,8 @@ function createContainer(options) {
         })),
     };
     container.register({
+        shadowArgs: awilix.asValue(undefined),
+        interpreter: awilix.asClass(interpreter_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         fileRepository: awilix.asClass(file_repository_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         googleAuth: awilix.asClass(auth_1.default),
         googleSheets: awilix.asClass(sheets_1.default),

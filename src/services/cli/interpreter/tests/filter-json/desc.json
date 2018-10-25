@@ -1,0 +1,4 @@
+{
+    "description": "Creates filtered jsons",
+    "params": ["-f", "json","--filters","en_US.CORE.LABELS.YES", "tag2"]
+}

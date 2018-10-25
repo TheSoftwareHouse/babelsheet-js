@@ -1,0 +1,4 @@
+{
+    "description": "Creates xlfs with selected language",
+    "params": ["-f", "xlf","-l","en_US"]
+}

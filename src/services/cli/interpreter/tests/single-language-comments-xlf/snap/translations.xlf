@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file datatype="plaintext" source-language="en">
+    <body>
+      <trans-unit id="core.labels.yes">
+        <source>core.labels.yes</source>
+        <target>yes</target>
+        <note>Affirmative, give consent</note>
+      </trans-unit>
+      <trans-unit id="core.labels.no">
+        <source>core.labels.no</source>
+        <target>no</target>
+        <note>Negative, refuse consent</note>
+      </trans-unit>
+      <trans-unit id="core.labels.save">
+        <source>core.labels.save</source>
+        <target>save</target>
+        <note>Persist, save consent</note>
+      </trans-unit>
+      <trans-unit id="core.labels.cancel">
+        <source>core.labels.cancel</source>
+        <target>cancel</target>
+      </trans-unit>
+      <trans-unit id="common.sth1">
+        <source>common.sth1</source>
+        <target>Some message ...</target>
+      </trans-unit>
+      <trans-unit id="common.form.comment">
+        <source>common.form.comment</source>
+        <target>comment</target>
+      </trans-unit>
+      <trans-unit id="front.header.title">
+        <source>front.header.title</source>
+        <target>My Cool App</target>
+        <note>Main page title</note>
+      </trans-unit>
+      <trans-unit id="front.header.catch.phrase">
+        <source>front.header.catch.phrase</source>
+        <target>Join us!</target>
+        <note>Phrase on a banner</note>
+      </trans-unit>
+      <trans-unit id="front.pagination.first">
+        <source>front.pagination.first</source>
+        <target>First page</target>
+      </trans-unit>
+      <trans-unit id="front.pagination.next">
+        <source>front.pagination.next</source>
+        <target>Next page</target>
+      </trans-unit>
+      <trans-unit id="front.pagination.prev">
+        <source>front.pagination.prev</source>
+        <target>Prev page</target>
+      </trans-unit>
+      <trans-unit id="front.pagination.last">
+        <source>front.pagination.last</source>
+        <target>Last page</target>
+      </trans-unit>
+      <trans-unit id="back.mails.register.subject">
+        <source>back.mails.register.subject</source>
+        <target>You have been registered</target>
+      </trans-unit>
+      <trans-unit id="back.mails.register.greeting">
+        <source>back.mails.register.greeting</source>
+        <target>Hi %name%</target>
+      </trans-unit>
+      <trans-unit id="back.mails.register.line1">
+        <source>back.mails.register.line1</source>
+        <target>Thank you for signing up with us.</target>
+      </trans-unit>
+      <trans-unit id="back.mails.register.footer">
+        <source>back.mails.register.footer</source>
+        <target>The App Team</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<resources>
+  <string name="core_labels_yes">yes</string>
+  <string name="common_sth1">Some message ...</string>
+  <string name="front_pagination_first">First page</string>
+  <string name="front_pagination_next">Next page</string>
+  <string name="back_mails_register_footer">The App Team</string>
+</resources>

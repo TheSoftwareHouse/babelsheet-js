@@ -1,0 +1,4 @@
+{
+    "description": "Creates filtered ios files",
+    "params": ["-f", "ios","--filters","en_US.CORE.LABELS.YES", "tag2"]
+}

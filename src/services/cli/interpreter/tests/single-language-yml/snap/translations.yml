@@ -1,0 +1,26 @@
+CORE:
+  LABELS:
+    "YES": "yes"
+    "NO": "no"
+    SAVE: save
+    CANCEL: cancel
+COMMON:
+  STH1: Some message ...
+  FORM:
+    COMMENT: comment
+FRONT:
+  HEADER:
+    TITLE: My Cool App
+    CATCH_PHRASE: Join us!
+  PAGINATION:
+    FIRST: First page
+    NEXT: Next page
+    PREV: Prev page
+    LAST: Last page
+BACK:
+  MAILS:
+    REGISTER:
+      SUBJECT: You have been registered
+      GREETING: Hi %name%
+      LINE1: Thank you for signing up with us.
+      FOOTER: The App Team

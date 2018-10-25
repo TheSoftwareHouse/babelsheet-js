@@ -1,0 +1,4 @@
+{
+    "description": "Creates jsons with selected language",
+    "params": ["-f", "json","-l","en_US"]
+}

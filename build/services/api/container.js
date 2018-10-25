@@ -6,15 +6,13 @@ const in_redis_1 = require("../../infrastructure/storage/in-redis");
 const handler_1 = require("../../shared/error/handler");
 const mask_converter_1 = require("../../shared/mask/mask.converter");
 const mask_input_1 = require("../../shared/mask/mask.input");
+const chain_transformer_1 = require("../../shared/transformers/chain.transformer");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
 const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-list-to-xlf.transformer");
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
-const json_to_ios_strings_transformer_1 = require("../../shared/transformers/json-to-ios-strings.transformer");
 const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const json_to_json_transformer_1 = require("../../shared/transformers/json-to-json.transformer");
-const json_to_xlf_transformer_1 = require("../../shared/transformers/json-to-xlf.transformer");
-const json_to_xml_transformer_1 = require("../../shared/transformers/json-to-xml.transformer");
 const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-yaml.transformer");
 const transformers_1 = require("../../shared/transformers/transformers");
 const cached_translations_1 = require("../../shared/translations/cached-translations");
@@ -37,19 +35,26 @@ function createContainer(options) {
         jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToJsonTransformer: awilix.asClass(json_to_json_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
-        jsonToXmlTransformer: awilix.asClass(json_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
-            jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
-            flatListToXml: container.resolve('flatListToXmlTransformer'),
+        jsonToXmlTransformer: awilix.asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            supportedType: 'json-xml',
+            transformers: [
+                container.resolve('jsonToFlatListTransformer'),
+                container.resolve('flatListToXmlTransformer'),
+            ],
         })),
-        jsonToIosStringsTransformer: awilix
-            .asClass(json_to_ios_strings_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
-            .inject(() => ({
-            jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
-            flatListToIosStrings: container.resolve('flatListToIosStringsTransformer'),
+        jsonToIosStringsTransformer: awilix.asClass(chain_transformer_1.default).inject(() => ({
+            supportedType: 'json-ios-strings',
+            transformers: [
+                container.resolve('jsonToFlatListTransformer'),
+                container.resolve('flatListToIosStringsTransformer'),
+            ],
         })),
-        jsonToXlfTransformer: awilix.asClass(json_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
-            jsonToFlatList: container.resolve('jsonToFlatListTransformer'),
-            flatListToXlf: container.resolve('flatListToXlfTransformer'),
+        jsonToXlfTransformer: awilix.asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            supportedType: 'json-xlf',
+            transformers: [
+                container.resolve('jsonToFlatListTransformer'),
+                container.resolve('flatListToXlfTransformer'),
+            ],
         })),
         jsonToYamlTransformer: awilix.asClass(json_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         transformers: awilix.asClass(transformers_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

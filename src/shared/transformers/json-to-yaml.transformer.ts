@@ -1,3 +1,4 @@
+import * as YAML from 'yaml';
 import ITransofrmer, { ITranslationsData } from './transformer';
 
 export default class JsonToYamlTransformer implements ITransofrmer {
@@ -49,45 +50,34 @@ export default class JsonToYamlTransformer implements ITransofrmer {
   }
 
   public generateYaml(json: object, comments: any, locales?: string[]) {
-    const jsonToYaml = (
-      current: any,
-      source: object,
-      upperKey: string = '',
-      context: string[] = [],
-      yaml: string = '',
-      level: number = 0
-    ): string => {
-      // if its an object, go deeper
-      if (typeof current === 'object') {
-        return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${
-          upperKey ? (this.checkForKeywords(upperKey) ? `'${upperKey}':\n` : `${upperKey}:\n`) : ''
-        }${Object.keys(current).reduce((accumulator, key) => {
-          return jsonToYaml(current[key], source, key, [...context, key], accumulator, level + 1);
-        }, '')}`;
+    // change schema to force compatibility with previous yaml implementation
+    const doc = new YAML.Document({ schema: 'yaml-1.1' });
+    doc.contents = YAML.createNode(json) as any;
+    // add comments
+    const addComments = (node: any, context: string[]) => {
+      //  map
+      if (node.items) {
+        node.items.forEach((item: any) => addComments(item, [...context, item.key.value]));
       }
-      // if its not an object, add it to yml. Check for comments existence first, if they were passed.
-      else {
-        let comment;
-        if (comments) {
-          comment = context.reduce((previous, key, index) => {
-            // if first key is an locale, skip it
-            if (index === 0 && locales && locales.some(locale => locale === key)) {
-              return previous;
-            }
-            return previous && previous[key];
-          }, comments);
+      // pair with map as value
+      else if (node.value && node.value.items) {
+        node.value.items.forEach((item: any) => addComments(item, [...context, item.key.value]));
+      }
+      // value - check for comments
+      else if (comments) {
+        const comment = context.reduce((previous: any, key, index) => {
+          // if first key is an locale, skip it
+          if (index === 0 && locales && locales.some(locale => locale === key)) {
+            return previous;
+          }
+          return previous && previous[key];
+        }, comments);
+        if (comment) {
+          node.comment = comment;
         }
-        return `${yaml}${'  '.repeat(Math.max(level - 1, 0))}${
-          this.checkForKeywords(upperKey) ? `'${upperKey}'` : upperKey
-        }: ${this.checkForKeywords(current) ? `'${current}'` : current}${comment ? ` #${comment}` : ''}\n`;
       }
     };
-    return jsonToYaml(json, json);
-  }
-
-  private checkForKeywords(text: string) {
-    // restricted words in yaml: http://yaml.org/type/bool.html
-    const expression = /^(y|Y|yes|Yes|YES|n|N|no|No|NO|true|True|TRUE|false|False|FALSE|on|On|ON|off|Off|OFF)$/m;
-    return expression.test(text);
+    addComments(doc.contents, []);
+    return doc.toString();
   }
 }

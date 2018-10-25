@@ -10,16 +10,13 @@ class SpreadsheetToIosStringsTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        const json = this.spreadsheetToJson.transform(source, { langCode });
-        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-        if (mergeLanguages || langCode) {
+    transform(source) {
+        const json = this.spreadsheetToJson.transform(source);
+        const jsonMasked = this.jsonToJsonMasked.transform(json);
+        if (source.meta.mergeLanguages) {
             return this.jsonToIosStrings.transform(jsonMasked);
         }
-        return Object.keys(jsonMasked).map(langName => {
-            const iosStrings = this.jsonToIosStrings.transform(jsonMasked[langName]);
-            return { lang: langName, content: iosStrings };
-        });
+        return this.jsonToIosStrings.transform(jsonMasked);
     }
 }
 exports.default = SpreadsheetToIosStringsTransformer;

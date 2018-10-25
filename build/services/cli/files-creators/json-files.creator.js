@@ -10,11 +10,16 @@ class JsonFilesCreator {
         return extension.toLowerCase() === this.supportedExtension;
     }
     save(dataToSave, path, filename) {
-        if (typeof dataToSave === 'string') {
-            this.createFolderAndSave(dataToSave, path, filename);
+        if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+            this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
-        dataToSave.forEach((data) => {
+        if (dataToSave.meta && dataToSave.meta.langCode) {
+            const translations = dataToSave.result[dataToSave.meta.langCode];
+            this.createFolderAndSave(translations, path, filename);
+            return;
+        }
+        dataToSave.result.forEach((data) => {
             this.createFolderAndSave(data.content, path, data.lang);
         });
     }

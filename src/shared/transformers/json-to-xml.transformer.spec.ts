@@ -1,5 +1,6 @@
 import JsonToXmlTransformer from './json-to-xml.transformer';
 import ITransformer from './transformer';
+import { minimalPassingObject } from '../../tests/testData';
 
 const jsonToFlatList: ITransformer = {
   supports: type => false,
@@ -27,11 +28,9 @@ describe('JsonToXmlTransformer', () => {
   });
 
   it('does generate xml from json', async () => {
-    const object = { test: ['test'] };
+    jsonToXmlTransformer.transform(minimalPassingObject);
 
-    jsonToXmlTransformer.transform(object);
-
-    expect(jsonToFlatList.transform).toBeCalledWith(object);
+    expect(jsonToFlatList.transform).toBeCalledWith(minimalPassingObject);
     expect(flatListToXml.transform).toBeCalledWith('json-flat-list return');
   });
 });

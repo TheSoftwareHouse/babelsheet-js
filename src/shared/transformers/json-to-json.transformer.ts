@@ -1,4 +1,4 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 
 export default class JsonToJsonTransformer implements ITransformer {
   private readonly supportedType = 'json';
@@ -7,7 +7,7 @@ export default class JsonToJsonTransformer implements ITransformer {
     return type.toLowerCase() === this.supportedType;
   }
 
-  public transform(source: { [key: string]: string[] }): { [key: string]: string[] } {
+  public transform(source: ITranslationsData): ITranslationsData {
     return source;
   }
 }

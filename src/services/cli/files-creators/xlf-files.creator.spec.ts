@@ -21,8 +21,8 @@ describe('FileCreators', () => {
     expect(result).toBeFalsy();
   });
 
-  it('executes save method once when dataToSave is string', () => {
-    xlfFilesCreator.save('data', '.', 'test');
+  it('executes save method once when dataToSave is merged', () => {
+    xlfFilesCreator.save({ translations: {}, result: { merged: 'data' }, meta: { mergeLanguages: true } }, '.', 'test');
 
     expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'xlf', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
@@ -34,7 +34,7 @@ describe('FileCreators', () => {
       { lang: 'pl', content: 'test2' },
       { lang: 'de', content: 'test3' },
     ];
-    xlfFilesCreator.save(translations, '.', 'test');
+    xlfFilesCreator.save({ result: translations, translations: {}, meta: {} }, '.', 'test');
 
     expect(fileRepository.saveData).toBeCalledWith(
       translations[0].content,

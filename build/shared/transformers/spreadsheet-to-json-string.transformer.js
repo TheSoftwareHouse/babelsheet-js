@@ -9,16 +9,22 @@ class SpreadsheetToJsonStringTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        const json = this.spreadsheetToJson.transform(source, { langCode });
-        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-        if (mergeLanguages || langCode) {
-            return JSON.stringify(jsonMasked);
+    transform(source) {
+        const json = this.spreadsheetToJson.transform(source);
+        const jsonMasked = this.jsonToJsonMasked.transform(json);
+        if (source.meta.mergeLanguages) {
+            return { ...jsonMasked, result: JSON.stringify(jsonMasked.result) };
         }
-        return Object.keys(jsonMasked).map(langName => {
-            const jsonString = JSON.stringify(jsonMasked[langName]);
-            return { lang: langName, content: jsonString };
-        });
+        if (source.meta.langCode) {
+            return { ...jsonMasked, result: { [source.meta.langCode]: JSON.stringify(jsonMasked.result) } };
+        }
+        return {
+            ...jsonMasked,
+            result: Object.keys(jsonMasked.result).map(langName => ({
+                lang: langName,
+                content: JSON.stringify(jsonMasked.result[langName]),
+            })),
+        };
     }
 }
 exports.default = SpreadsheetToJsonStringTransformer;

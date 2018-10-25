@@ -1,8 +1,7 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 export default class JsonToFlatListTransformer implements ITransformer {
     private readonly supportedType;
     supports(type: string): boolean;
-    transform(source: object): Array<{
-        [key: string]: string;
-    }>;
+    transform(source: ITranslationsData): ITranslationsData;
+    private prepareCommentsKey;
 }

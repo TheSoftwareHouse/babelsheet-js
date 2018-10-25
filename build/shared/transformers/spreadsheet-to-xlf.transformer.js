@@ -10,16 +10,10 @@ class SpreadsheetToXlfTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { langCode, mergeLanguages, filters, } = {}) {
-        const json = this.spreadsheetToJson.transform(source, { langCode });
-        const jsonMasked = this.jsonToJsonMasked.transform(json, { filters });
-        if (mergeLanguages || langCode) {
-            return this.jsonToXlf.transform(jsonMasked);
-        }
-        return Object.keys(jsonMasked).map(langName => {
-            const xlfTranslations = this.jsonToXlf.transform(jsonMasked[langName]);
-            return { lang: langName, content: xlfTranslations };
-        });
+    transform(source) {
+        const json = this.spreadsheetToJson.transform(source);
+        const jsonMasked = this.jsonToJsonMasked.transform(json);
+        return this.jsonToXlf.transform(jsonMasked);
     }
 }
 exports.default = SpreadsheetToXlfTransformer;

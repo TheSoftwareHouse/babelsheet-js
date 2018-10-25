@@ -1,8 +1,7 @@
-import ITransformer from './transformer';
+import ITransformer, { ITranslationsData } from './transformer';
 export default class FlatListToIosStringsTransformer implements ITransformer {
     private readonly supportedType;
     supports(type: string): boolean;
-    transform(source: Array<{
-        [key: string]: string;
-    }>): string;
+    transform(source: ITranslationsData): ITranslationsData;
+    private generateIosStrings;
 }

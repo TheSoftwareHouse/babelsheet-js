@@ -9,13 +9,17 @@ class TranslationsController {
     async getTranslations(req, res, next) {
         const queryFilters = req.query.filters || [];
         return this.translationsStorage
-            .getTranslations(queryFilters, { format: req.query.format, keepLocale: req.query.keepLocale })
+            .getTranslations(queryFilters, {
+            format: req.query.format,
+            keepLocale: req.query.keepLocale,
+            includeComments: req.query.comments,
+        })
             .then(trans => {
             const docType = formatToExtensions_1.getDocumentType(req.query.format);
             res
                 .status(200)
                 .type(docType)
-                .send(trans);
+                .send(trans.result.merged ? trans.result.merged : trans.result);
         })
             .catch(next);
     }

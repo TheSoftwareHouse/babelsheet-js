@@ -51,11 +51,16 @@ describe('fileGenerators', async () => {
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
     expect(mockTransformers.transform).toBeCalledWith(
-      'fetchSpreadsheetReturn',
-      'json',
-      args.language,
-      args.merge,
-      args.filters
+      {
+        result: 'fetchSpreadsheetReturn',
+        translations: {},
+        meta: {
+          langCode: args.language,
+          mergeLanguages: args.merge,
+          filters: args.filters,
+        },
+      },
+      'json'
     );
     expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
   });

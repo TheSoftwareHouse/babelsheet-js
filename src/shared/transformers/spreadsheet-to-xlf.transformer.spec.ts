@@ -1,19 +1,20 @@
 import SpreadsheetToXlfTransformer from './spreadsheet-to-xlf.transformer';
 import ITransformer from '../../shared/transformers/transformer';
+import { minimalPassingObject } from '../../tests/testData';
 
 const spreeadsheetToJson: ITransformer = {
   supports: type => false,
-  transform: jest.fn(() => 'spreadsheet return'),
+  transform: jest.fn(source => ({ ...source, result: 'spreadsheet return' })),
 };
 
 const jsonToXlf: ITransformer = {
   supports: type => false,
-  transform: jest.fn(() => 'xlf return'),
+  transform: jest.fn(source => ({ ...source, result: 'xlf return' })),
 };
 
 const jsonToMaskedJson: ITransformer = {
   supports: type => false,
-  transform: jest.fn(() => 'json masked return'),
+  transform: jest.fn(source => ({ ...source, result: 'json masked return' })),
 };
 
 describe('SpreadsheetToXlfTransformer', () => {
@@ -32,69 +33,57 @@ describe('SpreadsheetToXlfTransformer', () => {
   });
 
   it('does generate object for given language from spreadsheet', async () => {
-    const object = { test: ['test'] };
     const langCode = 'en_US';
 
-    spreadsheetToXlfTransformer.transform(object, { langCode });
+    const object = {
+      ...minimalPassingObject,
+      meta: {
+        ...minimalPassingObject,
+        langCode,
+      },
+    };
 
-    expect(spreeadsheetToJson.transform).toBeCalledWith(object, { langCode });
-
-    expect(jsonToMaskedJson.transform).toBeCalledWith('spreadsheet return', { filters: undefined });
-
-    expect(jsonToXlf.transform).toBeCalledWith('json masked return');
+    const result = spreadsheetToXlfTransformer.transform(object);
+    expect(spreeadsheetToJson.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson.transform).toBeCalledWith({ ...object, result: 'spreadsheet return' });
+    expect(jsonToXlf.transform).toBeCalledWith({ ...object, result: 'json masked return' });
+    expect(result).toEqual({ ...object, result: 'xlf return' });
   });
 
   it('does generate languages object in xlf from spreadsheet', async () => {
-    const jsonReturned = { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] };
+    const jsonReturned = { en: { test: 'test' }, fr: { test2: 'test2' } };
     const spreeadsheetToJson2: ITransformer = {
       supports: type => false,
-      transform: jest.fn(() => jsonReturned),
+      transform: jest.fn(source => ({ ...source, result: jsonReturned })),
     };
+
     const jsonToMaskedJson2: ITransformer = {
       supports: type => false,
-      transform: jest.fn(json => json),
+      transform: jest.fn(source => source),
+    };
+
+    const jsonToXlf2: ITransformer = {
+      supports: type => false,
+      transform: jest.fn(source => source),
     };
 
     const spreadsheetToXlfTransformer2 = new SpreadsheetToXlfTransformer(
       spreeadsheetToJson2,
-      jsonToXlf,
+      jsonToXlf2,
       jsonToMaskedJson2
     );
-    const object = { '11': ['', 'CORE'] };
 
+    const object = {
+      ...minimalPassingObject,
+      meta: {
+        ...minimalPassingObject,
+      },
+    };
     const result = spreadsheetToXlfTransformer2.transform(object);
 
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
-    expect(jsonToMaskedJson2.transform).toBeCalledWith(jsonReturned, { filters: undefined });
-    expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['en']);
-    expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['fr']);
-    expect(result).toEqual([{ content: 'xlf return', lang: 'en' }, { content: 'xlf return', lang: 'fr' }]);
-  });
-  it('does pass filters to json to json transformer', async () => {
-    const jsonReturned = { en: [{ test: 'test' }], fr: [{ test2: 'test2' }] };
-    const filters = ['en.test'];
-    const spreeadsheetToJson2: ITransformer = {
-      supports: type => false,
-      transform: jest.fn(() => jsonReturned),
-    };
-    const jsonToMaskedJson2: ITransformer = {
-      supports: type => false,
-      transform: jest.fn(json => json),
-    };
-
-    const spreadsheetToXlfTransformer2 = new SpreadsheetToXlfTransformer(
-      spreeadsheetToJson2,
-      jsonToXlf,
-      jsonToMaskedJson2
-    );
-    const object = { '11': ['', 'CORE'] };
-
-    const result = spreadsheetToXlfTransformer2.transform(object, { filters });
-
-    expect(spreeadsheetToJson2.transform).toBeCalledWith(object, { langCode: undefined });
-    expect(jsonToMaskedJson2.transform).toBeCalledWith(jsonReturned, { filters });
-    expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['en']);
-    expect(jsonToXlf.transform).toBeCalledWith(jsonReturned['fr']);
-    expect(result).toEqual([{ content: 'xlf return', lang: 'en' }, { content: 'xlf return', lang: 'fr' }]);
+    expect(spreeadsheetToJson2.transform).toBeCalledWith(object);
+    expect(jsonToMaskedJson2.transform).toBeCalledWith({ ...object, result: jsonReturned });
+    expect(jsonToXlf2.transform).toBeCalledWith({ ...object, result: jsonReturned });
+    expect(result).toEqual({ ...object, result: jsonReturned });
   });
 });

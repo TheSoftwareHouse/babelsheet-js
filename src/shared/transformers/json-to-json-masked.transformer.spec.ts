@@ -1,6 +1,7 @@
 import JsonToJsonMaskedTransformer from './json-to-json-masked.transformer';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
+import { multiLocaleDataset } from '../../tests/testData';
 
 describe('JsonToJsonTransformer', () => {
   const maskInput = new MaskInput();
@@ -20,24 +21,64 @@ describe('JsonToJsonTransformer', () => {
 
   it('does generate masked json from json', async () => {
     const object = {
-      en: {
-        first: {
-          filter: 'abc',
-        },
-        secondfilter: '123',
-        deleted: 'not in result',
-      },
+      meta: { ...multiLocaleDataset.meta, filters: ['en_US.CORE.LABELS.YES', 'pl_PL.CORE.LABELS'] },
+      result: multiLocaleDataset.translations,
+      translations: multiLocaleDataset.translations,
     };
 
-    const result = jsonToJsonMaskedTransformer.transform(object, { filters: ['en.first.filter', 'en.secondfilter'] });
-
-    expect(result).toEqual({
-      en: {
-        first: {
-          filter: 'abc',
+    const result = jsonToJsonMaskedTransformer.transform(object);
+    const expectedObject = {
+      ...object,
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+            },
+          },
         },
-        secondfilter: '123',
+        pl_PL: {
+          CORE: {
+            LABELS: {
+              YES: 'tak',
+              NO: 'nie',
+              SAVE: 'zapisz',
+            },
+          },
+        },
       },
-    });
+    };
+    expect(result).toEqual(expectedObject);
+  });
+  it('does generate masked json from json with tags in filters', async () => {
+    const object = {
+      meta: { ...multiLocaleDataset.meta, filters: ['en_US.tag1.LABELS.YES', 'pl_PL.tag2.CORE.LABELS'] },
+      result: multiLocaleDataset.translations,
+      translations: multiLocaleDataset.translations,
+      tags: multiLocaleDataset.tags,
+    };
+
+    const result = jsonToJsonMaskedTransformer.transform(object);
+    const expectedObject = {
+      ...object,
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+            },
+          },
+        },
+        pl_PL: {
+          CORE: {
+            LABELS: {
+              NO: 'nie',
+              SAVE: 'zapisz',
+            },
+          },
+        },
+      },
+    };
+    expect(result).toEqual(expectedObject);
   });
 });

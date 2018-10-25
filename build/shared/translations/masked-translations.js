@@ -13,16 +13,26 @@ class MaskedTranslations {
     async setTranslations(filters, translations) {
         return this.storage.set(this.translationsKey, translations);
     }
-    async getTranslations(filters, { keepLocale } = {}) {
-        const translationsWithTags = await this.storage.get(this.translationsKey);
-        if (!translationsWithTags) {
+    async getTranslations(filters, { keepLocale, includeComments } = {}) {
+        const source = await this.storage.get(this.translationsKey);
+        if (!source) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }
-        const maskedTranslations = this.jsonToJsonMaskedTransformer.transform(translationsWithTags, { filters });
+        const maskedTranslations = this.jsonToJsonMaskedTransformer.transform({
+            ...source,
+            meta: { ...source.meta, includeComments, filters, mergeLanguages: true },
+        });
+        // if not keeping locales and there is only one key on the first level of result, and it can be found in locales list
         if (!keepLocale) {
-            const localesCount = Object.keys(maskedTranslations).length;
-            if (localesCount === 1) {
-                return maskedTranslations[Object.keys(maskedTranslations)[0]];
+            const keys = Object.keys(maskedTranslations.result);
+            if (keys.length === 1 &&
+                maskedTranslations.meta.locales &&
+                maskedTranslations.meta.locales.some((locale) => locale === keys[0])) {
+                return {
+                    ...maskedTranslations,
+                    result: maskedTranslations.result[keys[0]],
+                    meta: { ...maskedTranslations.meta },
+                };
             }
         }
         return maskedTranslations;

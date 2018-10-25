@@ -1,6 +1,7 @@
 import { set } from 'dot-prop-immutable';
 import * as mask from 'json-mask';
 import SpreadsheetToJsonTransformer from './spreadsheet-to-json.transformer';
+import { spreadsheetData } from '../../tests/testData';
 
 describe('SpreadsheetToJsonTransformer', () => {
   it('does return true if supported type', async () => {
@@ -16,159 +17,37 @@ describe('SpreadsheetToJsonTransformer', () => {
 
     expect(result).toBeFalsy();
   });
-
-  it('transforms raw translations to json format', () => {
+  it('transforms raw translations with comments and tags to json format', async () => {
     const source = {
-      '0': [],
-      '1': ['This is an example spreadsheet for tshio/babelsheet'],
-      '2': [],
-      '3': ['First rows are not parsed - you can use it as a place for instructions for your colaborators'],
-      '4': [],
-      '5': ['The tool will start parsing from the row 11 (as the key levels markers indicate)'],
-      '6': [],
-      '7': [
-        'Tags (optional)',
-        'First level:',
-        'Second level:',
-        'Third level:',
-        'Fourth level:',
-        'locale code',
-        'locale code',
-      ],
-      '8': ['', 'Section names'],
-      '9': [],
-      '10': ['###', '>>>', '>>>', '>>>', '>>>', 'en_US', 'pl_PL'],
-      '11': ['', 'CORE'],
-      '12': ['', '', 'LABELS'],
-      '13': ['', '', '', 'YES', '', 'yes', 'tak'],
-      '14': ['', '', '', 'NO', '', 'no', 'nie'],
-      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz'],
-      '16': ['', '', '', 'CANCEL', '', 'cancel'],
-      '17': ['', 'COMMON'],
-      '18': ['tag1, tag2', '', 'STH1', '', '', 'Some message ...', 'Jakaś wiadomość ...'],
-      '19': ['', '', 'FORM'],
-      '20': ['', '', '', 'COMMENT', '', 'comment', 'komentarz'],
-      '21': ['', 'FRONT'],
-      '22': ['', '', 'HEADER'],
-      '23': ['', '', '', 'TITLE', '', 'My Cool App', 'Moja Apka'],
-      '24': ['', '', '', 'CATCH_PHRASE', '', 'Join us!', 'Dołącz do nas!'],
-      '25': ['', '', 'PAGINATION'],
-      '26': ['tag1, tag2', '', '', 'FIRST', '', 'First page', 'Pierwsza strona'],
-      '27': ['tag1, tag2', '', '', 'NEXT', '', 'Next page', 'Następna strona'],
-      '28': ['tag1', '', '', 'PREV', '', 'Prev page', 'Poprzednia strona'],
-      '29': ['tag1', '', '', 'LAST', '', 'Last page', 'Ostatnia strona'],
-      '30': ['', 'BACK'],
-      '31': ['', '', 'MAILS'],
-      '32': ['', '', '', 'REGISTER'],
-      '33': ['', '', '', '', 'SUBJECT', 'You have been registered', 'Zarejestrowałeś się.'],
-      '34': ['', '', '', '', 'GREETING', 'Hi %name%', 'Cześć %name%'],
-      '35': ['', '', '', '', 'LINE1', 'Thank you for signing up with us.', 'Dziękujemy za rejestrację'],
-      '36': ['tag2', '', '', '', 'FOOTER', 'The App Team', 'Ekipa Apki'],
+      translations: {},
+      result: spreadsheetData.multiRawSpreadsheetData,
+      meta: spreadsheetData.initialMeta,
     };
 
     const expectedResult = {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
-          },
-          FRONT: {
-            PAGINATION: {
-              FIRST: null,
-              NEXT: null,
-              PREV: null,
-              LAST: null,
-            },
-          },
-        },
-        tag2: {
-          COMMON: {
-            STH1: null,
-          },
-          FRONT: {
-            PAGINATION: {
-              FIRST: null,
-              NEXT: null,
-            },
-          },
-          BACK: { MAILS: { REGISTER: { FOOTER: null } } },
-        },
-      },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-            SAVE: 'save',
-            CANCEL: 'cancel',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-        FRONT: {
-          HEADER: {
-            TITLE: 'My Cool App',
-            CATCH_PHRASE: 'Join us!',
-          },
-          PAGINATION: {
-            FIRST: 'First page',
-            NEXT: 'Next page',
-            PREV: 'Prev page',
-            LAST: 'Last page',
-          },
-        },
-        BACK: {
-          MAILS: {
-            REGISTER: {
-              SUBJECT: 'You have been registered',
-              GREETING: 'Hi %name%',
-              LINE1: 'Thank you for signing up with us.',
-              FOOTER: 'The App Team',
-            },
-          },
-        },
-      },
-      pl_PL: {
-        CORE: {
-          LABELS: {
-            YES: 'tak',
-            NO: 'nie',
-            SAVE: 'zapisz',
-          },
-        },
-        COMMON: {
-          STH1: 'Jakaś wiadomość ...',
-          FORM: {
-            COMMENT: 'komentarz',
-          },
-        },
-        FRONT: {
-          HEADER: {
-            TITLE: 'Moja Apka',
-            CATCH_PHRASE: 'Dołącz do nas!',
-          },
-          PAGINATION: {
-            FIRST: 'Pierwsza strona',
-            NEXT: 'Następna strona',
-            PREV: 'Poprzednia strona',
-            LAST: 'Ostatnia strona',
-          },
-        },
-        BACK: {
-          MAILS: {
-            REGISTER: {
-              SUBJECT: 'Zarejestrowałeś się.',
-              GREETING: 'Cześć %name%',
-              LINE1: 'Dziękujemy za rejestrację',
-              FOOTER: 'Ekipa Apki',
-            },
-          },
-        },
-      },
+      translations: spreadsheetData.multiTranslationsData,
+      result: spreadsheetData.multiTranslationsData,
+      comments: spreadsheetData.comments,
+      meta: spreadsheetData.meta,
+      tags: spreadsheetData.tags,
+    };
+    const transformer = new SpreadsheetToJsonTransformer();
+    const result = await transformer.transform(source);
+    expect(result).toEqual(expectedResult);
+  });
+
+  it('transforms raw translations with tags to json format', () => {
+    const source = {
+      translations: {},
+      result: spreadsheetData.multiRawSpreadsheetDataWithTags,
+      meta: spreadsheetData.initialMeta,
+    };
+
+    const expectedResult = {
+      translations: spreadsheetData.multiTranslationsData,
+      result: spreadsheetData.multiTranslationsData,
+      meta: spreadsheetData.meta,
+      tags: spreadsheetData.tags,
     };
 
     const transformer = new SpreadsheetToJsonTransformer();
@@ -178,16 +57,19 @@ describe('SpreadsheetToJsonTransformer', () => {
 
   it('transforms raw translations to json format when there are more values in rows', () => {
     const source = {
-      '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', 'pl_PL'],
-      '11': ['', 'CORE'],
-      '12': ['', '', 'LABELS'],
-      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
-      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
-      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
-      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      translations: {},
+      result: [
+        ['###', '>>>', '>>>', '>>>', '', 'en_US', 'pl_PL'],
+        ['', 'CORE'],
+        ['', '', 'LABELS'],
+        ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
+        ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
+        ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
+        ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      ],
+      meta: spreadsheetData.initialMeta,
     };
-
-    const expectedResult = {
+    const translations = {
       en_US: {
         CORE: {
           LABELS: {
@@ -208,6 +90,11 @@ describe('SpreadsheetToJsonTransformer', () => {
         },
       },
     };
+    const expectedResult = {
+      translations,
+      meta: spreadsheetData.meta,
+      result: translations,
+    };
 
     const transformer = new SpreadsheetToJsonTransformer();
 
@@ -216,15 +103,23 @@ describe('SpreadsheetToJsonTransformer', () => {
 
   it('transforms raw translations to json format when there is no meta', () => {
     const source = {
-      '11': ['CORE'],
-      '12': ['', 'LABELS'],
-      '13': ['', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
-      '14': ['', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
-      '15': ['', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
-      '16': ['', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      translations: {},
+      result: [
+        ['CORE'],
+        ['', 'LABELS'],
+        ['', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
+        ['', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
+        ['', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
+        ['', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      ],
+      meta: spreadsheetData.initialMeta,
     };
 
-    const expectedResult = {};
+    const expectedResult = {
+      translations: {},
+      result: {},
+      meta: {},
+    };
 
     const transformer = new SpreadsheetToJsonTransformer();
 
@@ -234,46 +129,82 @@ describe('SpreadsheetToJsonTransformer', () => {
   it('transforms raw translations to json format in given language code', () => {
     const langCode = 'pl_PL';
     const source = {
-      '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', langCode],
-      '11': ['', 'CORE'],
-      '12': ['', '', 'LABELS'],
-      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
-      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
-      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
-      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      translations: {},
+      result: [
+        ['###', '>>>', '>>>', '>>>', '', 'en_US', langCode],
+        ['', 'CORE'],
+        ['', '', 'LABELS'],
+        ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
+        ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
+        ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
+        ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
+      ],
+      meta: {
+        ...spreadsheetData.initialMeta,
+        langCode,
+      },
     };
-
-    const expectedResult = {
-      CORE: {
-        LABELS: {
-          YES: 'tak',
-          NO: 'nie',
-          SAVE: 'zapisz',
+    const translations = {
+      [langCode]: {
+        CORE: {
+          LABELS: {
+            YES: 'tak',
+            NO: 'nie',
+            SAVE: 'zapisz',
+          },
         },
       },
+      en_US: {
+        CORE: {
+          LABELS: {
+            YES: 'yes',
+            NO: 'no',
+            SAVE: 'save',
+            CANCEL: 'cancel',
+          },
+        },
+      },
+    };
+    const expectedResult = {
+      translations,
+      result: {
+        CORE: {
+          LABELS: {
+            YES: 'tak',
+            NO: 'nie',
+            SAVE: 'zapisz',
+          },
+        },
+      },
+      meta: { ...spreadsheetData.meta, langCode },
     };
 
     const transformer = new SpreadsheetToJsonTransformer();
 
-    expect(transformer.transform(source, { langCode })).toEqual(expectedResult);
+    expect(transformer.transform(source)).toEqual(expectedResult);
   });
 
   it('does throw exception when there are no translations in given language code', () => {
     const langCode = 'en_US';
     const source = {
-      '10': ['###', '>>>', '>>>', '>>>', 'pl_PL'],
-      '11': ['', 'CORE'],
-      '12': ['', '', 'LABELS'],
-      '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues'],
-      '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues'],
-      '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues'],
-      '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues'],
+      translations: {},
+      result: [
+        ['###', '>>>', '>>>', '>>>', 'pl_PL'],
+        ['', 'CORE'],
+        ['', '', 'LABELS'],
+        ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues'],
+        ['', '', '', 'NO', '', 'no', 'nie', 'moreValues'],
+        ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues'],
+        ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues'],
+      ],
+      meta: {
+        ...spreadsheetData.initialMeta,
+        langCode,
+      },
     };
 
     const transformer = new SpreadsheetToJsonTransformer();
 
-    expect(() => transformer.transform(source, { langCode })).toThrow(
-      `No translations for '${langCode}' language code`
-    );
+    expect(() => transformer.transform(source)).toThrow(`No translations for '${langCode}' language code`);
   });
 });

@@ -1,14 +1,13 @@
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
 export default class IosFilesCreator implements IFilesCreator {
     private fileRepository;
     private supportedExtension;
     private defaultFileName;
     constructor(fileRepository: IFileRepository);
     supports(extension: string): boolean;
-    save(dataToSave: Array<{
-        lang: string;
-        content: string;
-    }> | string, path: string, filename: string, baseLang: string): void;
+    save(dataToSave: ITranslationsData, path: string, filename: string, baseLang: string): void;
     private transformLangWithRegion;
     private createFolderAndSave;
     private generateBaseTranslations;

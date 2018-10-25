@@ -13,6 +13,7 @@ export default class TranslationsRouting {
       '/',
       celebrate({
         query: {
+          comments: Joi.boolean().default(false),
           filters: Joi.array().items(Joi.string()),
           format: Joi.string().default('json'),
           keepLocale: Joi.boolean().default(false),

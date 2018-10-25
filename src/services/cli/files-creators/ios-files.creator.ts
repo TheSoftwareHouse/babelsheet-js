@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
 
 export default class IosFilesCreator implements IFilesCreator {
   private supportedExtension = 'strings';
@@ -10,26 +12,27 @@ export default class IosFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(
-    dataToSave: Array<{ lang: string; content: string }> | string,
-    path: string,
-    filename: string,
-    baseLang: string
-  ): void {
-    if (typeof dataToSave === 'string') {
-      this.createFolderAndSave(dataToSave, path, filename);
+  public save(dataToSave: ITranslationsData, path: string, filename: string, baseLang: string): void {
+    if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+      this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
-
-    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
-    dataWithoutTags.forEach((data: any) => {
+    if (dataToSave.meta && dataToSave.meta.langCode) {
+      this.createFolderAndSave(
+        dataToSave.result.find((element: any) => element.lang === dataToSave.meta.langCode).content,
+        path,
+        filename
+      );
+      return;
+    }
+    dataToSave.result.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
       const folderName = `${path}/${langWithLocale}.lproj`;
 
       this.createFolderAndSave(data.content, folderName);
     });
 
-    this.generateBaseTranslations(dataToSave, path, baseLang);
+    this.generateBaseTranslations(dataToSave.result, path, baseLang);
   }
 
   private transformLangWithRegion(languageCode: string): string {

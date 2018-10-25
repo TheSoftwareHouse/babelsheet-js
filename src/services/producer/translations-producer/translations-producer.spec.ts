@@ -8,42 +8,19 @@ import TranslationsProducer from './translations-producer';
 
 import TranslationsStorage from '../../../shared/translations/translations';
 import { getLoggerMock } from '../../../tests/loggerMock';
+import { spreadsheetData } from '../../../tests/testData';
 
 const loggerMock = getLoggerMock();
-const sheetsReturnData = {
-  '10': ['###', '>>>', '>>>', '>>>', '', 'en_US', 'pl_PL'],
-  '11': ['', 'CORE'],
-  '12': ['', '', 'LABELS'],
-  '13': ['', '', '', 'YES', '', 'yes', 'tak', 'moreValues', 'moreValues'],
-  '14': ['', '', '', 'NO', '', 'no', 'nie', 'moreValues', 'moreValues'],
-  '15': ['', '', '', 'SAVE', '', 'save', 'zapisz', 'moreValues', 'moreValues'],
-  '16': ['', '', '', 'CANCEL', '', 'cancel', '', 'moreValues', 'moreValues'],
-};
-
+const sheetsReturnData = spreadsheetData.multiRawSpreadsheetData;
 const returnDataParsed = {
-  en_US: {
-    CORE: {
-      LABELS: {
-        YES: 'yes',
-        NO: 'no',
-        SAVE: 'save',
-        CANCEL: 'cancel',
-      },
-    },
-  },
-  pl_PL: {
-    CORE: {
-      LABELS: {
-        YES: 'tak',
-        NO: 'nie',
-        SAVE: 'zapisz',
-      },
-    },
-  },
+  meta: { ...spreadsheetData.meta, filters: [], mergeLanguages: true },
+  translations: spreadsheetData.result,
+  result: spreadsheetData.result,
+  comments: spreadsheetData.comments,
+  tags: spreadsheetData.tags,
 };
-
 const changedDataParsed = ramda.clone(returnDataParsed);
-changedDataParsed.en_US.CORE.LABELS.YES = 'yep';
+changedDataParsed.result.en_US.CORE.LABELS.YES = 'yep';
 
 const container = createContainer().register({
   logger: awilix.asValue(loggerMock),

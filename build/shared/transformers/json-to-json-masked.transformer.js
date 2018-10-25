@@ -10,15 +10,14 @@ class JsonToJsonMaskedTransformer {
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
-    transform(source, { filters, }) {
-        const { tags, ...translations } = source;
-        if (filters && filters.length) {
-            const maskInput = this.maskInput.convert(filters);
-            const filtersMask = this.maskConverter.convert(maskInput, tags);
-            const maskedTranslations = mask(translations, filtersMask);
-            return maskedTranslations;
+    transform(source) {
+        if (source.meta.filters && source.meta.filters.length) {
+            const maskInput = this.maskInput.convert(source.meta.filters);
+            const filtersMask = this.maskConverter.convert(maskInput, source.tags || {});
+            const maskedTranslations = mask(source.result, filtersMask);
+            return { ...source, result: maskedTranslations };
         }
-        return translations;
+        return source;
     }
 }
 exports.default = JsonToJsonMaskedTransformer;

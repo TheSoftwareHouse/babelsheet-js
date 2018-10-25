@@ -11,7 +11,13 @@ class TranslationsProducer {
     }
     async produce(authData) {
         const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
-        const transformedData = await this.transformer.transform(spreadsheetData);
+        const transformedData = await this.transformer.transform({
+            translations: {},
+            meta: {
+                mergeLanguages: true,
+            },
+            result: spreadsheetData,
+        });
         const [, actualTranslations] = await await_to_js_1.default(this.translationsStorage.getTranslations([]));
         if (!ramda.equals(transformedData, actualTranslations)) {
             await this.translationsStorage.clearTranslations();

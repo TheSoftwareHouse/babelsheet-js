@@ -1,5 +1,7 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { ITranslationsData } from '../../../shared/transformers/transformer';
+import { IFilesCreator } from './files-creator.types';
 
 export default class YamlFilesCreator implements IFilesCreator {
   private supportedExtension = 'yml';
@@ -10,14 +12,20 @@ export default class YamlFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: Array<{ lang: string; content: string }> | string, path: string, filename: string): void {
-    if (typeof dataToSave === 'string') {
-      this.createFolderAndSave(dataToSave, path, filename);
+  public save(dataToSave: ITranslationsData, path: string, filename: string): void {
+    if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
+      this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
     }
-
-    const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
-    dataWithoutTags.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
+    if (dataToSave.meta && dataToSave.meta.langCode) {
+      this.createFolderAndSave(
+        dataToSave.result.find((element: any) => element.lang === dataToSave.meta.langCode).content,
+        path,
+        filename
+      );
+      return;
+    }
+    dataToSave.result.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
   }
 
   private createFolderAndSave(data: string, folderName: string, fileName: string) {

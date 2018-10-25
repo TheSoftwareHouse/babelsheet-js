@@ -20,28 +20,43 @@ export default class CachedTranslations implements ITranslations {
     return this.storage.clear();
   }
 
-  public async setTranslations(filters: string[], translations: { [key: string]: any }, format?: string) {
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
-
+  public async setTranslations(
+    filters: string[],
+    translations: { [key: string]: any },
+    format?: string,
+    keepLocale?: boolean,
+    includeComments?: boolean
+  ) {
+    const translationsKey = this.translationsKeyGenerator.generateKey(
+      this.translationsCachePrefix,
+      filters,
+      format,
+      keepLocale,
+      includeComments
+    );
     return this.storage.set(translationsKey, translations);
   }
 
   public async getTranslations(
     filters: string[],
-    { format, keepLocale }: { format: string; keepLocale: boolean }
+    { format, keepLocale, includeComments }: { format: string; keepLocale: boolean; includeComments: boolean }
   ): Promise<{ [key: string]: any }> {
     const extension = getExtensionsFromJson(format);
-    const translationsKey = this.translationsKeyGenerator.generateKey(this.translationsCachePrefix, filters, format);
-
+    const translationsKey = this.translationsKeyGenerator.generateKey(
+      this.translationsCachePrefix,
+      filters,
+      format,
+      keepLocale,
+      includeComments
+    );
     if (await this.storage.has(translationsKey)) {
       return await this.storage.get(translationsKey);
     }
 
-    return this.maskedTranslations.getTranslations(filters, { keepLocale }).then(async trans => {
+    return this.maskedTranslations.getTranslations(filters, { keepLocale, includeComments }).then(async trans => {
       if (ramda.isEmpty(trans)) {
         return Promise.reject(new NotFoundError('Translations not found'));
       }
-
       const transformedTranslations = await this.transformers.transform(trans, extension);
 
       await this.storage.set(translationsKey, transformedTranslations);

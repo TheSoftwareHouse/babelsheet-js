@@ -31,7 +31,7 @@ import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
 import XlfFilesCreator from './files-creators/xlf-files.creator';
 import YamlFilesCreator from './files-creators/yaml-files.creator';
-import Interpreter from "./interpreter/interpreter";
+import Interpreter from './interpreter/interpreter';
 
 export default function createContainer(options?: ContainerOptions): AwilixContainer {
   const container = awilix.createContainer({
@@ -152,7 +152,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
 
   container.register({
     shadowArgs: awilix.asValue(undefined),
-    interpreter: awilix.asClass(Interpreter, { lifetime: awilix.Lifetime.SINGLETON }),
+    interpreter: awilix.asClass(Interpreter),
     fileRepository: awilix.asClass(FileRepository, { lifetime: awilix.Lifetime.SINGLETON }),
     googleAuth: awilix.asClass(GoogleAuth),
     googleSheets: awilix.asClass(GoogleSheets),

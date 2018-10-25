@@ -7,7 +7,7 @@ dotenv.config({ path: BABELSHEET_ENV_PATH });
 
 import { ILogger } from 'tsh-node-common';
 import createContainer from './container';
-import Interpreter from "./interpreter/interpreter";
+import Interpreter from './interpreter/interpreter';
 
 const container = createContainer();
 

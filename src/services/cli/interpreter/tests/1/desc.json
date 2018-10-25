@@ -1,0 +1,4 @@
+{
+    "description": "Creates basic yamls with no options",
+    "params": ["-f", "yml"]
+}

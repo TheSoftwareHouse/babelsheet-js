@@ -1,104 +1,120 @@
-import createContainer from "../container";
-import FakeGoogleSheets from "../../../tests/fakeSheets";
+import createContainer from '../container';
+import FakeGoogleSheets from '../../../tests/fakeSheets';
 import * as awilix from 'awilix';
-import { spreadsheetData } from '../../../tests/testData'
-import Interpreter from "./interpreter";
-import path from 'path';
-// const fs = require('fs');
-import * as fs from 'fs';
+import { spreadsheetData } from '../../../tests/testData';
+import Interpreter from './interpreter';
+import * as path from 'path';
+import * as fs from 'fs-extra';
+import * as jsdiff from 'diff';
+import * as dircompare from 'dir-compare';
+import FilesCreators from '../files-creators/files-creators';
+import FakeFilesCreators from '../../../tests/fakeFileCreators';
+import { getLoggerMock } from '../../../tests/loggerMock';
 
+const loggerMock = getLoggerMock();
+const containerTemp = createContainer();
+const fileCreators = containerTemp.resolve<FilesCreators>('filesCreators');
 
-const container = createContainer().register({
-    googleSheets: awilix.asClass(FakeGoogleSheets).inject(() => ({ returnData: spreadsheetData.multiRawSpreadsheetData })),
+const container = containerTemp.register({
+  googleSheets: awilix
+    .asClass(FakeGoogleSheets)
+    .inject(() => ({ returnData: spreadsheetData.multiRawSpreadsheetData })),
+  logger: awilix.asValue(loggerMock),
 });
-const snapsPath = './tests/snapshots/'
-const scenarios = [
+const snapsPath = path.join('src', 'services', 'cli', 'interpreter', 'tests');
+
+const getPath = relativePath => path.join(snapsPath, relativePath);
+const isUnixHiddenPath = function(path) {
+  return /(^|\/)\.[^\/\.]/g.test(path);
+};
+const reset = '\x1b[0m';
+const green = '\x1b[32m';
+const red = '\x1b[31m';
+const getColor = difference => {
+  if (difference.added) {
+    return green;
+  } else if (difference.removed) {
+    return red;
+  } else {
+    return reset;
+  }
+};
+
+// get directories list in /tests
+const directories = fs.readdirSync(snapsPath);
+
+const scenarios = directories.reduce((accumulator, directory) => {
+  // skip directory if hidden
+  if (isUnixHiddenPath(directory)) {
+    return accumulator;
+  }
+  // check if there is a desc.json file in the directory
+  const descFilePath = path.join(snapsPath, directory, 'desc.json');
+  const descFileExists = fs.existsSync(descFilePath);
+  if (!descFileExists) {
+    return accumulator;
+  }
+  // read the desc file
+  const desc = JSON.parse(fs.readFileSync(descFilePath, 'utf8'));
+  // add scenario
+  return [
+    ...accumulator,
     {
-        description: 'Creates basic jsons with no options',
-        params: ['-f', 'json'],
-        results: ['en_US.json', 'pl_PL.json'],
-    }
-]
+      description: desc.description,
+      params: desc.params,
+      resultPath: path.join(snapsPath, directory, 'result'),
+      snapPath: path.join(snapsPath, directory, 'snap'),
+    },
+  ];
+}, []);
 
 describe('CLI interpreter', () => {
-    beforeEach(async () => {
-        process.env.BABELSHEET_CLIENT_ID = 'BABELSHEET_CLIENT_ID';
-        process.env.BABELSHEET_CLIENT_SECRET = 'BABELSHEET_CLIENT_SECRET';
-        process.env.BABELSHEET_SPREADSHEET_NAME = 'BABELSHEET_SPREADSHEET_NAME';
-        process.env.BABELSHEET_SPREADSHEET_ID = 'BABELSHEET_SPREADSHEET_ID';
-        process.env.BABELSHEET_REDIRECT_URI = 'BABELSHEET_REDIRECT_URI';
+  beforeEach(async () => {
+    process.env.BABELSHEET_CLIENT_ID = 'BABELSHEET_CLIENT_ID';
+    process.env.BABELSHEET_CLIENT_SECRET = 'BABELSHEET_CLIENT_SECRET';
+    process.env.BABELSHEET_SPREADSHEET_NAME = 'BABELSHEET_SPREADSHEET_NAME';
+    process.env.BABELSHEET_SPREADSHEET_ID = 'BABELSHEET_SPREADSHEET_ID';
+    process.env.BABELSHEET_REDIRECT_URI = 'BABELSHEET_REDIRECT_URI';
+  });
+  // for each scenario
+  scenarios.forEach(scenario => {
+    it(scenario.description, async () => {
+      // alter arguments and paths
+      container.register({
+        shadowArgs: awilix.asValue(['generate', ...scenario.params]),
+        filesCreators: awilix.asClass(FakeFilesCreators).inject(() => ({
+          innerFilesCreators: fileCreators,
+          basePath: scenario.resultPath,
+        })),
+      });
+      // interpret arguments
+      const interpreter = await container.resolve<Interpreter>('interpreter').interpret();
+
+      // check if snap folder exists, create it if it doesent and copy test contents. Dont copy if the folder exists, in case of more files than expected being generated.
+      const snapshotFolderExists = fs.existsSync(scenario.snapPath);
+      if (!snapshotFolderExists) {
+        fs.mkdirSync(scenario.snapPath);
+        fs.copySync(scenario.resultPath, scenario.snapPath);
+      } else {
+        const directoryDiff = await dircompare.compare(scenario.resultPath, scenario.snapPath, {
+          compareContent: true,
+        });
+        // deepcompare different files
+        const deepAnalysis = directoryDiff.diffSet.filter(element => element.state !== 'equal');
+        deepAnalysis.map(difference => {
+          const resultFilePath = path.join(difference.path1, difference.name1);
+          const snapFilePath = path.join(difference.path2, difference.name2);
+          const oldFile = fs.readFileSync(snapFilePath, 'utf8');
+          const newFile = fs.readFileSync(resultFilePath, 'utf8');
+          const diff = jsdiff.diffChars(oldFile, newFile);
+
+          const colorOutput = diff.reduce((accumulator, current) => {
+            return `${accumulator}${getColor(current)}${current.value}`;
+          }, `${resultFilePath}:\n`);
+          console.log(colorOutput, getColor({}));
+        });
+        return expect(deepAnalysis.length).toBe(0);
+      }
     });
-    scenarios.forEach(scenario => {
-        it(scenario.description, async () => {
-            container.register({
-                shadowArgs: awilix.asValue(['generate', ...scenario.params]),
-            })
-            const interpreter = await container.resolve<Interpreter>('interpreter').interpret();
-            // check if result files exist
-            scenario.results.forEach(result => {
-                fs.access(result, fs.constants.F_OK, (err) => {
-                    expect(err).toBeNull();
-                    // check if results are in snapshots directory
-                    fs.access(path.join(snapsPath, result), fs.constants.F_OK, (err) => {
-                        // file doesen't exist - copy it
-                        if (err) {
-                            fs.copyFileSync(result, snapsPath)
-                        }
-                    });
-                });
-            })
-        })
-    })
-})
-
-
-
-
-// build .js files
-// const fs = require('fs');
-// const {
-  // spawn
-// } = require('child_process');
-// (async ()=>{
-  // const build = spawn('yarn', ['build']);
-
-  // build.stdout.on('data', (data) => {
-    // console.log(`stdout: ${data}`);
-  // });
-
-  // build.stderr.on('data', (data) => {
-    // console.log(`stderr: ${data}`);
-  // });
-
-  // build.on('close', (code) => {
-    // console.log(`build process exited with code ${code}`);
-  // });
-  // launch CLI with mocked google sheets 
-  // const scenarios = [{
-    // arguments: ['-f', 'yml', '--fitlers', 'tag2'],
-    // results: ['./messages.en_US.yml','./messages.pl_PL.yml']
-  // }]
-  // for (scenario of scenarios){
-//     const cli = await spawn('node', ['./build/services/cli/index.js', 'generate-snap', ...scenario.arguments]);
-//     cli.stdout.on('data', (data) => {
-//       console.log(`stdout: ${data}`);
-//     });
-
-//     cli.stderr.on('data', (data) => {
-//       console.log(`stderr: ${data}`);
-//     });
-
-//     cli.on('close', (code) => {
-//       if (code === 0){
-//         console.log(`cli process exited with code ${code}`);
-//         // check if expected results are where expected
-
-//       } else {
-//         console.log(`cli process exited with non-zero code: ${code}. Bailing.`)
-//       }
-//     });
-//   }
-// })()
-// check if the expected outputs are snapped
-// no - create snap
-// yes - compare snap
+  });
+});

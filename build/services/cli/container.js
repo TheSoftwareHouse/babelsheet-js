@@ -149,7 +149,7 @@ function createContainer(options) {
     };
     container.register({
         shadowArgs: awilix.asValue(undefined),
-        interpreter: awilix.asClass(interpreter_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        interpreter: awilix.asClass(interpreter_1.default),
         fileRepository: awilix.asClass(file_repository_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         googleAuth: awilix.asClass(auth_1.default),
         googleSheets: awilix.asClass(sheets_1.default),

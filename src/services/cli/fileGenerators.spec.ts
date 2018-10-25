@@ -5,6 +5,7 @@ import { ITransformers } from '../../shared/transformers/transformers.types';
 import { getGoogleAuthMock } from '../../tests/googleAuthMock';
 import { getLoggerMock } from '../../tests/loggerMock';
 import InEnvStorage from '../../infrastructure/storage/in-env';
+import IFileRepository from '../../infrastructure/repository/file-repository.types';
 
 export const getExtension = jest.fn();
 
@@ -30,6 +31,7 @@ describe('fileGenerators', async () => {
   it('generateTranslations does run proper functions', async () => {
     const mockGoogleSheets = {
       fetchSpreadsheet: jest.fn().mockImplementation(() => 'fetchSpreadsheetReturn'),
+      googleAuth: jest.fn(),
     };
 
     const mockTransformers: ITransformers = {
@@ -46,8 +48,15 @@ describe('fileGenerators', async () => {
       transformers: awilix.asValue(mockTransformers),
       filesCreators: awilix.asValue(mockFileCreators),
     });
-
-    await generateTranslations(container, args);
+    const fileRepository = container.resolve<IFileRepository>('fileRepository');
+    await generateTranslations(
+      loggerMock,
+      fileRepository,
+      mockGoogleSheets as any,
+      mockTransformers as any,
+      mockFileCreators as any,
+      args
+    );
 
     expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
     expect(mockTransformers.transform).toBeCalledWith(
@@ -78,7 +87,7 @@ describe('fileGenerators', async () => {
 
     const inEnvStorage = container.resolve<InEnvStorage>('inEnvStorage');
 
-    await generateConfigFile(container, args, inEnvStorage);
+    await generateConfigFile(loggerMock, inEnvStorage, getGoogleAuthMock() as any, args, inEnvStorage);
 
     expect(mockInEnvStorage.set).toBeCalledWith('babelsheet_refresh_token', 'test-token');
   });

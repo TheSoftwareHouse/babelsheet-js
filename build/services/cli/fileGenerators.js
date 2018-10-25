@@ -75,8 +75,7 @@ function getAndSaveAuthData(logger, inEnvStorage, args) {
     return spreadsheetAuthData;
 }
 async function getRefreshToken(googleAuth, { clientId, clientSecret, redirectUri }) {
-    const oAuth2Client = await googleAuth
-        .createOAuthClient(clientId, clientSecret, redirectUri);
+    const oAuth2Client = await googleAuth.createOAuthClient(clientId, clientSecret, redirectUri);
     const { refresh_token } = await googleAuth.getTokens(oAuth2Client);
     return refresh_token;
 }

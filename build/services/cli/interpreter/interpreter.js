@@ -18,9 +18,14 @@ class Interpreter {
             json: this.inFileStorage,
         };
     }
-    configureCli() {
-        console.log(this.shadowArgs);
-        return yargs
+    async interpret(overwriteShadowArgs) {
+        const args = this.configureCli(overwriteShadowArgs);
+        args._[0] === 'init'
+            ? await fileGenerators_1.generateConfigFile(this.logger, this.inEnvStorage, this.googleAuth, args, this.getProperStorage[args['config-format']])
+            : await fileGenerators_1.generateTranslations(this.logger, this.fileRepository, this.googleSheets, this.transformers, this.filesCreators, args);
+    }
+    configureCli(overwriteShadowArgs) {
+        let parser = yargs
             .usage('Usage: generate [-f "format"] [-n "filename"] [-p "path"]')
             .command('init', 'Generates config file with token for google auth')
             .option('cf', {
@@ -71,14 +76,15 @@ class Interpreter {
             .help('?')
             .alias('?', 'help')
             .example('$0 generate -f android -n my-data -p ./result -l en_US --merge', 'Generate my-data.xml with english translations in folder /result')
-            .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format')
-            .parse(this.shadowArgs);
-    }
-    async interpret() {
-        const args = this.configureCli();
-        args._[0] === 'init'
-            ? await fileGenerators_1.generateConfigFile(this.logger, this.inEnvStorage, this.googleAuth, args, this.getProperStorage[args['config-format']])
-            : await fileGenerators_1.generateTranslations(this.logger, this.fileRepository, this.googleSheets, this.transformers, this.filesCreators, args);
+            .example('$0 generate --base pl_PL --format ios', 'Generate translations in current directory in ios format');
+        // custom parser when shadowing args, because the test fail with no message otherwise. Can be a huge timesink.
+        if (this.shadowArgs || overwriteShadowArgs) {
+            parser = parser.fail((msg, err) => {
+                this.logger.error(`${msg ? `Failure message: ${msg} ` : ''}${err ? `Error: ${err}` : ''}`);
+                process.exit(1);
+            });
+        }
+        return parser.parse(this.shadowArgs || overwriteShadowArgs);
     }
 }
 exports.default = Interpreter;

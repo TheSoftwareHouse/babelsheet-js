@@ -40,7 +40,14 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
   return authData;
 }
 
-export async function generateTranslations(logger: ILogger, fileRepository: IFileRepository, googleSheets: GoogleSheets,transformers:Transformers,filesCreators: FilesCreators, args: Arguments) {
+export async function generateTranslations(
+  logger: ILogger,
+  fileRepository: IFileRepository,
+  googleSheets: GoogleSheets,
+  transformers: Transformers,
+  filesCreators: FilesCreators,
+  args: Arguments
+) {
   const { info } = logger;
 
   info('Getting auth variables...');
@@ -121,15 +128,19 @@ async function getRefreshToken(
   googleAuth: GoogleAuth,
   { clientId, clientSecret, redirectUri }: { [key: string]: string }
 ) {
-  const oAuth2Client = await googleAuth
-    .createOAuthClient(clientId, clientSecret, redirectUri);
+  const oAuth2Client = await googleAuth.createOAuthClient(clientId, clientSecret, redirectUri);
 
   const { refresh_token } = await googleAuth.getTokens(oAuth2Client);
   return refresh_token;
 }
 
-export async function generateConfigFile(logger: ILogger, inEnvStorage: InEnvStorage,
-  googleAuth: GoogleAuth, args: Arguments, storage: IStorage) {
+export async function generateConfigFile(
+  logger: ILogger,
+  inEnvStorage: InEnvStorage,
+  googleAuth: GoogleAuth,
+  args: Arguments,
+  storage: IStorage
+) {
   const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args);
 
   logger.info('Acquiring refresh token...');

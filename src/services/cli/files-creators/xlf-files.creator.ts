@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
 import { ITranslationsData } from '../../../shared/transformers/transformer';
 import { IFilesCreator } from './files-creator.types';
@@ -31,7 +31,7 @@ export default class XlfFilesCreator implements IFilesCreator {
 
   private createFolderAndSave(data: string, folderName: string, fileName: string) {
     if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
+      fs.mkdirsSync(folderName);
     }
 
     this.fileRepository.saveData(data, fileName, this.supportedExtension, folderName);

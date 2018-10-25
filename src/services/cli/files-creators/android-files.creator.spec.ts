@@ -1,7 +1,7 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import AndroidFilesCreator from './android-files.creator';
 
-jest.mock('fs');
+jest.mock('fs-extra');
 
 describe('AndroidFilesCreator', () => {
   let fileRepository = null;
@@ -47,10 +47,10 @@ describe('AndroidFilesCreator', () => {
     const secondPathName = './values-en-rUS';
     const thirdPathName = `./values-${translations[2].lang}`;
 
-    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
-    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
-    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
-    expect(fs.mkdirSync).toBeCalledWith('./values');
+    expect(fs.mkdirsSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(thirdPathName);
+    expect(fs.mkdirsSync).toBeCalledWith('./values');
     expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'strings', 'xml', firstPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'strings', 'xml', secondPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'strings', 'xml', thirdPathName);
@@ -69,9 +69,9 @@ describe('AndroidFilesCreator', () => {
     const secondPathName = './values-en-rUS';
     const thirdPathName = `./values-${translations[2].lang}`;
 
-    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
-    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
-    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(thirdPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'strings', 'xml', firstPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'strings', 'xml', secondPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'strings', 'xml', thirdPathName);

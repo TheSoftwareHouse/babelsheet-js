@@ -7,7 +7,6 @@
   "scripts": {
     "prepare-pr": "tsc && jest --coverage && mkdocs build && tslint -c tslint.json 'src/**/*.ts' && nsp check && prettier --write 'src/**/*.ts'",
     "test": "jest --coverage",
-    "test-nocoverage": "jest",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",
     "type-check": "tsc --noEmit",
@@ -28,6 +27,7 @@
   "author": "The Software House",
   "license": "MIT",
   "dependencies": {
+    "@types/fs-extra": "^5.0.4",
     "await-to-js": "^2.0.1",
     "awilix": "^3.0.6",
     "celebrate": "^7.0.4",

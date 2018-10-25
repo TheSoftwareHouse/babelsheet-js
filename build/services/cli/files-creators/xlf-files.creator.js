@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
+const fs = require("fs-extra");
 class XlfFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
@@ -22,7 +22,7 @@ class XlfFilesCreator {
     }
     createFolderAndSave(data, folderName, fileName) {
         if (!fs.existsSync(folderName)) {
-            fs.mkdirSync(folderName);
+            fs.mkdirsSync(folderName);
         }
         this.fileRepository.saveData(data, fileName, this.supportedExtension, folderName);
     }

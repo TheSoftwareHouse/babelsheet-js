@@ -1,7 +1,7 @@
 import IosFilesCreator from './ios-files.creator';
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 
-jest.mock('fs');
+jest.mock('fs-extra');
 
 describe('IosFilesCreator', () => {
   let fileRepository = null;
@@ -48,10 +48,10 @@ describe('IosFilesCreator', () => {
     const secondPathName = './en-US.lproj';
     const thirdPathName = `./${translations[2].lang}.lproj`;
 
-    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
-    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
-    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
-    expect(fs.mkdirSync).toBeCalledWith('./Base.lproj');
+    expect(fs.mkdirsSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(thirdPathName);
+    expect(fs.mkdirsSync).toBeCalledWith('./Base.lproj');
     expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'Localizable', 'strings', firstPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', secondPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'Localizable', 'strings', thirdPathName);
@@ -70,9 +70,9 @@ describe('IosFilesCreator', () => {
     const secondPathName = './fr.lproj';
     const thirdPathName = `./${translations[2].lang}.lproj`;
 
-    expect(fs.mkdirSync).toBeCalledWith(firstPathName);
-    expect(fs.mkdirSync).toBeCalledWith(secondPathName);
-    expect(fs.mkdirSync).toBeCalledWith(thirdPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(firstPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(secondPathName);
+    expect(fs.mkdirsSync).toBeCalledWith(thirdPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[0].content, 'Localizable', 'strings', firstPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[1].content, 'Localizable', 'strings', secondPathName);
     expect(fileRepository.saveData).toBeCalledWith(translations[2].content, 'Localizable', 'strings', thirdPathName);

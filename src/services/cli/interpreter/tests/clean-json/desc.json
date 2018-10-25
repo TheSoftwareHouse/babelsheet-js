@@ -1,4 +1,4 @@
 {
-    "description": "Creates basic yamls with no options",
-    "params": ["-f", "yml"]
+    "description": "Creates basic jsons with no options",
+    "params": ["-f", "json"]
 }

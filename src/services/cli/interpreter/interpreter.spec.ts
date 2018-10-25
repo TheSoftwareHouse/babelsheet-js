@@ -105,7 +105,7 @@ describe('CLI interpreter', () => {
       // check if snap folder exists, create it if it doesent and copy test contents. Dont copy if the folder exists, in case of more files than expected being generated.
       const snapshotFolderExists = fs.existsSync(scenario.snapPath);
       if (!snapshotFolderExists) {
-        fs.mkdirSync(scenario.snapPath);
+        fs.mkdirsSync(scenario.snapPath);
         fs.copySync(scenario.resultPath, scenario.snapPath);
       } else {
         const directoryDiff = await dircompare.compare(scenario.resultPath, scenario.snapPath, {

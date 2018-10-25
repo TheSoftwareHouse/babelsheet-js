@@ -15,7 +15,7 @@ export default class JsonToJsonMaskedTransformer implements ITransformer {
   public transform(source: ITranslationsData): ITranslationsData {
     if (source.meta.filters && source.meta.filters.length) {
       const maskInput = this.maskInput.convert(source.meta.filters);
-      const filtersMask = this.maskConverter.convert(maskInput, source.tags || {});
+      const filtersMask = this.maskConverter.convert(maskInput, source.tags || {}, source.meta || {});
       const maskedTranslations = mask(source.result, filtersMask);
       return { ...source, result: maskedTranslations };
     }

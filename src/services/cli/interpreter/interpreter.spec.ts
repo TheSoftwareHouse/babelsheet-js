@@ -1,3 +1,5 @@
+// if snapshots changed intentionally, remove the whole snaps folder
+
 import createContainer from '../container';
 import FakeGoogleSheets from '../../../tests/fakeSheets';
 import * as awilix from 'awilix';
@@ -23,6 +25,10 @@ const container = containerTemp.register({
 });
 const snapsPath = path.join('src', 'services', 'cli', 'interpreter', 'tests');
 
+const remakeFolder = folder => {
+  fs.removeSync(folder);
+  fs.mkdirsSync(folder);
+};
 const getPath = relativePath => path.join(snapsPath, relativePath);
 const isUnixHiddenPath = function(path) {
   return /(^|\/)\.[^\/\.]/g.test(path);
@@ -69,12 +75,18 @@ const scenarios = directories.reduce((accumulator, directory) => {
 }, []);
 
 describe('CLI interpreter', () => {
-  beforeEach(async () => {
+  beforeAll(() => {
     process.env.BABELSHEET_CLIENT_ID = 'BABELSHEET_CLIENT_ID';
     process.env.BABELSHEET_CLIENT_SECRET = 'BABELSHEET_CLIENT_SECRET';
     process.env.BABELSHEET_SPREADSHEET_NAME = 'BABELSHEET_SPREADSHEET_NAME';
     process.env.BABELSHEET_SPREADSHEET_ID = 'BABELSHEET_SPREADSHEET_ID';
     process.env.BABELSHEET_REDIRECT_URI = 'BABELSHEET_REDIRECT_URI';
+  });
+  afterAll(() => {
+    // remove all results
+    scenarios.forEach(scenario => {
+      remakeFolder(scenario.resultPath);
+    });
   });
   // for each scenario
   scenarios.forEach(scenario => {
@@ -101,7 +113,13 @@ describe('CLI interpreter', () => {
         });
         // deepcompare different files
         const deepAnalysis = directoryDiff.diffSet.filter(element => element.state !== 'equal');
-        deepAnalysis.map(difference => {
+        deepAnalysis.forEach(difference => {
+          // expect files to be in both directories
+          expect(difference.path1).toBeDefined();
+          expect(difference.name1).toBeDefined();
+          expect(difference.path2).toBeDefined();
+          expect(difference.name2).toBeDefined();
+
           const resultFilePath = path.join(difference.path1, difference.name1);
           const snapFilePath = path.join(difference.path2, difference.name2);
           const oldFile = fs.readFileSync(snapFilePath, 'utf8');
@@ -111,9 +129,10 @@ describe('CLI interpreter', () => {
           const colorOutput = diff.reduce((accumulator, current) => {
             return `${accumulator}${getColor(current)}${current.value}`;
           }, `${resultFilePath}:\n`);
+          // print formatted diffs
           console.log(colorOutput, getColor({}));
+          return expect(deepAnalysis.length).toBe(0);
         });
-        return expect(deepAnalysis.length).toBe(0);
       }
     });
   });

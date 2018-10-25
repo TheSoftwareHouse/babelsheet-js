@@ -1,0 +1,4 @@
+{
+    "description": "Creates basic xlfs with no options",
+    "params": ["-f", "xlf"]
+}

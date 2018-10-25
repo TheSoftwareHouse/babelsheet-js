@@ -1,0 +1,4 @@
+{
+    "description": "Creates basic ios files with no options",
+    "params": ["-f", "ios"]
+}

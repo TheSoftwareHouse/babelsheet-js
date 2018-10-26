@@ -1,4 +1,0 @@
-{
-    "description": "Creates basic jsons with no options",
-    "params": ["-f", "json"]
-}

@@ -1,4 +1,0 @@
-{
-    "description": "Creates ios translation files with selected language, with comments",
-    "params": ["-f", "ios","-l","en_US","--comments"]
-}

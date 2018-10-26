@@ -1,4 +1,0 @@
-{
-    "description": "Creates filtered yamls",
-    "params": ["-f", "yml","--filters","en_US.CORE.LABELS.YES", "tag2"]
-}

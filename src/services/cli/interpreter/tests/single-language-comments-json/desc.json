@@ -1,4 +1,0 @@
-{
-    "description": "Creates jsons with selected language, without comments despite the specified option (no json comments support)",
-    "params": ["-f", "json","-l","en_US","--comments"]
-}

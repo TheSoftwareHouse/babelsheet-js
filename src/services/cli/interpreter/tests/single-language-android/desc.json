@@ -1,4 +1,0 @@
-{
-    "description": "Creates android xmls with selected language",
-    "params": ["-f", "android","-l","en_US"]
-}

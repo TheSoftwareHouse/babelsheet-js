@@ -1,4 +1,0 @@
-{
-    "description": "Creates filtered android xmls",
-    "params": ["-f", "android","--filters","en_US.CORE.LABELS.YES", "tag2"]
-}

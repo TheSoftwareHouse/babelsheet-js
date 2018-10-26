@@ -1,4 +1,0 @@
-{
-    "description": "Creates ymls with selected language, with comments",
-    "params": ["-f", "yml","-l","en_US","--comments"]
-}

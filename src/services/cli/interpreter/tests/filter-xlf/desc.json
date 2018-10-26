@@ -1,4 +1,0 @@
-{
-    "description": "Creates filtered xlfs",
-    "params": ["-f", "xlf","--filters","en_US.CORE.LABELS.YES", "tag2"]
-}

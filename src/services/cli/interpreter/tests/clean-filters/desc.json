@@ -1,0 +1,4 @@
+{
+    "description": "Creates filtered files",
+    "params": ["--filters","tag2","en_US.CORE.LABELS.YES"]
+}

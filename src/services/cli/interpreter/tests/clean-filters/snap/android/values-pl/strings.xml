@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<resources>
+  <string name="common_sth1">Jakaś wiadomość ...</string>
+  <string name="front_pagination_first">Pierwsza strona</string>
+  <string name="front_pagination_next">Następna strona</string>
+  <string name="back_mails_register_footer">Ekipa Apki</string>
+</resources>

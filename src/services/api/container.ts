@@ -5,15 +5,13 @@ import InRedisStorage from '../../infrastructure/storage/in-redis';
 import ErrorHandler from '../../shared/error/handler';
 import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
+import ChainTransformer from '../../shared/transformers/chain.transformer';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
 import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
-import JsonToIosStringsTransformer from '../../shared/transformers/json-to-ios-strings.transformer';
 import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import JsonToJsonTransformer from '../../shared/transformers/json-to-json.transformer';
-import JsonToXlfTransformer from '../../shared/transformers/json-to-xlf.transformer';
-import JsonToXmlTransformer from '../../shared/transformers/json-to-xml.transformer';
 import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
 import Transformers from '../../shared/transformers/transformers';
 import CachedTranslations from '../../shared/translations/cached-translations';
@@ -38,27 +36,34 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     jsonToJsonMaskedTransformer: awilix.asClass(JsonToJsonMaskedTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
-    jsonToXmlTransformer: awilix.asClass(JsonToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
-      jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
-      flatListToXml: container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
+    jsonToXmlTransformer: awilix.asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      supportedType: 'json-xml',
+      transformers: [
+        container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        container.resolve<FlatListToXmlTransformer>('flatListToXmlTransformer'),
+      ],
     })),
-    jsonToIosStringsTransformer: awilix
-      .asClass(JsonToIosStringsTransformer, { lifetime: awilix.Lifetime.SINGLETON })
-      .inject(() => ({
-        jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
-        flatListToIosStrings: container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
-      })),
-    jsonToXlfTransformer: awilix.asClass(JsonToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
-      jsonToFlatList: container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
-      flatListToXlf: container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
+    jsonToIosStringsTransformer: awilix.asClass(ChainTransformer).inject(() => ({
+      supportedType: 'json-ios-strings',
+      transformers: [
+        container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        container.resolve<FlatListToIosStringsTransformer>('flatListToIosStringsTransformer'),
+      ],
+    })),
+    jsonToXlfTransformer: awilix.asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      supportedType: 'json-xlf',
+      transformers: [
+        container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
+      ],
     })),
     jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
-        container.resolve<JsonToXmlTransformer>('jsonToXmlTransformer'),
-        container.resolve<JsonToIosStringsTransformer>('jsonToIosStringsTransformer'),
+        container.resolve<ChainTransformer>('jsonToXmlTransformer'),
+        container.resolve<ChainTransformer>('jsonToIosStringsTransformer'),
         container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
-        container.resolve<JsonToXlfTransformer>('jsonToXlfTransformer'),
+        container.resolve<ChainTransformer>('jsonToXlfTransformer'),
         container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
       ],
     })),

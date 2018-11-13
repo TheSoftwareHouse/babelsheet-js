@@ -1,7 +1,11 @@
-export default class FakeGoogleSheets {
-  constructor(private returnData: { [key: string]: string[] }) {}
+import { spreadsheetData } from './testData';
 
-  public async fetchSpreadsheet(credentials: { [key: string]: string }): Promise<{ [key: string]: string[] }> {
+export default class FakeGoogleSheets {
+  constructor(private returnData: { [key: string]: string[] } | string[][] = spreadsheetData.multiRawSpreadsheetData) {}
+
+  public async fetchSpreadsheet(credentials: {
+    [key: string]: string;
+  }): Promise<string[][] | { [key: string]: string[] }> {
     return this.returnData;
   }
 }

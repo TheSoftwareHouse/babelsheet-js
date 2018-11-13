@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs = require("fs");
+const fs = require("fs-extra");
 class AndroidFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
@@ -38,7 +38,7 @@ class AndroidFilesCreator {
     }
     createFolderAndSave(data, folderName, filename) {
         if (!fs.existsSync(folderName)) {
-            fs.mkdirSync(folderName);
+            fs.mkdirsSync(folderName);
         }
         this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
     }

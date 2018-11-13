@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<resources>
+  <string name="core_labels_yes">yes</string>
+  <string name="core_labels_no">no</string>
+  <string name="core_labels_save">save</string>
+  <string name="core_labels_cancel">cancel</string>
+  <string name="common_sth1">Some message ...</string>
+  <string name="common_form_comment">comment</string>
+  <string name="front_header_title">My Cool App</string>
+  <string name="front_header_catch_phrase">Join us!</string>
+  <string name="front_pagination_first">First page</string>
+  <string name="front_pagination_next">Next page</string>
+  <string name="front_pagination_prev">Prev page</string>
+  <string name="front_pagination_last">Last page</string>
+  <string name="back_mails_register_subject">You have been registered</string>
+  <string name="back_mails_register_greeting">Hi %name%</string>
+  <string name="back_mails_register_line1">Thank you for signing up with us.</string>
+  <string name="back_mails_register_footer">The App Team</string>
+</resources>

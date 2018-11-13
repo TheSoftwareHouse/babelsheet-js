@@ -1,4 +1,3 @@
-import { AwilixContainer } from 'awilix';
 import { ILogger } from 'tsh-node-common';
 import { Arguments } from 'yargs';
 import IFileRepository from '../../infrastructure/repository/file-repository.types';
@@ -12,13 +11,11 @@ import GoogleSheets from '../../shared/google/sheets';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
 
-function checkFolderPermissions(container: AwilixContainer, path: string): void {
-  const { error } = container.resolve<ILogger>('logger');
-
-  const canWrite = container.resolve<IFileRepository>('fileRepository').hasAccess(path, Permission.Write);
+function checkFolderPermissions(logger: ILogger, fileRepository: IFileRepository, path: string): void {
+  const canWrite = fileRepository.hasAccess(path, Permission.Write);
 
   if (!canWrite) {
-    error(`No access to '${path}'`);
+    logger.error(`No access to '${path}'`);
     process.exit(1);
   }
 }
@@ -43,8 +40,15 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
   return authData;
 }
 
-export async function generateTranslations(container: AwilixContainer, args: Arguments) {
-  const { info } = container.resolve<ILogger>('logger');
+export async function generateTranslations(
+  logger: ILogger,
+  fileRepository: IFileRepository,
+  googleSheets: GoogleSheets,
+  transformers: Transformers,
+  filesCreators: FilesCreators,
+  args: Arguments
+) {
+  const { info } = logger;
 
   info('Getting auth variables...');
   const spreadsheetAuthData = getSpreadsheetAuthData(args);
@@ -56,14 +60,14 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   const extension = getExtension(args.format);
 
   info('Checking folder permissions...');
-  checkFolderPermissions(container, args.path);
+  checkFolderPermissions(logger, fileRepository, args.path);
 
   info('Fetching spreadsheet...');
-  const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
+  const spreadsheetData = await googleSheets.fetchSpreadsheet(spreadsheetAuthData);
   info('Spreadsheet fetched successfully.');
 
   info('Formatting spreadsheet...');
-  const dataToSave = await container.resolve<Transformers>('transformers').transform(
+  const dataToSave = await transformers.transform(
     {
       result: spreadsheetData,
       translations: {},
@@ -79,11 +83,11 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   info('Spreadsheet formatted.');
 
   info(`Saving translations...`);
-  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);
+  filesCreators.save(dataToSave, args.path, args.filename, extension, args.base);
   info('File successfully saved.');
 }
 
-function saveNecessaryEnvToFile(container: AwilixContainer, authData: { [key: string]: string }) {
+function saveNecessaryEnvToFile(inEnvStorage: InEnvStorage, authData: { [key: string]: string }) {
   const {
     BABELSHEET_CLIENT_ID,
     BABELSHEET_CLIENT_SECRET,
@@ -92,57 +96,57 @@ function saveNecessaryEnvToFile(container: AwilixContainer, authData: { [key: st
   } = process.env;
 
   if (!authData.clientId || authData.clientId !== BABELSHEET_CLIENT_ID) {
-    container.resolve<InEnvStorage>('inEnvStorage').set('CLIENT_ID', authData.clientId || '');
+    inEnvStorage.set('CLIENT_ID', authData.clientId || '');
   }
 
   if (!authData.clientSecret || authData.clientSecret !== BABELSHEET_CLIENT_SECRET) {
-    container.resolve<InEnvStorage>('inEnvStorage').set('CLIENT_SECRET', authData.clientSecret || '');
+    inEnvStorage.set('CLIENT_SECRET', authData.clientSecret || '');
   }
 
   if (!authData.spreadsheetId || authData.spreadsheetId !== BABELSHEET_SPREADSHEET_ID) {
-    container.resolve<InEnvStorage>('inEnvStorage').set('SPREADSHEET_ID', authData.spreadsheetId || '');
+    inEnvStorage.set('SPREADSHEET_ID', authData.spreadsheetId || '');
   }
 
   if (authData.spreadsheetName !== BABELSHEET_SPREADSHEET_NAME) {
-    container.resolve<InEnvStorage>('inEnvStorage').set('SPREADSHEET_NAME', authData.spreadsheetName);
+    inEnvStorage.set('SPREADSHEET_NAME', authData.spreadsheetName);
   }
 }
 
-function getAndSaveAuthData(container: AwilixContainer, args: Arguments) {
-  const { info } = container.resolve<ILogger>('logger');
-
-  info('Getting auth variables...');
+function getAndSaveAuthData(logger: ILogger, inEnvStorage: InEnvStorage, args: Arguments) {
+  logger.info('Getting auth variables...');
   const spreadsheetAuthData = getSpreadsheetAuthData(args);
 
-  saveNecessaryEnvToFile(container, spreadsheetAuthData);
+  saveNecessaryEnvToFile(inEnvStorage, spreadsheetAuthData);
 
-  info('Checking auth variables...');
+  logger.info('Checking auth variables...');
   checkAuthParameters(spreadsheetAuthData);
 
   return spreadsheetAuthData;
 }
 
 async function getRefreshToken(
-  container: AwilixContainer,
+  googleAuth: GoogleAuth,
   { clientId, clientSecret, redirectUri }: { [key: string]: string }
 ) {
-  const oAuth2Client = await container
-    .resolve<GoogleAuth>('googleAuth')
-    .createOAuthClient(clientId, clientSecret, redirectUri);
+  const oAuth2Client = await googleAuth.createOAuthClient(clientId, clientSecret, redirectUri);
 
-  const { refresh_token } = await container.resolve<GoogleAuth>('googleAuth').getTokens(oAuth2Client);
+  const { refresh_token } = await googleAuth.getTokens(oAuth2Client);
   return refresh_token;
 }
 
-export async function generateConfigFile(container: AwilixContainer, args: Arguments, storage: IStorage) {
-  const { info } = container.resolve<ILogger>('logger');
+export async function generateConfigFile(
+  logger: ILogger,
+  inEnvStorage: InEnvStorage,
+  googleAuth: GoogleAuth,
+  args: Arguments,
+  storage: IStorage
+) {
+  const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args);
 
-  const spreadsheetAuthData = getAndSaveAuthData(container, args);
+  logger.info('Acquiring refresh token...');
+  const refreshToken = await getRefreshToken(googleAuth, spreadsheetAuthData);
 
-  info('Acquiring refresh token...');
-  const refreshToken = await getRefreshToken(container, spreadsheetAuthData);
-
-  info('Saving token...');
+  logger.info('Saving token...');
   storage.set('babelsheet_refresh_token', refreshToken);
-  info('Refresh token saved');
+  logger.info('Refresh token saved');
 }

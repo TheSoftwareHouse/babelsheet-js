@@ -6,5 +6,6 @@ export default class MaskConverter {
     }, meta: {
         [key: string]: any;
     }): string;
+    private replaceTagsInMask;
     private convertMaskRecursively;
 }

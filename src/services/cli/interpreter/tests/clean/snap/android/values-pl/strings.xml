@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<resources>
+  <string name="core_labels_yes">tak</string>
+  <string name="core_labels_no">nie</string>
+  <string name="core_labels_save">zapisz</string>
+  <string name="common_sth1">Jakaś wiadomość ...</string>
+  <string name="common_form_comment">komentarz</string>
+  <string name="front_header_title">Moja Apka</string>
+  <string name="front_header_catch_phrase">Dołącz do nas!</string>
+  <string name="front_pagination_first">Pierwsza strona</string>
+  <string name="front_pagination_next">Następna strona</string>
+  <string name="front_pagination_prev">Poprzednia strona</string>
+  <string name="front_pagination_last">Ostatnia strona</string>
+  <string name="back_mails_register_subject">Zarejestrowałeś się.</string>
+  <string name="back_mails_register_greeting">Cześć %name%</string>
+  <string name="back_mails_register_line1">Dziękujemy za rejestrację</string>
+  <string name="back_mails_register_footer">Ekipa Apki</string>
+</resources>

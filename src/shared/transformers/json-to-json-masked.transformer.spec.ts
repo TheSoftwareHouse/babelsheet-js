@@ -81,4 +81,37 @@ describe('JsonToJsonTransformer', () => {
     };
     expect(result).toEqual(expectedObject);
   });
+  it('does generate masked json from json with tags with no locale in filters', async () => {
+    const object = {
+      meta: { ...multiLocaleDataset.meta, filters: ['tag2', 'en_US.CORE.LABELS.YES'] },
+      result: multiLocaleDataset.translations,
+      translations: multiLocaleDataset.translations,
+      tags: multiLocaleDataset.tags,
+    };
+
+    const result = jsonToJsonMaskedTransformer.transform(object);
+    const expectedObject = {
+      ...object,
+      result: {
+        en_US: {
+          CORE: {
+            LABELS: {
+              YES: 'yes',
+              NO: 'no',
+              SAVE: 'save',
+            },
+          },
+        },
+        pl_PL: {
+          CORE: {
+            LABELS: {
+              NO: 'nie',
+              SAVE: 'zapisz',
+            },
+          },
+        },
+      },
+    };
+    expect(result).toEqual(expectedObject);
+  });
 });

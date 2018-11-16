@@ -6,6 +6,7 @@ const formatToExtension = {
     json: 'json',
     xlf: 'xlf',
     yml: 'yml',
+    po: 'po',
 };
 function getExtension(format) {
     const extension = formatToExtension[format];
@@ -21,6 +22,7 @@ const extensionsFromJson = {
     json: { extension: 'json', documentType: 'application/json' },
     xlf: { extension: 'json-xlf', documentType: 'application/xml' },
     yml: { extension: 'json-yml', documentType: 'text/plain' },
+    po: { extension: 'json-po', documentType: 'text/plain' },
 };
 function getExtensionsFromJson(format) {
     const details = extensionsFromJson[format];

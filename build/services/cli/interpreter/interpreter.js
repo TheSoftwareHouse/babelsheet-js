@@ -42,7 +42,7 @@ class Interpreter {
             default: 'json',
             describe: 'Format type',
             type: 'string',
-            choices: ['android', 'json', 'ios', 'yml', 'xlf'],
+            choices: ['android', 'json', 'ios', 'yml', 'xlf', 'po'],
         })
             .option('p', { alias: 'path', default: '.', describe: 'Path for saving file', type: 'string' })
             .option('l', {

@@ -4,6 +4,7 @@ const formatToExtension: { [key: string]: string } = {
   json: 'json',
   xlf: 'xlf',
   yml: 'yml',
+  po: 'po',
 };
 
 export function getExtension(format: string): string {
@@ -21,6 +22,7 @@ const extensionsFromJson: { [key: string]: { [key: string]: string } } = {
   json: { extension: 'json', documentType: 'application/json' },
   xlf: { extension: 'json-xlf', documentType: 'application/xml' },
   yml: { extension: 'json-yml', documentType: 'text/plain' },
+  po: { extension: 'json-po', documentType: 'text/plain' },
 };
 
 export function getExtensionsFromJson(format: string): string {

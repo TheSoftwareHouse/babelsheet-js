@@ -6,7 +6,8 @@
     "strict": true,
     "allowSyntheticDefaultImports": false,
     "outDir": "build",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "noImplicitAny": false
   },
   "exclude": [
     "node_modules",

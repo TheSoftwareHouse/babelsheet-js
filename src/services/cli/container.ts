@@ -17,6 +17,7 @@ import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
+import JsonToPoTransformer from '../../shared/transformers/json-to-po.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import Transformers from '../../shared/transformers/transformers';
@@ -27,6 +28,7 @@ import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
 import XlfFilesCreator from './files-creators/xlf-files.creator';
 import YamlFilesCreator from './files-creators/yaml-files.creator';
+import PoFilesCreator from './files-creators/po-files.creator';
 import Interpreter from './interpreter/interpreter';
 import { ConfigProviderFactory } from './spreadsheet-config-providers/config-provider.factory';
 import { GoogleSpreadsheetConfigService } from './spreadsheet-config-providers/google-spreadsheet-config.provider';
@@ -71,6 +73,9 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     yamlFilesCreator: awilix.asClass(YamlFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       fileRepository: container.resolve<FileRepository>('fileRepository'),
     })),
+    poFilesCreator: awilix.asClass(PoFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
     filesCreators: awilix.asClass(FilesCreators, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       filesCreators: [
         container.resolve<AndroidFilesCreator>('androidFilesCreator'),
@@ -78,6 +83,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<JsonFilesCreator>('jsonFilesCreator'),
         container.resolve<XlfFilesCreator>('xlfFilesCreator'),
         container.resolve<YamlFilesCreator>('yamlFilesCreator'),
+        container.resolve<PoFilesCreator>('poFilesCreator'),
       ],
     })),
   };
@@ -113,6 +119,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    jsonToPoTransformer: awilix.asClass(JsonToPoTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToIosStringsTransformer: awilix
       .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
@@ -163,6 +170,16 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
           container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
         ],
       })),
+    spreadsheetToPoTransformer: awilix
+      .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        supportedType: 'po',
+        transformers: [
+          container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+          container.resolve<JsonToJsonMaskedTransformer>('jsonToJsonMaskedTransformer'),
+          container.resolve<JsonToPoTransformer>('jsonToPoTransformer'),
+        ],
+      })),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
@@ -170,6 +187,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<ChainTransformer>('spreadsheetToIosStringsTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToXlfTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToYamlTransformer'),
+        container.resolve<ChainTransformer>('spreadsheetToPoTransformer'),
       ],
     })),
   };

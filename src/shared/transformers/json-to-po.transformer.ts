@@ -11,18 +11,7 @@ export default class JsonToPoTransformer implements ITransofrmer {
   }
 
   public transform(source: ITranslationsData): ITranslationsData {
-    if (source.meta.mergeLanguages) {
-      return {
-        ...source,
-        result: {
-          merged: this.generatePo(
-            source.result,
-            source.meta.includeComments ? source.comments : undefined,
-            source.meta.locales
-          ),
-        },
-      };
-    } else if (source.meta.langCode) {
+    if (source.meta.langCode) {
       return {
         ...source,
         result: [

@@ -1,4 +1,9 @@
 "use strict";
+import SpreadsheetToJsonTransformer from "../../../src/shared/transformers/spreadsheet-to-json.transformer";
+import JsonToJsonMaskedTransformer from "../../../src/shared/transformers/json-to-json-masked.transformer";
+import JsonToFlatListTransformer from "../../../src/shared/transformers/json-to-flat-list.transformer";
+import FlatListToPoTransformer from "../../../src/shared/transformers/flat-list-to-po.transformer";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const awilix = require("awilix");
 const tsh_node_common_1 = require("tsh-node-common");
@@ -14,11 +19,11 @@ const token_provider_1 = require("../../shared/token-provider/token-provider");
 const chain_transformer_1 = require("../../shared/transformers/chain.transformer");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
 const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-list-to-xlf.transformer");
+const flat_list_to_po_transformer_1 = require("../../shared/transformers/flat-list-to-po.transformer");
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
 const json_to_json_masked_transformer_1 = require("../../shared/transformers/json-to-json-masked.transformer");
 const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-yaml.transformer");
-const json_to_po_transformer_1 = require("../../shared/transformers/json-to-po.transformer");
 const spreadsheet_to_json_string_transformer_1 = require("../../shared/transformers/spreadsheet-to-json-string.transformer");
 const spreadsheet_to_json_transformer_1 = require("../../shared/transformers/spreadsheet-to-json.transformer");
 const transformers_1 = require("../../shared/transformers/transformers");
@@ -110,10 +115,10 @@ function createContainer(options) {
             lifetime: awilix.Lifetime.SINGLETON,
         }),
         flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        flatListToPoTransformer: awilix.asClass(flat_list_to_po_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToYamlTransformer: awilix.asClass(json_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
-        jsonToPoTransformer: awilix.asClass(json_to_po_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         spreadsheetToJsonTransformer: awilix.asClass(spreadsheet_to_json_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         spreadsheetToIosStringsTransformer: awilix
             .asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
@@ -169,9 +174,10 @@ function createContainer(options) {
             .inject(() => ({
             supportedType: 'po',
             transformers: [
-                container.resolve('spreadsheetToJsonTransformer'),
-                container.resolve('jsonToJsonMaskedTransformer'),
-                container.resolve('jsonToPoTransformer'),
+                container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+                container.resolve<JsonToJsonMaskedTransformer>('jsonToJsonMaskedTransformer'),
+                container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+                container.resolve<FlatListToPoTransformer>('flatListToPoTransformer'),
             ],
         })),
         transformers: awilix.asClass(transformers_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({

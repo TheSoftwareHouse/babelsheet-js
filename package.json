@@ -93,6 +93,7 @@
     "typescript": "^2.7.2"
   },
   "jest": {
+    "testEnvironment": "node",
     "collectCoverageFrom": [
       "src/**/*.ts",
       "!src/**/index.ts",

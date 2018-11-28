@@ -1,49 +1,49 @@
 msgid ""
 msgstr ""
-"Language: en\n"
+"Language: pl\n"
 "Content-Type: text/plain; charset=utf-8\n"
 
-msgid "core.labels.yes"
+msgid "core_labels_yes"
 msgstr "tak"
 
-msgid "core.labels.no"
+msgid "core_labels_no"
 msgstr "nie"
 
-msgid "core.labels.save"
+msgid "core_labels_save"
 msgstr "zapisz"
 
-msgid "common.sth1"
+msgid "common_sth1"
 msgstr "Jakaś wiadomość ..."
 
-msgid "common.form.comment"
+msgid "common_form_comment"
 msgstr "komentarz"
 
-msgid "front.header.title"
+msgid "front_header_title"
 msgstr "Moja Apka"
 
-msgid "front.header.catch_phrase"
+msgid "front_header_catch_phrase"
 msgstr "Dołącz do nas!"
 
-msgid "front.pagination.first"
+msgid "front_pagination_first"
 msgstr "Pierwsza strona"
 
-msgid "front.pagination.next"
+msgid "front_pagination_next"
 msgstr "Następna strona"
 
-msgid "front.pagination.prev"
+msgid "front_pagination_prev"
 msgstr "Poprzednia strona"
 
-msgid "front.pagination.last"
+msgid "front_pagination_last"
 msgstr "Ostatnia strona"
 
-msgid "back.mails.register.subject"
+msgid "back_mails_register_subject"
 msgstr "Zarejestrowałeś się."
 
-msgid "back.mails.register.greeting"
+msgid "back_mails_register_greeting"
 msgstr "Cześć %name%"
 
-msgid "back.mails.register.line1"
+msgid "back_mails_register_line1"
 msgstr "Dziękujemy za rejestrację"
 
-msgid "back.mails.register.footer"
+msgid "back_mails_register_footer"
 msgstr "Ekipa Apki"

@@ -3,17 +3,17 @@ msgstr ""
 "Language: en\n"
 "Content-Type: text/plain; charset=utf-8\n"
 
-msgid "core.labels.yes"
+msgid "core_labels_yes"
 msgstr "yes"
 
-msgid "common.sth1"
+msgid "common_sth1"
 msgstr "Some message ..."
 
-msgid "front.pagination.first"
+msgid "front_pagination_first"
 msgstr "First page"
 
-msgid "front.pagination.next"
+msgid "front_pagination_next"
 msgstr "Next page"
 
-msgid "back.mails.register.footer"
+msgid "back_mails_register_footer"
 msgstr "The App Team"

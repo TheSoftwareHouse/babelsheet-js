@@ -1,16 +1,16 @@
 msgid ""
 msgstr ""
-"Language: en\n"
+"Language: pl\n"
 "Content-Type: text/plain; charset=utf-8\n"
 
-msgid "common.sth1"
+msgid "common_sth1"
 msgstr "Jakaś wiadomość ..."
 
-msgid "front.pagination.first"
+msgid "front_pagination_first"
 msgstr "Pierwsza strona"
 
-msgid "front.pagination.next"
+msgid "front_pagination_next"
 msgstr "Następna strona"
 
-msgid "back.mails.register.footer"
+msgid "back_mails_register_footer"
 msgstr "Ekipa Apki"

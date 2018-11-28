@@ -12,11 +12,11 @@ import TokenProvider from '../../shared/token-provider/token-provider';
 import ChainTransformer from '../../shared/transformers/chain.transformer';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
 import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
+import FlatListToPoTransformer from '../../shared/transformers/flat-list-to-po.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
 import JsonToJsonMaskedTransformer from '../../shared/transformers/json-to-json-masked.transformer';
 import JsonToYamlTransformer from '../../shared/transformers/json-to-yaml.transformer';
-import JsonToPoTransformer from '../../shared/transformers/json-to-po.transformer';
 import SpreadsheetToJsonStringTransformer from '../../shared/transformers/spreadsheet-to-json-string.transformer';
 import SpreadsheetToJsonTransformer from '../../shared/transformers/spreadsheet-to-json.transformer';
 import Transformers from '../../shared/transformers/transformers';
@@ -87,10 +87,10 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       lifetime: awilix.Lifetime.SINGLETON,
     }),
     flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToPoTransformer: awilix.asClass(FlatListToPoTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
-    jsonToPoTransformer: awilix.asClass(JsonToPoTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToJsonTransformer: awilix.asClass(SpreadsheetToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     spreadsheetToIosStringsTransformer: awilix
       .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
@@ -120,6 +120,17 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
           container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
         ],
       })),
+    spreadsheetToPoTransformer: awilix
+      .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        supportedType: 'po',
+        transformers: [
+          container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+          container.resolve<JsonToJsonMaskedTransformer>('jsonToJsonMaskedTransformer'),
+          container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+          container.resolve<FlatListToPoTransformer>('flatListToPoTransformer'),
+        ],
+      })),
     spreadsheetToXmlTransformer: awilix
       .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
@@ -141,24 +152,14 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
           container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
         ],
       })),
-    spreadsheetToPoTransformer: awilix
-      .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
-      .inject(() => ({
-        supportedType: 'po',
-        transformers: [
-          container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
-          container.resolve<JsonToJsonMaskedTransformer>('jsonToJsonMaskedTransformer'),
-          container.resolve<JsonToPoTransformer>('jsonToPoTransformer'),
-        ],
-      })),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
         container.resolve<SpreadsheetToJsonStringTransformer>('spreadsheetToJsonStringTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToXmlTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToIosStringsTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToXlfTransformer'),
-        container.resolve<ChainTransformer>('spreadsheetToYamlTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToPoTransformer'),
+        container.resolve<ChainTransformer>('spreadsheetToYamlTransformer'),
       ],
     })),
   };

@@ -293,7 +293,6 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const translationsStorage = container.resolve<TranslationsStorage>('translationsStorage');
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
-    // const storage = container.resolve<InMemoryStorage>('storage');
 
     await maskedTranslations.setTranslations([], {}, DEFAULT_VERSION);
     await translationsStorage.setTranslations(

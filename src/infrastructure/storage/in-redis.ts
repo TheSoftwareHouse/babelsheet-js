@@ -26,7 +26,7 @@ export default class InRedisStorage implements IStorage {
     return promisifiedHas(key);
   }
 
-  public async clear(key: string) {
+  public async clear(key?: string) {
     if (key) {
       const promisifiedClear: any = util.promisify(this.client.del).bind(this.client);
       return promisifiedClear(key);

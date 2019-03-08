@@ -5,7 +5,7 @@
   "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",
   "scripts": {
-    "test": "./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest --coverage",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",
     "type-check": "tsc --noEmit",

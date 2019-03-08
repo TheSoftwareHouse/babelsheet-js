@@ -5,5 +5,5 @@ export default class InRedisStorage implements IStorage {
     set(key: string, value: any): Promise<any>;
     get(key: string): Promise<any>;
     has(key: string): Promise<any>;
-    clear(): Promise<any>;
+    clear(key: string): Promise<any>;
 }

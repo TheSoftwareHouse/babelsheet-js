@@ -10,6 +10,7 @@ pages:
   - Services: services.md
   - Docker: docker.md
   - How it works: how-it-works.md
+  - Translations versioning: translations-versioning.md
   - Development: development.md
 
 extra:

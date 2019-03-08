@@ -36,7 +36,7 @@ function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
     clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
     clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
     spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
-    spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+    spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME,
     redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 
@@ -62,15 +62,39 @@ export async function generateTranslations(container: AwilixContainer, args: Arg
   const spreadsheetData = await container.resolve<GoogleSheets>('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
   info('Spreadsheet fetched successfully.');
 
-  info('Formatting spreadsheet...');
-  const dataToSave = await container
-    .resolve<Transformers>('transformers')
-    .transform(spreadsheetData, extension, args.language, args.merge);
-  info('Spreadsheet formatted.');
+  const transformers = container.resolve<Transformers>('transformers');
+  const fileCreators = container.resolve<FilesCreators>('filesCreators');
 
-  info(`Saving translations...`);
-  container.resolve<FilesCreators>('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);
-  info('File successfully saved.');
+  const transformedSheets: { [key: string]: any } = await Object.keys(spreadsheetData).reduce(
+    async (transformedSheetsPromise: Promise<{ [key: string]: any }>, key) => {
+      info(`Formatting spreadsheet - version ${key}`);
+
+      const values = spreadsheetData[key];
+
+      if (!values) {
+        return transformedSheetsPromise;
+      }
+
+      const data = await transformers.transform(spreadsheetData[key], extension, args.language, args.merge);
+      const sheets = await transformedSheetsPromise;
+
+      sheets[key] = data;
+
+      return transformedSheetsPromise;
+    },
+    Promise.resolve({})
+  );
+
+  for (const version of Object.keys(transformedSheets)) {
+    const dataToSave = await transformers.transform(spreadsheetData[version], extension, args.language, args.merge);
+
+    info(`Spreadsheet with version ${version} formatted.`);
+
+    info(`Saving translations - version ${version}`);
+    fileCreators.save(dataToSave, args.path, args.filename, extension, args.base, version);
+
+    info(`File (version ${version}) successfully saved.`);
+  }
 }
 
 function saveNecessaryEnvToFile(container: AwilixContainer, authData: { [key: string]: string }) {

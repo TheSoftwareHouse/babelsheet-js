@@ -4,5 +4,5 @@ export default class FilesCreators {
     save(dataToSave: Array<{
         lang: string;
         content: string;
-    }> | string, path: string, filename: string, extension: string, baseLang: string): void;
+    }> | string, path: string, filename: string, extension: string, baseLang: string, version: string): void;
 }

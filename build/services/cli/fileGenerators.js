@@ -17,7 +17,7 @@ function getSpreadsheetAuthData(args) {
         clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
         clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
         spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
-        spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+        spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME,
         redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
     };
     return authData;
@@ -35,14 +35,26 @@ async function generateTranslations(container, args) {
     info('Fetching spreadsheet...');
     const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet(spreadsheetAuthData);
     info('Spreadsheet fetched successfully.');
-    info('Formatting spreadsheet...');
-    const dataToSave = await container
-        .resolve('transformers')
-        .transform(spreadsheetData, extension, args.language, args.merge);
-    info('Spreadsheet formatted.');
-    info(`Saving translations...`);
-    container.resolve('filesCreators').save(dataToSave, args.path, args.filename, extension, args.base);
-    info('File successfully saved.');
+    const transformers = container.resolve('transformers');
+    const fileCreators = container.resolve('filesCreators');
+    const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedSheetsPromise, key) => {
+        info(`Formatting spreadsheet - version ${key}`);
+        const values = spreadsheetData[key];
+        if (!values) {
+            return transformedSheetsPromise;
+        }
+        const data = await transformers.transform(spreadsheetData[key], extension, args.language, args.merge);
+        const sheets = await transformedSheetsPromise;
+        sheets[key] = data;
+        return transformedSheetsPromise;
+    }, Promise.resolve({}));
+    for (const version of Object.keys(transformedSheets)) {
+        const dataToSave = await transformers.transform(spreadsheetData[version], extension, args.language, args.merge);
+        info(`Spreadsheet with version ${version} formatted.`);
+        info(`Saving translations - version ${version}`);
+        fileCreators.save(dataToSave, args.path, args.filename, extension, args.base, version);
+        info(`File (version ${version}) successfully saved.`);
+    }
 }
 exports.generateTranslations = generateTranslations;
 function saveNecessaryEnvToFile(container, authData) {

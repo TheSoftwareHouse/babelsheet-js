@@ -10,8 +10,10 @@ export default class TranslationsController {
   public async getTranslations(req: Request, res: Response, next: NextFunction): Promise<void> {
     const queryFilters = req.query.filters || [];
 
+    const version = req.query.version || process.env.BABELSHEET_SPREADSHEET_NAME || 'Sheet1';
+
     return this.translationsStorage
-      .getTranslations(queryFilters, req.query.format)
+      .getTranslations(queryFilters, req.query.format, version)
       .then(trans => {
         const docType = getDocumentType(req.query.format);
         res

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { toSuffix } from '../../../shared/get-version-suffix';
 
 export default class IosFilesCreator implements IFilesCreator {
   private supportedExtension = 'strings';
@@ -14,22 +15,23 @@ export default class IosFilesCreator implements IFilesCreator {
     dataToSave: Array<{ lang: string; content: string }> | string,
     path: string,
     filename: string,
+    version: string,
     baseLang: string
   ): void {
     if (typeof dataToSave === 'string') {
-      this.createFolderAndSave(dataToSave, path, filename);
+      this.createFolderAndSave(dataToSave, path, filename + toSuffix(version));
       return;
     }
 
     const dataWithoutTags = dataToSave.filter((translations: any) => translations.lang !== 'tags');
     dataWithoutTags.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
-      const folderName = `${path}/${langWithLocale}.lproj`;
+      const folderName = `${path}/${version}/${langWithLocale}.lproj`;
 
       this.createFolderAndSave(data.content, folderName);
     });
 
-    this.generateBaseTranslations(dataToSave, path, baseLang);
+    this.generateBaseTranslations(dataToSave, path, baseLang, version);
   }
 
   private transformLangWithRegion(languageCode: string): string {
@@ -47,7 +49,7 @@ export default class IosFilesCreator implements IFilesCreator {
 
   private createFolderAndSave(data: string, folderName: string, filename?: string) {
     if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
+      fs.mkdirSync(folderName, { recursive: true });
     }
 
     this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
@@ -56,14 +58,15 @@ export default class IosFilesCreator implements IFilesCreator {
   private generateBaseTranslations(
     dataToSave: Array<{ lang: string; content: string }>,
     path: string,
-    baseLang: string
+    baseLang: string,
+    version: string
   ) {
     const baseTranslations: any = dataToSave.find(
       (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1
     );
 
     if (baseTranslations) {
-      const folderName = `${path}/Base.lproj`;
+      const folderName = `${path}/${version}/Base.lproj`;
 
       this.createFolderAndSave(baseTranslations.content, folderName);
     }

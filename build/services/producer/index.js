@@ -25,7 +25,7 @@ function getAuthDataFromEnv() {
         clientId: BABELSHEET_CLIENT_ID,
         clientSecret: BABELSHEET_CLIENT_SECRET,
         spreadsheetId: BABELSHEET_SPREADSHEET_ID,
-        spreadsheetName: BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+        spreadsheetName: BABELSHEET_SPREADSHEET_NAME,
         redirectUri: BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
     };
     checkAuthParams_1.checkAuthParameters(authData);
@@ -34,13 +34,27 @@ function getAuthDataFromEnv() {
 async function main() {
     const authData = getAuthDataFromEnv();
     const spreadsheetData = await container.resolve('googleSheets').fetchSpreadsheet(authData);
-    const transformedData = await container.resolve('transformer').transform(spreadsheetData);
-    const [, actualTranslations] = await await_to_js_1.default(container.resolve('translationsStorage').getTranslations([]));
-    if (!ramda.equals(transformedData, actualTranslations)) {
-        await container.resolve('translationsStorage').clearTranslations();
-        await container.resolve('translationsStorage').setTranslations([], transformedData);
-        container.resolve('logger').info('Translations were refreshed');
-    }
+    const transformer = container.resolve('transformer');
+    const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedTranslationsPromise, key) => {
+        const values = spreadsheetData[key];
+        if (!values) {
+            return transformedTranslationsPromise;
+        }
+        const data = await transformer.transform(spreadsheetData[key]);
+        const transformedTranslations = await transformedTranslationsPromise;
+        transformedTranslations[key] = data;
+        return transformedTranslationsPromise;
+    }, Promise.resolve({}));
+    const translationsStorage = container.resolve('translationsStorage');
+    const logger = container.resolve('logger');
+    Object.keys(transformedSheets).forEach(async (key) => {
+        const [, actualTranslations] = await await_to_js_1.default(translationsStorage.getTranslations([], key));
+        if (!ramda.equals(transformedSheets[key], actualTranslations)) {
+            await translationsStorage.clearTranslations(key);
+            await translationsStorage.setTranslations([], transformedSheets[key], key);
+            logger.info(`Translations (version ${key}) were refreshed`);
+        }
+    });
 }
 const everyFiveMinutes = '*/5 * * * *';
 main();

@@ -15,6 +15,7 @@ export default class TranslationsRouting {
         query: {
           filters: Joi.array().items(Joi.string()),
           format: Joi.string().default('json'),
+          version: Joi.string(),
         },
       }),
       this.translationsController.getTranslations

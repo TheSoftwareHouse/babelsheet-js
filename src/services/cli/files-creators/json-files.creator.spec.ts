@@ -1,5 +1,7 @@
 import JsonFilesCreator from './json-files.creator';
 
+const DEFAULT_VERSION = 'Sheet1';
+
 const fileRepository = {
   hasAccess: (path, permission) => false,
   loadData: (filename, extension) => 'loadData',
@@ -22,9 +24,9 @@ describe('JsonFilesCreator', () => {
   });
 
   it('executes save method once when dataToSave is string', () => {
-    jsonFilesCreator.save('data', '.', 'test');
+    jsonFilesCreator.save('data', '.', 'test', DEFAULT_VERSION);
 
-    expect(fileRepository.saveData).toBeCalledWith('data', 'test', 'json', '.');
+    expect(fileRepository.saveData).toBeCalledWith('data', `test-${DEFAULT_VERSION}`, 'json', '.');
     expect(fileRepository.saveData.mock.calls.length).toBe(1);
   });
 
@@ -34,10 +36,25 @@ describe('JsonFilesCreator', () => {
       { lang: 'pl', content: 'test2' },
       { lang: 'de', content: 'test3' },
     ];
-    jsonFilesCreator.save(translations, '.', 'test');
+    jsonFilesCreator.save(translations, '.', 'test', DEFAULT_VERSION);
 
-    expect(fileRepository.saveData).toBeCalledWith(translations[0].content, translations[0].lang, 'json', '.');
-    expect(fileRepository.saveData).toBeCalledWith(translations[1].content, translations[1].lang, 'json', '.');
-    expect(fileRepository.saveData).toBeCalledWith(translations[2].content, translations[2].lang, 'json', '.');
+    expect(fileRepository.saveData).toBeCalledWith(
+      translations[0].content,
+      `${translations[0].lang}-${DEFAULT_VERSION}`,
+      'json',
+      '.'
+    );
+    expect(fileRepository.saveData).toBeCalledWith(
+      translations[1].content,
+      `${translations[1].lang}-${DEFAULT_VERSION}`,
+      'json',
+      '.'
+    );
+    expect(fileRepository.saveData).toBeCalledWith(
+      translations[2].content,
+      `${translations[2].lang}-${DEFAULT_VERSION}`,
+      'json',
+      '.'
+    );
   });
 });

@@ -8,8 +8,9 @@ class TranslationsController {
     }
     async getTranslations(req, res, next) {
         const queryFilters = req.query.filters || [];
+        const version = req.query.version || process.env.BABELSHEET_SPREADSHEET_NAME || 'Sheet1';
         return this.translationsStorage
-            .getTranslations(queryFilters, req.query.format)
+            .getTranslations(queryFilters, req.query.format, version)
             .then(trans => {
             const docType = formatToExtensions_1.getDocumentType(req.query.format);
             res

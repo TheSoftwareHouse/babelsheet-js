@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs");
+const get_version_suffix_1 = require("../../../shared/get-version-suffix");
 class AndroidFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
@@ -10,18 +11,18 @@ class AndroidFilesCreator {
     supports(extension) {
         return extension.toLowerCase() === this.supportedExtension;
     }
-    save(dataToSave, path, filename, baseLang) {
+    save(dataToSave, path, filename, version, baseLang) {
         if (typeof dataToSave === 'string') {
-            this.createFolderAndSave(dataToSave, path, filename);
+            this.createFolderAndSave(dataToSave, path, filename + get_version_suffix_1.toSuffix(version));
             return;
         }
         const dataWithoutTags = dataToSave.filter((translation) => translation.lang !== 'tags');
         dataWithoutTags.forEach((data) => {
             const langWithLocale = this.transformLangWithRegion(data.lang);
-            const folderName = `${path}/values-${langWithLocale}`;
+            const folderName = `${path}/${version}/values-${langWithLocale}`;
             this.createFolderAndSave(data.content, folderName);
         });
-        this.generateBaseTranslations(dataToSave, path, baseLang);
+        this.generateBaseTranslations(dataToSave, path, baseLang, version);
     }
     transformLangWithRegion(languageCode) {
         const langWithLocale = languageCode.split(/[-_]{1}/);
@@ -35,14 +36,14 @@ class AndroidFilesCreator {
     }
     createFolderAndSave(data, folderName, filename) {
         if (!fs.existsSync(folderName)) {
-            fs.mkdirSync(folderName);
+            fs.mkdirSync(folderName, { recursive: true });
         }
         this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
     }
-    generateBaseTranslations(dataToSave, path, baseLang) {
+    generateBaseTranslations(dataToSave, path, baseLang, version) {
         const baseTranslations = dataToSave.find((translation) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1);
         if (baseTranslations) {
-            const folderName = `${path}/values`;
+            const folderName = `${path}/${version}/values`;
             this.createFolderAndSave(baseTranslations.content, folderName);
         }
     }

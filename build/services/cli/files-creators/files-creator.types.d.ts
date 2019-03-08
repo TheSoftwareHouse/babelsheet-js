@@ -3,5 +3,5 @@ interface IFilesCreator {
     save(dataToSave: Array<{
         lang: string;
         content: string;
-    }> | string, path: string, filename: string, baseLang?: string): void;
+    }> | string, path: string, filename: string, version: string, baseLang?: string): void;
 }

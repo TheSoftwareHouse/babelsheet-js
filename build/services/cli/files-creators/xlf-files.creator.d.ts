@@ -7,6 +7,6 @@ export default class XlfFilesCreator implements IFilesCreator {
     save(dataToSave: Array<{
         lang: string;
         content: string;
-    }> | string, path: string, filename: string): void;
+    }> | string, path: string, filename: string, version: string): void;
     private createFolderAndSave;
 }

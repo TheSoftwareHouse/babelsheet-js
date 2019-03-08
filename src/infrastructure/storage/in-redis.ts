@@ -13,7 +13,8 @@ export default class InRedisStorage implements IStorage {
   }
 
   public async set(key: string, value: any) {
-    return util.promisify(this.client.set).bind(this.client)(key, JSON.stringify(value));
+    const promisifiedSet: any = util.promisify(this.client.set).bind(this.client);
+    return promisifiedSet(key, JSON.stringify(value));
   }
 
   public async get(key: string): Promise<any> {
@@ -21,10 +22,16 @@ export default class InRedisStorage implements IStorage {
   }
 
   public async has(key: string) {
-    return util.promisify(this.client.exists).bind(this.client)(key);
+    const promisifiedHas: any = util.promisify(this.client.exists).bind(this.client);
+    return promisifiedHas(key);
   }
 
-  public async clear() {
+  public async clear(key: string) {
+    if (key) {
+      const promisifiedClear: any = util.promisify(this.client.del).bind(this.client);
+      return promisifiedClear(key);
+    }
+
     return util.promisify(this.client.flushall).bind(this.client)();
   }
 }

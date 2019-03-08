@@ -10,6 +10,7 @@ class TranslationsRouting {
             query: {
                 filters: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
                 format: celebrate_1.Joi.string().default('json'),
+                version: celebrate_1.Joi.string(),
             },
         }), this.translationsController.getTranslations);
     }

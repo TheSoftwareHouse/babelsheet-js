@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mask = require("json-mask");
 const not_found_1 = require("../error/not-found");
+const get_version_suffix_1 = require("../get-version-suffix");
 class MaskedTranslations {
     constructor(storage, maskInput, maskConverter) {
         this.storage = storage;
@@ -9,14 +10,15 @@ class MaskedTranslations {
         this.maskConverter = maskConverter;
         this.translationsKey = 'translations';
     }
-    async clearTranslations() {
-        return this.storage.clear();
+    async clearTranslations(version) {
+        const key = this.translationsKey + get_version_suffix_1.toSuffix(version);
+        return this.storage.clear(key);
     }
-    async setTranslations(filters, translations) {
-        return this.storage.set(this.translationsKey, translations);
+    async setTranslations(filters, translations, version) {
+        return this.storage.set(this.translationsKey + get_version_suffix_1.toSuffix(version), translations);
     }
-    async getTranslations(filters) {
-        const translationsWithTags = await this.storage.get(this.translationsKey);
+    async getTranslations(filters, version, format) {
+        const translationsWithTags = await this.storage.get(this.translationsKey + get_version_suffix_1.toSuffix(version));
         if (!translationsWithTags) {
             return Promise.reject(new not_found_1.default('Translations not found'));
         }

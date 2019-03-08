@@ -8,11 +8,11 @@ export default class MaskedTranslations implements ITranslations {
     private maskConverter;
     private readonly translationsKey;
     constructor(storage: IStorage, maskInput: MaskInput, maskConverter: MaskConverter);
-    clearTranslations(): Promise<void>;
+    clearTranslations(version: string): Promise<void>;
     setTranslations(filters: string[], translations: {
         [key: string]: any;
-    }): Promise<void>;
-    getTranslations(filters: string[]): Promise<{
+    }, version: string): Promise<void>;
+    getTranslations(filters: string[], version: string, format?: string): Promise<{
         [key: string]: any;
     }>;
 }

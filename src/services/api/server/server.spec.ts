@@ -9,6 +9,8 @@ import { getLoggerMock } from '../../../tests/loggerMock';
 
 const loggerMock = getLoggerMock();
 
+const DEFAULT_VERSION = 'Sheet1';
+
 const container = createContainer().register({
   logger: awilix.asValue(loggerMock),
   storage: awilix.asClass(InMemoryStorage, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -23,7 +25,6 @@ describe('Server', () => {
 
   it('returns 404 when there are no translations', async () => {
     const server = container.resolve<Server>('server').getApp();
-    const translationsStorage = container.resolve<TranslationsStorage>('translationsStorage');
 
     await request(server)
       .get('/translations')
@@ -40,42 +41,46 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
+    await maskedTranslations.setTranslations(
+      [],
+      {
+        tags: {
+          tag1: {
+            COMMON: {
+              STH1: null,
+            },
+          },
+          tag2: {
+            CORE: {
+              LABELS: {
+                YES: null,
+              },
+            },
+            COMMON: {
+              STH1: null,
+            },
           },
         },
-        tag2: {
+        en_US: {
           CORE: {
             LABELS: {
-              YES: null,
+              YES: 'yes',
+              NO: 'no',
             },
           },
           COMMON: {
-            STH1: null,
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-      },
-    });
+      DEFAULT_VERSION
+    );
 
     await request(server)
-      .get('/translations')
+      .get(`/translations?version=${DEFAULT_VERSION}`)
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
@@ -101,7 +106,7 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
 
     await request(server)
-      .get('/translations?filters[]=')
+      .get(`/translations?version=${DEFAULT_VERSION}&filters[]=`)
       .expect(400)
       .then(res => {
         expect(res.body).toEqual({
@@ -118,39 +123,43 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
+    await maskedTranslations.setTranslations(
+      [],
+      {
+        tags: {
+          tag1: {
+            COMMON: {
+              STH1: null,
+            },
+          },
+          tag2: {
+            CORE: {
+              LABELS: {
+                YES: null,
+              },
+            },
+            COMMON: {
+              STH1: null,
+            },
           },
         },
-        tag2: {
+        en_US: {
           CORE: {
             LABELS: {
-              YES: null,
+              YES: 'yes',
+              NO: 'no',
             },
           },
           COMMON: {
-            STH1: null,
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-      },
-    });
+      DEFAULT_VERSION
+    );
 
     await request(server)
       .get('/translations?filters[]=en_US.CORE.LABELS&filters[]=en_US.COMMON.STH1')
@@ -176,42 +185,46 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
+    await maskedTranslations.setTranslations(
+      [],
+      {
+        tags: {
+          tag1: {
+            COMMON: {
+              STH1: null,
+            },
+          },
+          tag2: {
+            CORE: {
+              LABELS: {
+                YES: null,
+              },
+            },
+            COMMON: {
+              STH1: null,
+            },
           },
         },
-        tag2: {
+        en_US: {
           CORE: {
             LABELS: {
-              YES: null,
+              YES: 'yes',
+              NO: 'no',
             },
           },
           COMMON: {
-            STH1: null,
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-      },
-    });
+      DEFAULT_VERSION
+    );
 
     await request(server)
-      .get('/translations?filters[]=en_US.tag1')
+      .get(`/translations?filters[]=en_US.tag1&version=${DEFAULT_VERSION}`)
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
@@ -247,9 +260,9 @@ describe('Server', () => {
       },
     };
 
-    await maskedTranslations.setTranslations([], translations);
+    await maskedTranslations.setTranslations([], translations, DEFAULT_VERSION);
 
-    expect(await storage.getData()).toEqual({ translations });
+    expect(await storage.getData()).toEqual({ [`translations-${DEFAULT_VERSION}`]: translations });
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&filters[]=en_US.COMMON.STH1')
@@ -265,8 +278,8 @@ describe('Server', () => {
       });
 
     expect(await storage.getData()).toEqual({
-      translations,
-      'translationsCache-en_us.tag1,en_us.common.sth1-json': {
+      [`translations-${DEFAULT_VERSION}`]: translations,
+      [`translationsCache-en_us.tag1,en_us.common.sth1-json-${DEFAULT_VERSION}`]: {
         en_US: {
           COMMON: {
             STH1: 'Some message ...',
@@ -280,9 +293,9 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const translationsStorage = container.resolve<TranslationsStorage>('translationsStorage');
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
-    const storage = container.resolve<InMemoryStorage>('storage');
+    // const storage = container.resolve<InMemoryStorage>('storage');
 
-    await maskedTranslations.setTranslations([], {});
+    await maskedTranslations.setTranslations([], {}, DEFAULT_VERSION);
     await translationsStorage.setTranslations(
       ['en_us.tag1', 'en_us.common.sth1'],
       {
@@ -292,11 +305,12 @@ describe('Server', () => {
           },
         },
       },
+      DEFAULT_VERSION,
       'json'
     );
 
     await request(server)
-      .get('/translations?filters[]=en_US.tag1&filters[]=en_US.COMMON.STH1')
+      .get(`/translations?filters[]=en_US.tag1&filters[]=en_US.COMMON.STH1`)
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
@@ -327,39 +341,43 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], {
-      tags: {
-        tag1: {
-          COMMON: {
-            STH1: null,
+    await maskedTranslations.setTranslations(
+      [],
+      {
+        tags: {
+          tag1: {
+            COMMON: {
+              STH1: null,
+            },
+          },
+          tag2: {
+            CORE: {
+              LABELS: {
+                YES: null,
+              },
+            },
+            COMMON: {
+              STH1: null,
+            },
           },
         },
-        tag2: {
+        en_US: {
           CORE: {
             LABELS: {
-              YES: null,
+              YES: 'yes',
+              NO: 'no',
             },
           },
           COMMON: {
-            STH1: null,
+            STH1: 'Some message ...',
+            FORM: {
+              COMMENT: 'comment',
+            },
           },
         },
       },
-      en_US: {
-        CORE: {
-          LABELS: {
-            YES: 'yes',
-            NO: 'no',
-          },
-        },
-        COMMON: {
-          STH1: 'Some message ...',
-          FORM: {
-            COMMENT: 'comment',
-          },
-        },
-      },
-    });
+      DEFAULT_VERSION
+    );
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&format=android')

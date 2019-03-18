@@ -1,8 +1,8 @@
 import * as fs from 'fs-extra';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { toSuffix } from '../../../shared/get-version-suffix';
 import { ITranslationsData } from '../../../shared/transformers/transformer';
 import { IFilesCreator } from './files-creator.types';
-import { toSuffix } from '../../../shared/get-version-suffix';
 
 export default class JsonFilesCreator implements IFilesCreator {
   private supportedExtension = 'json';

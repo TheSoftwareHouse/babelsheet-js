@@ -16,7 +16,11 @@ class TranslationsProducer {
             if (!values) {
                 return transformedTranslationsPromise;
             }
-            const data = await this.transformer.transform({ translations: {}, meta: { mergeLanguages: true }, result: spreadsheetData[key] });
+            const data = await this.transformer.transform({
+                translations: {},
+                meta: { mergeLanguages: true },
+                result: spreadsheetData[key],
+            });
             const transformedTranslations = await transformedTranslationsPromise;
             transformedTranslations[key] = data;
             return transformedTranslationsPromise;

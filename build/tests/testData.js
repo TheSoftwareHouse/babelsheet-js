@@ -260,7 +260,8 @@ exports.minimalPassingObject = {
 };
 exports.spreadsheetData = {
     // expected raw data returned from google sheets with comments and tags
-    multiRawSpreadsheetData: { [VERSION]: [
+    multiRawSpreadsheetData: {
+        [VERSION]: [
             [],
             ['This is an example spreadsheet for tshio/babelsheet'],
             [],
@@ -307,9 +308,11 @@ exports.spreadsheetData = {
             ['', '', '', '', '', 'GREETING', 'Hi %name%', 'Cześć %name%'],
             ['', '', '', '', '', 'LINE1', 'Thank you for signing up with us.', 'Dziękujemy za rejestrację'],
             ['', 'tag2', '', '', '', 'FOOTER', 'The App Team', 'Ekipa Apki'],
-        ] },
+        ],
+    },
     // expected raw data returned from google sheets with tags
-    multiRawSpreadsheetDataWithTags: { [VERSION]: [
+    multiRawSpreadsheetDataWithTags: {
+        [VERSION]: [
             [],
             ['This is an example spreadsheet for tshio/babelsheet'],
             [],
@@ -317,7 +320,15 @@ exports.spreadsheetData = {
             [],
             ['The tool will start parsing from the row 11 (as the key levels markers indicate)'],
             [],
-            ['Tags (optional)', 'First level:', 'Second level:', 'Third level:', 'Fourth level:', 'locale code', 'locale code'],
+            [
+                'Tags (optional)',
+                'First level:',
+                'Second level:',
+                'Third level:',
+                'Fourth level:',
+                'locale code',
+                'locale code',
+            ],
             ['', 'Section names'],
             [],
             ['###', '>>>', '>>>', '>>>', '>>>', 'en_US', 'pl_PL'],
@@ -347,7 +358,8 @@ exports.spreadsheetData = {
             ['', '', '', '', 'GREETING', 'Hi %name%', 'Cześć %name%'],
             ['', '', '', '', 'LINE1', 'Thank you for signing up with us.', 'Dziękujemy za rejestrację'],
             ['tag2', '', '', '', 'FOOTER', 'The App Team', 'Ekipa Apki'],
-        ] },
+        ],
+    },
     // expected spreadsheetToJson transformer output (no comments, tags)
     multiTranslationsData: {
         en_US: {

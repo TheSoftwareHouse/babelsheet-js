@@ -1,7 +1,7 @@
+import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 import * as util from 'util';
 import GoogleAuth from './auth';
-import { OAuth2Client } from 'google-auth-library';
 
 interface ISheetValues {
   [key: string]: string[];

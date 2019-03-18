@@ -24,7 +24,9 @@ class CachedTranslations {
         if (await this.storage.has(translationsKey)) {
             return await this.storage.get(translationsKey);
         }
-        return this.maskedTranslations.getTranslations(filters, version, { keepLocale, includeComments }).then(async (trans) => {
+        return this.maskedTranslations
+            .getTranslations(filters, version, { keepLocale, includeComments })
+            .then(async (trans) => {
             if (ramda.isEmpty(trans)) {
                 return Promise.reject(new not_found_1.default('Translations not found'));
             }

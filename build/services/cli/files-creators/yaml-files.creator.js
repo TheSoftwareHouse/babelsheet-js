@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs-extra");
+const get_version_suffix_1 = require("../../../shared/get-version-suffix");
 class YamlFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
@@ -9,16 +10,16 @@ class YamlFilesCreator {
     supports(extension) {
         return extension.toLowerCase() === this.supportedExtension;
     }
-    save(dataToSave, path, filename) {
+    save(dataToSave, path, filename, version) {
         if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
             this.createFolderAndSave(dataToSave.result.merged, path, filename);
             return;
         }
         if (dataToSave.meta && dataToSave.meta.langCode) {
-            this.createFolderAndSave(dataToSave.result.find((element) => element.lang === dataToSave.meta.langCode).content, path, filename);
+            this.createFolderAndSave(dataToSave.result.find((element) => element.lang === dataToSave.meta.langCode).content, path, filename + get_version_suffix_1.toSuffix(version));
             return;
         }
-        dataToSave.result.forEach((data) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
+        dataToSave.result.forEach((data) => this.createFolderAndSave(data.content, path, `messages.${data.lang}${get_version_suffix_1.toSuffix(version)}`));
     }
     createFolderAndSave(data, folderName, fileName) {
         if (!fs.existsSync(folderName)) {

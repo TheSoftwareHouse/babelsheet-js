@@ -6,11 +6,11 @@ export default class MaskedTranslations implements ITranslations {
     private jsonToJsonMaskedTransformer;
     private readonly translationsKey;
     constructor(storage: IStorage, jsonToJsonMaskedTransformer: ITransformer);
-    clearTranslations(): Promise<void>;
+    clearTranslations(version: string): Promise<void>;
     setTranslations(filters: string[], translations: {
         [key: string]: any;
-    }): Promise<void>;
-    getTranslations(filters: string[], { keepLocale, includeComments }?: {
+    }, version: string): Promise<void>;
+    getTranslations(filters: string[], version: string, { keepLocale, includeComments }?: {
         keepLocale?: boolean;
         includeComments?: boolean;
     }): Promise<ITranslationsData>;

@@ -20,7 +20,7 @@ describe('SpreadsheetToJsonTransformer', () => {
   it('transforms raw translations with comments and tags to json format', async () => {
     const source = {
       translations: {},
-      result: spreadsheetData.multiRawSpreadsheetData,
+      result: spreadsheetData.multiRawSpreadsheetData['version'],
       meta: spreadsheetData.initialMeta,
     };
 
@@ -39,7 +39,7 @@ describe('SpreadsheetToJsonTransformer', () => {
   it('transforms raw translations with tags to json format', () => {
     const source = {
       translations: {},
-      result: spreadsheetData.multiRawSpreadsheetDataWithTags,
+      result: spreadsheetData.multiRawSpreadsheetDataWithTags['version'],
       meta: spreadsheetData.initialMeta,
     };
 

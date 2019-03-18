@@ -8,6 +8,8 @@ import Server from './server';
 import { getLoggerMock } from '../../../tests/loggerMock';
 import { minimalPassingObject, multiLocaleDataset } from '../../../tests/testData';
 
+const DEFAULT_VERSION = 'Sheet1';
+
 const loggerMock = getLoggerMock();
 
 const container = createContainer().register({
@@ -40,10 +42,10 @@ describe('Server', () => {
     const server = container.resolve<Server>('server').getApp();
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
 
-    await maskedTranslations.setTranslations([], minimalPassingObject);
+    await maskedTranslations.setTranslations([], minimalPassingObject, DEFAULT_VERSION);
 
     await request(server)
-      .get('/translations')
+      .get(`/translations?version=${DEFAULT_VERSION}`)
       .expect(200)
       .then(res => {
         expect(res.body).toEqual(minimalPassingObject.result.en_US);
@@ -76,7 +78,7 @@ describe('Server', () => {
       tags: multiLocaleDataset.tags,
       result: multiLocaleDataset.translations,
     };
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?filters[]=en_US.CORE.LABELS.YES&filters[]=en_US.CORE.LABELS.SAVE')
@@ -103,10 +105,10 @@ describe('Server', () => {
       result: multiLocaleDataset.translations,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
-      .get('/translations?filters[]=en_US.tag1')
+      .get(`/translations?filters[]=en_US.tag1&version=${DEFAULT_VERSION}`)
       .expect(200)
       .then(res => {
         expect(res.body).toEqual({
@@ -130,9 +132,10 @@ describe('Server', () => {
       result: multiLocaleDataset.translations,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
-    expect(await storage.getData()).toEqual({ translations: { ...object } });
+    // todo: just : object ?
+    expect(await storage.getData()).toEqual({ [`translations-${DEFAULT_VERSION}`]: { ...object } });
 
     await request(server)
       .get('/translations?filters[]=en_US.CORE.LABELS.YES&filters[]=en_US.CORE.LABELS.SAVE')
@@ -149,8 +152,8 @@ describe('Server', () => {
       });
 
     expect(await storage.getData()).toEqual({
-      translations: { ...object },
-      'translationsCache-en_us.core.labels.yes,en_us.core.labels.save-json-0-0': {
+      [`translations-${DEFAULT_VERSION}`]: { ...object },
+      [`translationsCache-en_us.core.labels.yes,en_us.core.labels.save-json-0-0-${DEFAULT_VERSION}`]: {
         ...object,
         meta: {
           ...object.meta,
@@ -176,7 +179,7 @@ describe('Server', () => {
     const maskedTranslations = container.resolve<MaskedTranslations>('maskedTranslations');
     const storage = container.resolve<InMemoryStorage>('storage');
 
-    await maskedTranslations.setTranslations([], {});
+    await maskedTranslations.setTranslations([], {}, DEFAULT_VERSION);
     await translationsStorage.setTranslations(
       ['en_us.tag1'],
       {
@@ -186,6 +189,7 @@ describe('Server', () => {
           },
         },
       },
+      DEFAULT_VERSION,
       'json'
     );
 
@@ -224,7 +228,7 @@ describe('Server', () => {
       tags: multiLocaleDataset.tags,
       result: multiLocaleDataset.translations,
     };
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&format=android')
@@ -249,7 +253,7 @@ describe('Server', () => {
       result: multiLocaleDataset.translations,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&format=android&keepLocale=true')
@@ -274,7 +278,7 @@ describe('Server', () => {
       result: multiLocaleDataset.translations,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?filters[]=en_US.tag1&format=android')
@@ -299,7 +303,7 @@ describe('Server', () => {
       result: multiLocaleDataset.translations,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?format=android')
@@ -330,7 +334,7 @@ describe('Server', () => {
       comments: multiLocaleDataset.comments,
     };
 
-    await maskedTranslations.setTranslations([], object);
+    await maskedTranslations.setTranslations([], object, DEFAULT_VERSION);
 
     await request(server)
       .get('/translations?format=android&comments=true')

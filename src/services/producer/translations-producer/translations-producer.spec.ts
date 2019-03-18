@@ -1,5 +1,4 @@
 import * as awilix from 'awilix';
-import * as request from 'supertest';
 import * as ramda from 'ramda';
 import createContainer from '../container';
 import FakeGoogleSheets from '../../../tests/fakeSheets';
@@ -9,6 +8,8 @@ import TranslationsProducer from './translations-producer';
 import TranslationsStorage from '../../../shared/translations/translations';
 import { getLoggerMock } from '../../../tests/loggerMock';
 import { spreadsheetData } from '../../../tests/testData';
+
+const VERSION = 'version';
 
 const loggerMock = getLoggerMock();
 const sheetsReturnData = spreadsheetData.multiRawSpreadsheetData;
@@ -34,14 +35,14 @@ describe('Producer', () => {
 
     await storage.clear();
   });
-  it('Puts translations into the storage', async () => {
+  it('Refreshes translations if they changed.', async () => {
     const producer = await container.resolve<TranslationsProducer>('translationsProducer');
-    await container.resolve<TranslationsStorage>('translationsStorage').setTranslations([], changedDataParsed);
-    expect(await container.resolve<TranslationsStorage>('translationsStorage').getTranslations([])).toEqual(
+    await container.resolve<TranslationsStorage>('translationsStorage').setTranslations([], changedDataParsed, VERSION);
+    expect(await container.resolve<TranslationsStorage>('translationsStorage').getTranslations([], VERSION)).toEqual(
       changedDataParsed
     );
     await producer.produce({});
-    expect(await container.resolve<TranslationsStorage>('translationsStorage').getTranslations([])).toEqual(
+    expect(await container.resolve<TranslationsStorage>('translationsStorage').getTranslations([], VERSION)).toEqual(
       returnDataParsed
     );
   });

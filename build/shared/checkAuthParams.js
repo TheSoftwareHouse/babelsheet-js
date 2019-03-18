@@ -10,8 +10,5 @@ function checkAuthParameters(params) {
     if (!params.spreadsheetId) {
         throw new Error('Please provide spreadsheet ID');
     }
-    if (!params.spreadsheetName) {
-        throw new Error('Please provide spreadsheet name');
-    }
 }
 exports.checkAuthParameters = checkAuthParameters;

@@ -1,3 +1,4 @@
+declare const VERSION = "version";
 export declare const multiLocaleDataset: {
     meta: {
         mergeLanguages: boolean;
@@ -190,8 +191,12 @@ export declare const minimalPassingObject: {
     };
 };
 export declare const spreadsheetData: {
-    multiRawSpreadsheetData: string[][];
-    multiRawSpreadsheetDataWithTags: string[][];
+    multiRawSpreadsheetData: {
+        [VERSION]: string[][];
+    };
+    multiRawSpreadsheetDataWithTags: {
+        [VERSION]: string[][];
+    };
     multiTranslationsData: {
         en_US: {
             CORE: {
@@ -403,3 +408,4 @@ export declare const spreadsheetData: {
         locales: string[];
     };
 };
+export {};

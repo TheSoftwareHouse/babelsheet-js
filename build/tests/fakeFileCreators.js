@@ -6,8 +6,8 @@ class FakeFilesCreators {
         this.innerFilesCreators = innerFilesCreators;
         this.basePath = basePath;
     }
-    save(dataToSave, path, filename, extension, baseLang) {
-        return this.innerFilesCreators.save(dataToSave, nodepath.join(this.basePath, path), filename, extension, baseLang);
+    save(dataToSave, path, filename, extension, version, baseLang) {
+        return this.innerFilesCreators.save(dataToSave, nodepath.join(this.basePath, path), filename, extension, version, baseLang);
     }
 }
 exports.default = FakeFilesCreators;

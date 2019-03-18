@@ -11,6 +11,7 @@ class TranslationsRouting {
                 comments: celebrate_1.Joi.boolean().default(false),
                 filters: celebrate_1.Joi.array().items(celebrate_1.Joi.string()),
                 format: celebrate_1.Joi.string().default('json'),
+                version: celebrate_1.Joi.string(),
                 keepLocale: celebrate_1.Joi.boolean().default(false),
             },
         }), this.translationsController.getTranslations);

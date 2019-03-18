@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = require("fs-extra");
+const get_version_suffix_1 = require("../../../shared/get-version-suffix");
 class IosFilesCreator {
     constructor(fileRepository) {
         this.fileRepository = fileRepository;
@@ -10,9 +11,9 @@ class IosFilesCreator {
     supports(extension) {
         return extension.toLowerCase() === this.supportedExtension;
     }
-    save(dataToSave, path, filename, baseLang) {
+    save(dataToSave, path, filename, version, baseLang) {
         if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
-            this.createFolderAndSave(dataToSave.result.merged, path, filename);
+            this.createFolderAndSave(dataToSave.result.merged, path, filename + get_version_suffix_1.toSuffix(version));
             return;
         }
         if (dataToSave.meta && dataToSave.meta.langCode) {
@@ -21,10 +22,10 @@ class IosFilesCreator {
         }
         dataToSave.result.forEach((data) => {
             const langWithLocale = this.transformLangWithRegion(data.lang);
-            const folderName = `${path}/${langWithLocale}.lproj`;
+            const folderName = `${path}/${version}/${langWithLocale}.lproj`;
             this.createFolderAndSave(data.content, folderName);
         });
-        this.generateBaseTranslations(dataToSave.result, path, baseLang);
+        this.generateBaseTranslations(dataToSave.result, path, baseLang, version);
     }
     transformLangWithRegion(languageCode) {
         const langWithLocale = languageCode.split(/[-_]{1}/);
@@ -42,10 +43,10 @@ class IosFilesCreator {
         }
         this.fileRepository.saveData(data, filename || this.defaultFileName, this.supportedExtension, folderName);
     }
-    generateBaseTranslations(dataToSave, path, baseLang) {
+    generateBaseTranslations(dataToSave, path, baseLang, version) {
         const baseTranslations = dataToSave.find((translation) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1);
         if (baseTranslations) {
-            const folderName = `${path}/Base.lproj`;
+            const folderName = `${path}/${version}/Base.lproj`;
             this.createFolderAndSave(baseTranslations.content, folderName);
         }
     }

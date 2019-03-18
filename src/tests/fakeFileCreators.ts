@@ -9,8 +9,16 @@ export default class FakeFilesCreators {
     path: string,
     filename: string,
     extension: string,
+    version: string,
     baseLang: string
   ): void {
-    return this.innerFilesCreators.save(dataToSave, nodepath.join(this.basePath, path), filename, extension, baseLang);
+    return this.innerFilesCreators.save(
+      dataToSave,
+      nodepath.join(this.basePath, path),
+      filename,
+      extension,
+      version,
+      baseLang
+    );
   }
 }

@@ -23,6 +23,7 @@ export default class CachedTranslations implements ITranslations {
   public async setTranslations(
     filters: string[],
     translations: { [key: string]: any },
+    version: string,
     format?: string,
     keepLocale?: boolean,
     includeComments?: boolean
@@ -30,6 +31,7 @@ export default class CachedTranslations implements ITranslations {
     const translationsKey = this.translationsKeyGenerator.generateKey(
       this.translationsCachePrefix,
       filters,
+      version,
       format,
       keepLocale,
       includeComments
@@ -39,12 +41,14 @@ export default class CachedTranslations implements ITranslations {
 
   public async getTranslations(
     filters: string[],
+    version: string,
     { format, keepLocale, includeComments }: { format: string; keepLocale: boolean; includeComments: boolean }
   ): Promise<{ [key: string]: any }> {
     const extension = getExtensionsFromJson(format);
     const translationsKey = this.translationsKeyGenerator.generateKey(
       this.translationsCachePrefix,
       filters,
+      version,
       format,
       keepLocale,
       includeComments
@@ -53,14 +57,16 @@ export default class CachedTranslations implements ITranslations {
       return await this.storage.get(translationsKey);
     }
 
-    return this.maskedTranslations.getTranslations(filters, { keepLocale, includeComments }).then(async trans => {
-      if (ramda.isEmpty(trans)) {
-        return Promise.reject(new NotFoundError('Translations not found'));
-      }
-      const transformedTranslations = await this.transformers.transform(trans, extension);
+    return this.maskedTranslations
+      .getTranslations(filters, version, { keepLocale, includeComments })
+      .then(async trans => {
+        if (ramda.isEmpty(trans)) {
+          return Promise.reject(new NotFoundError('Translations not found'));
+        }
+        const transformedTranslations = await this.transformers.transform(trans, extension);
 
-      await this.storage.set(translationsKey, transformedTranslations);
-      return transformedTranslations;
-    });
+        await this.storage.set(translationsKey, transformedTranslations);
+        return transformedTranslations;
+      });
   }
 }

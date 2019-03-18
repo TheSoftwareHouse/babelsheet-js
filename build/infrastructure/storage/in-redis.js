@@ -4,7 +4,7 @@ const redis_1 = require("redis");
 const util = require("util");
 class InRedisStorage {
     constructor() {
-        this.client = redis_1.createClient(Number(process.env.BABELSHEET_REDIS_PORT) || 6379, process.env.BABELSHEET_REDIS_HOST || 'db');
+        this.client = redis_1.createClient(Number(process.env.BABELSHEET_REDIS_PORT) || 6379, process.env.BABELSHEET_REDIS_HOST || 'localhost');
     }
     async set(key, value) {
         return util.promisify(this.client.set).bind(this.client)(key, JSON.stringify(value));
@@ -15,7 +15,10 @@ class InRedisStorage {
     async has(key) {
         return util.promisify(this.client.exists).bind(this.client)(key);
     }
-    async clear() {
+    async clear(key) {
+        if (key) {
+            return util.promisify(this.client.del).bind(this.client)(key);
+        }
         return util.promisify(this.client.flushall).bind(this.client)();
     }
 }

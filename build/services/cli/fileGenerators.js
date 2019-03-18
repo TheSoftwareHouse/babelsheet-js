@@ -16,7 +16,7 @@ function getSpreadsheetAuthData(args) {
         clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
         clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
         spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
-        spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+        spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME,
         redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
     };
     return authData;
@@ -34,21 +34,32 @@ async function generateTranslations(logger, fileRepository, googleSheets, transf
     info('Fetching spreadsheet...');
     const spreadsheetData = await googleSheets.fetchSpreadsheet(spreadsheetAuthData);
     info('Spreadsheet fetched successfully.');
-    info('Formatting spreadsheet...');
-    const dataToSave = await transformers.transform({
-        result: spreadsheetData,
-        translations: {},
-        meta: {
-            includeComments: args.comments,
-            langCode: args.language,
-            mergeLanguages: args.merge,
-            filters: args.filters,
-        },
-    }, extension);
-    info('Spreadsheet formatted.');
-    info(`Saving translations...`);
-    filesCreators.save(dataToSave, args.path, args.filename, extension, args.base);
-    info('File successfully saved.');
+    const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedSheetsPromise, key) => {
+        info(`Formatting spreadsheet - version ${key}`);
+        const values = spreadsheetData[key];
+        if (!values) {
+            return transformedSheetsPromise;
+        }
+        const data = await transformers.transform({
+            result: spreadsheetData[key],
+            translations: {},
+            meta: {
+                includeComments: args.comments,
+                langCode: args.language,
+                mergeLanguages: args.merge,
+                filters: args.filters,
+            },
+        }, extension);
+        const sheets = await transformedSheetsPromise;
+        sheets[key] = data;
+        return transformedSheetsPromise;
+    }, Promise.resolve({}));
+    for (const version of Object.keys(transformedSheets)) {
+        info(`Spreadsheet with version ${version} formatted.`);
+        info(`Saving translations - version ${version}`);
+        filesCreators.save(transformedSheets[version], args.path, args.filename, extension, version, args.base);
+        info(`File (version ${version}) successfully saved.`);
+    }
 }
 exports.generateTranslations = generateTranslations;
 function saveNecessaryEnvToFile(inEnvStorage, authData) {

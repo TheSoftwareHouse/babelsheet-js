@@ -30,7 +30,9 @@ const args = {
 describe('fileGenerators', async () => {
   it('generateTranslations does run proper functions', async () => {
     const mockGoogleSheets = {
-      fetchSpreadsheet: jest.fn().mockImplementation(() => 'fetchSpreadsheetReturn'),
+      fetchSpreadsheet: jest
+        .fn()
+        .mockImplementation(() => ({ Sheet1: 'firstSpreadsheet', Sheet2: 'secondSpreadsheet' })),
       googleAuth: jest.fn(),
     };
 
@@ -58,10 +60,11 @@ describe('fileGenerators', async () => {
       args
     );
 
-    expect(mockGoogleSheets.fetchSpreadsheet).toBeCalled();
-    expect(mockTransformers.transform).toBeCalledWith(
+    expect(mockGoogleSheets.fetchSpreadsheet).toHaveBeenCalledTimes(1);
+    expect(mockTransformers.transform).toHaveBeenNthCalledWith(
+      1,
       {
-        result: 'fetchSpreadsheetReturn',
+        result: 'firstSpreadsheet',
         translations: {},
         meta: {
           langCode: args.language,
@@ -71,7 +74,37 @@ describe('fileGenerators', async () => {
       },
       'json'
     );
-    expect(mockFileCreators.save).toBeCalledWith('transformReturn', args.path, args.filename, 'json', args.base);
+    expect(mockTransformers.transform).toHaveBeenNthCalledWith(
+      2,
+      {
+        result: 'secondSpreadsheet',
+        translations: {},
+        meta: {
+          langCode: args.language,
+          mergeLanguages: args.merge,
+          filters: args.filters,
+        },
+      },
+      'json'
+    );
+    expect(mockFileCreators.save).toHaveBeenNthCalledWith(
+      1,
+      'transformReturn',
+      args.path,
+      args.filename,
+      'json',
+      'Sheet1',
+      args.base
+    );
+    expect(mockFileCreators.save).toHaveBeenNthCalledWith(
+      2,
+      'transformReturn',
+      args.path,
+      args.filename,
+      'json',
+      'Sheet2',
+      args.base
+    );
   });
 
   it('generateConfigFile does run storage', async () => {

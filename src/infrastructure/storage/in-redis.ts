@@ -8,7 +8,7 @@ export default class InRedisStorage implements IStorage {
   constructor() {
     this.client = createClient(
       Number(process.env.BABELSHEET_REDIS_PORT) || 6379,
-      process.env.BABELSHEET_REDIS_HOST || 'db'
+      process.env.BABELSHEET_REDIS_HOST || 'localhost'
     );
   }
 
@@ -24,7 +24,11 @@ export default class InRedisStorage implements IStorage {
     return util.promisify(this.client.exists).bind(this.client)(key);
   }
 
-  public async clear() {
+  public async clear(key?: string) {
+    if (key) {
+      return util.promisify(this.client.del).bind(this.client)(key);
+    }
+
     return util.promisify(this.client.flushall).bind(this.client)();
   }
 }

@@ -2,25 +2,29 @@ import IStorage from '../../infrastructure/storage/storage';
 import NotFoundError from '../error/not-found';
 import ITransformer, { ITranslationsData } from '../transformers/transformer';
 import ITranslations from './translations';
+import { toSuffix } from '../get-version-suffix';
 
 export default class MaskedTranslations implements ITranslations {
   private readonly translationsKey = 'translations';
 
   constructor(private storage: IStorage, private jsonToJsonMaskedTransformer: ITransformer) {}
 
-  public async clearTranslations() {
-    return this.storage.clear();
+  public async clearTranslations(version: string) {
+    const key = this.translationsKey + toSuffix(version);
+    return this.storage.clear(key);
   }
 
-  public async setTranslations(filters: string[], translations: { [key: string]: any }) {
-    return this.storage.set(this.translationsKey, translations);
+  public async setTranslations(filters: string[], translations: { [key: string]: any }, version: string) {
+    return this.storage.set(this.translationsKey + toSuffix(version), translations);
   }
 
   public async getTranslations(
     filters: string[],
+    version: string,
     { keepLocale, includeComments }: { keepLocale?: boolean; includeComments?: boolean } = {}
   ): Promise<ITranslationsData> {
-    const source = await this.storage.get(this.translationsKey);
+    const source = await this.storage.get(this.translationsKey + toSuffix(version));
+
     if (!source) {
       return Promise.reject(new NotFoundError('Translations not found'));
     }

@@ -28,7 +28,7 @@ function getAuthDataFromEnv(): { [key: string]: string } {
     BABELSHEET_CLIENT_ID,
     BABELSHEET_CLIENT_SECRET,
     BABELSHEET_SPREADSHEET_ID,
-    BABELSHEET_SPREADSHEET_NAME,
+    // BABELSHEET_SPREADSHEET_NAME,
     BABELSHEET_REDIRECT_URI,
   } = process.env;
 
@@ -36,7 +36,7 @@ function getAuthDataFromEnv(): { [key: string]: string } {
     clientId: BABELSHEET_CLIENT_ID,
     clientSecret: BABELSHEET_CLIENT_SECRET,
     spreadsheetId: BABELSHEET_SPREADSHEET_ID,
-    spreadsheetName: BABELSHEET_SPREADSHEET_NAME || 'Sheet1',
+    spreadsheetName: '', //BABELSHEET_SPREADSHEET_NAME,
     redirectUri: BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
   };
 

@@ -16,6 +16,7 @@ export default class TranslationsRouting {
           comments: Joi.boolean().default(false),
           filters: Joi.array().items(Joi.string()),
           format: Joi.string().default('json'),
+          version: Joi.string(),
           keepLocale: Joi.boolean().default(false),
         },
       }),

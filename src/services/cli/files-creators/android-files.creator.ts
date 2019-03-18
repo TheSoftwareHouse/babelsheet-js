@@ -2,6 +2,7 @@ import * as fs from 'fs-extra';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
 import { ITranslationsData } from '../../../shared/transformers/transformer';
 import { IFilesCreator } from './files-creator.types';
+import { toSuffix } from '../../../shared/get-version-suffix';
 
 export default class AndroidFilesCreator implements IFilesCreator {
   private supportedExtension = 'xml';
@@ -12,9 +13,9 @@ export default class AndroidFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: ITranslationsData, path: string, filename: string, baseLang: string): void {
+  public save(dataToSave: ITranslationsData, path: string, filename: string, version: string, baseLang: string): void {
     if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
-      this.createFolderAndSave(dataToSave.result.merged, path, filename);
+      this.createFolderAndSave(dataToSave.result.merged, path, filename + toSuffix(version));
       return;
     }
     if (dataToSave.meta && dataToSave.meta.langCode) {
@@ -27,12 +28,12 @@ export default class AndroidFilesCreator implements IFilesCreator {
     }
     dataToSave.result.forEach((data: any) => {
       const langWithLocale = this.transformLangWithRegion(data.lang);
-      const folderName = `${path}/values-${langWithLocale}`;
+      const folderName = `${path}/${version}/values-${langWithLocale}`;
 
       this.createFolderAndSave(data.content, folderName);
     });
 
-    this.generateBaseTranslations(dataToSave.result, path, baseLang);
+    this.generateBaseTranslations(dataToSave.result, path, baseLang, version);
   }
 
   private transformLangWithRegion(languageCode: string): string {
@@ -59,14 +60,15 @@ export default class AndroidFilesCreator implements IFilesCreator {
   private generateBaseTranslations(
     dataToSave: Array<{ lang: string; content: string }>,
     path: string,
-    baseLang: string
+    baseLang: string,
+    version: string
   ) {
     const baseTranslations: any = dataToSave.find(
       (translation: any) => translation.lang.toLowerCase().indexOf(baseLang.toLowerCase()) !== -1
     );
 
     if (baseTranslations) {
-      const folderName = `${path}/values`;
+      const folderName = `${path}/${version}/values`;
 
       this.createFolderAndSave(baseTranslations.content, folderName);
     }

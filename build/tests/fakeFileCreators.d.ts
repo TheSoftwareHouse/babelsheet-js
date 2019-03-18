@@ -4,5 +4,5 @@ export default class FakeFilesCreators {
     private innerFilesCreators;
     private basePath;
     constructor(innerFilesCreators: FilesCreators, basePath: string);
-    save(dataToSave: ITranslationsData, path: string, filename: string, extension: string, baseLang: string): void;
+    save(dataToSave: ITranslationsData, path: string, filename: string, extension: string, version: string, baseLang: string): void;
 }

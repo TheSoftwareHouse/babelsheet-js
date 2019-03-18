@@ -2,7 +2,7 @@
 
 
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="no-js">
   <head>
     
@@ -32,7 +32,7 @@
         <meta name="lang:search.tokenizer" content="[\s\-]+">
       
       <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-3.0.4">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.0.2">
     
     
       
@@ -40,12 +40,12 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/application.451f80e5.css">
+      <link rel="stylesheet" href="../assets/stylesheets/application.982221ab.css">
       
       
     
     
-      <script src="../assets/javascripts/modernizr.1aa3b519.js"></script>
+      <script src="../assets/javascripts/modernizr.1f0bcf2b.js"></script>
     
     
       
@@ -55,6 +55,10 @@
       
     
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+    
+      
     
     
   </head>
@@ -71,7 +75,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="../#cli" tabindex="1" class="md-skip">
+      <a href="#cli" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -92,22 +96,19 @@
       <div class="md-flex__cell md-flex__cell--stretch">
         <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
           
-            
-              <span class="md-header-nav__topic">
-                Babelsheet
-              </span>
-              <span class="md-header-nav__topic">
-                Services
-              </span>
-            
+            <span class="md-header-nav__topic">
+              Babelsheet
+            </span>
+            <span class="md-header-nav__topic">
+              Services
+            </span>
           
         </div>
       </div>
       <div class="md-flex__cell md-flex__cell--shrink">
         
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
           
-            <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
-            
 <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
@@ -130,7 +131,6 @@
     </div>
   </div>
 </div>
-          
         
       </div>
       
@@ -302,6 +302,18 @@
 
 
   <li class="md-nav__item">
+    <a href="../translations-versioning/" title="Translations versioning" class="md-nav__link">
+      Translations versioning
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
     <a href="../development/" title="Development" class="md-nav__link">
       Development
     </a>
@@ -394,7 +406,7 @@
                 
                 <h2 id="cli">CLI</h2>
 <p>Command line tool is used to obtain <code>BABELSHEET_REFRESH_TOKEN</code>, as well as to generate translations files.
-Translations files are possible to generate in given formats:</p>
+It's possible to generate translations files in given formats:</p>
 <ul>
 <li>Android</li>
 <li>iOS</li>
@@ -408,7 +420,7 @@ Translations files are possible to generate in given formats:</p>
 <p>To generate translations type:</p>
 <p><code>babelsheet generate [options]</code></p>
 <p>Remember to <a href="../configuration/#configuration-file">create .env.babelsheet file</a> before generating translations.</p>
-<p><small>If you wont provide <code>BABELSHEET_REFRESH_TOKEN</code> in <code>.env.babelsheet</code> file or <code>data.json</code> file, babelsheet will automatically open browser to create such token, and will save it in right storage - you can change read and write storages, check it <a href="../development/#set-refresh-token-read-providers">here</a>.</small></p>
+<p><small>If you won't provide <code>BABELSHEET_REFRESH_TOKEN</code> in <code>.env.babelsheet</code> file or <code>data.json</code> file, babelsheet will automatically open browser to create such token, and will save it in the right storage - you can change read and write storages, check it <a href="../development/#set-refresh-token-read-providers">here</a>.</small></p>
 <p><strong>Options</strong>
 <details>
   <summary>--config-format</summary>
@@ -504,31 +516,31 @@ Translations files are possible to generate in given formats:</p>
   </p>
 </details>
 <details>
-  <summary>--client_id</summary>
+  <summary>--client-id</summary>
   <p>
-    Client id received from Google. Overwrite .env.babelsheet <code>BABELSHEET_CLIENT_ID</code> value. (<a href="../configuration/#configuring-google-spreadsheet-api">see how to obtain</a>)
+    Client id received from Google. Overwrites .env.babelsheet <code>BABELSHEET_CLIENT_ID</code> value. (<a href="../configuration/#configuring-google-spreadsheet-api">see how to obtain</a>)
   </p>
 </details>
 <details>
-  <summary>--client_secret</summary>
+  <summary>--client-secret</summary>
   <p>
-    Client secret received from Google. Overwrite .env.babelsheet <code>BABELSHEET_CLIENT_SECRET</code> value. (<a href="../configuration/#configuring-google-spreadsheet-api">see how to obtain</a>)
+    Client secret received from Google. Overwrites .env.babelsheet <code>BABELSHEET_CLIENT_SECRET</code> value. (<a href="../configuration/#configuring-google-spreadsheet-api">see how to obtain</a>)
   </p>
 </details>
 <details>
-  <summary>--spreadsheet_id</summary>
+  <summary>--spreadsheet-id</summary>
   <p>
-    Spreadsheet ID from spreadsheet URL. Overwrite .env.babelsheet <code>BABELSHEET_SPREADSHEET_ID</code> value. (<a href="../configuration/#how-to-get-spreadsheet-id">see how to obtain</a>)
+    Spreadsheet ID from spreadsheet URL. Overwrites .env.babelsheet <code>BABELSHEET_SPREADSHEET_ID</code> value. (<a href="../configuration/#how-to-get-spreadsheet-id">see how to obtain</a>)
   </p>
 </details>
 <details>
-  <summary>--spreadsheet_name</summary>
+  <summary>--spreadsheet-name</summary>
   <p>
-    Sheet name. Overwrite .env.babelsheet <code>BABELSHEET_SPREADSHEET_NAME</code> value. (<a href="../configuration/#how-to-get-spreadsheet-name">see how to obtain</a>)
+    Sheet name. Overwrites .env.babelsheet <code>BABELSHEET_SPREADSHEET_NAME</code> value. (<a href="../configuration/#how-to-get-spreadsheet-name">see how to obtain</a>)
   </p>
 </details>
 <details>
-  <summary>--spreadsheet_name</summary>
+  <summary>--redirect-uri</summary>
   <p>
     Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet <code>BABELSHEET_REDIRECT_URI</code> value. (<a href="configuration.md/#how-to-get-spreadsheet-name">see how to obtain</a>)
   </p>
@@ -543,8 +555,8 @@ Translations files are possible to generate in given formats:</p>
 <p><code>babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder</code> - generates english translations in <code>my-own-en-translations.json</code> file inside <code>./my-folder</code> folder.</p>
 <p><code>babelsheet generate --format ios --path ./translations</code> - generates translations in iOS format in <code>./translations</code> folder.</p>
 <h2 id="producer">Producer</h2>
-<p>Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as <code>BABELSHEET_CLIENT_ID</code>, <code>BABELSHEET_CLIENT_SECRET</code> and <code>BABELSHEET_REFRESH_TOKEN</code> then producer wont be able to work properly. In such case it runs a command responsible for obtaining those keys.</p>
-<p>You can run Producer in docker container - see <a href="../docker/">Docker</a>.</p>
+<p>Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as <code>BABELSHEET_CLIENT_ID</code>, <code>BABELSHEET_CLIENT_SECRET</code> and <code>BABELSHEET_REFRESH_TOKEN</code> then producer won't be able to work properly. In such case it runs a command responsible for obtaining those keys.</p>
+<p>You can run Producer in a docker container - see <a href="../docker/">Docker</a>.</p>
 <p>If you want to run producer locally, first remember about <a href="../configuration/#configuration-file">setting environment variables</a> and <a href="../docker/#redis">running redis</a>, next type:</p>
 <ol>
 <li>
@@ -572,6 +584,9 @@ Translations can be filtered by using:</p>
 </li>
 <li>
 <p><code>comments</code> - translations can include comments, e.g. <code>/translations?comments=true</code>. JSON results don't include comments.</p>
+</li>
+<li>
+<p><code>version</code> - version (spreadsheet name) that will be returned. If this isn't provided then it's taken from BABELSHEET_SPREADSHEET_NAME environment variable.</p>
 </li>
 </ul>
 <p>You can run API in docker container - see <a href="../docker/">Docker</a>.</p>
@@ -653,7 +668,6 @@ curl -X GET -g 'http://localhost:3000/translations?filters[]=en_US.CORE.LABELS&a
           Material for MkDocs</a>
       </div>
       
-        
   <div class="md-footer-social">
     <link rel="stylesheet" href="../assets/fonts/font-awesome.css">
     
@@ -665,19 +679,15 @@ curl -X GET -g 'http://localhost:3000/translations?filters[]=en_US.CORE.LABELS&a
     
   </div>
 
-      
     </div>
   </div>
 </footer>
       
     </div>
     
-      <script src="../assets/javascripts/application.583bbe55.js"></script>
+      <script src="../assets/javascripts/application.d9aa80ab.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
-      
-    
-    
       
     
   </body>

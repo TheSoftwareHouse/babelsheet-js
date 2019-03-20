@@ -10,7 +10,7 @@
     "test": "jest --coverage",
     "test-watch": "jest --watch",
     "format": "prettier --write 'src/**/*.ts'",
-    "type-check": "tsc --noEmit",
+    "type-check": "tsc --noEmit --skipLibCheck",
     "build": "tsc --skipLibCheck",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint-fix": "tslint -c tslint.json 'src/**/*.ts' --fix",

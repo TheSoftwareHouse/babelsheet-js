@@ -5,4 +5,4 @@ script:
   - npm test
   - npm run type-check
   - npm run lint
-  - npm run nsp
+  - npm run audit

@@ -11,18 +11,27 @@ class TranslationsProducer {
     }
     async produce(authData) {
         const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
-        const transformedData = await this.transformer.transform({
-            translations: {},
-            meta: {
-                mergeLanguages: true,
-            },
-            result: spreadsheetData,
-        });
-        const [, actualTranslations] = await await_to_js_1.default(this.translationsStorage.getTranslations([]));
-        if (!ramda.equals(transformedData, actualTranslations)) {
-            await this.translationsStorage.clearTranslations();
-            await this.translationsStorage.setTranslations([], transformedData);
-            this.logger.info('Translations were refreshed');
+        const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedTranslationsPromise, key) => {
+            const values = spreadsheetData[key];
+            if (!values) {
+                return transformedTranslationsPromise;
+            }
+            const data = await this.transformer.transform({
+                translations: {},
+                meta: { mergeLanguages: true },
+                result: spreadsheetData[key],
+            });
+            const transformedTranslations = await transformedTranslationsPromise;
+            transformedTranslations[key] = data;
+            return transformedTranslationsPromise;
+        }, Promise.resolve({}));
+        for (const key of Object.keys(transformedSheets)) {
+            const [, actualTranslations] = await await_to_js_1.default(this.translationsStorage.getTranslations([], key));
+            if (!ramda.equals(transformedSheets[key], actualTranslations)) {
+                await this.translationsStorage.clearTranslations(key);
+                await this.translationsStorage.setTranslations([], transformedSheets[key], key);
+                this.logger.info(`Translations (version ${key}) were refreshed`);
+            }
         }
     }
 }

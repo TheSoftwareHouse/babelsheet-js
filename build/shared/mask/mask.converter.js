@@ -33,7 +33,7 @@ class MaskConverter {
         return this.replaceTagsInMask(source, tags || {});
     }
     replaceTagsInMask(source, tags) {
-        // if there is a tag in the structure, replace it with the tag contents. This is done to avoid a situation, 
+        // if there is a tag in the structure, replace it with the tag contents. This is done to avoid a situation,
         // where filters and tags will overlap, overwriting eachother (depending on their order)
         const replaceTags = (filters) => {
             if (filters) {

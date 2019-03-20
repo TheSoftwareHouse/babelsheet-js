@@ -9,13 +9,33 @@ class GoogleSheets {
     async fetchSpreadsheet(credentials) {
         const oAuth2Client = await this.googleAuth.getAuthenticatedClient(credentials);
         const sheets = googleapis_1.google.sheets('v4');
+        const { spreadsheetId, spreadsheetName } = credentials;
+        const ranges = spreadsheetName
+            ? [spreadsheetName]
+            : await this.getAllSpreadsheetsNames(oAuth2Client, spreadsheetId);
         return util
-            .promisify(sheets.spreadsheets.values.get)({
+            .promisify(sheets.spreadsheets.values.batchGet)({
             auth: oAuth2Client,
-            range: credentials.spreadsheetName,
-            spreadsheetId: credentials.spreadsheetId,
+            ranges,
+            spreadsheetId,
         })
-            .then((res) => res.data.values);
+            .then((res) => {
+            const valuesBySpreadsheet = {};
+            for (let i = 0; i < res.data.valueRanges.length; ++i) {
+                valuesBySpreadsheet[ranges[i]] = res.data.valueRanges[i].values;
+            }
+            return valuesBySpreadsheet;
+        });
+    }
+    getAllSpreadsheetsNames(auth, spreadsheetId) {
+        const sheets = googleapis_1.google.sheets('v4');
+        return util
+            .promisify(sheets.spreadsheets.get)({
+            auth,
+            ranges: [],
+            spreadsheetId,
+        })
+            .then((res) => res.data.sheets.map((sheet) => sheet.properties.title));
     }
 }
 exports.default = GoogleSheets;

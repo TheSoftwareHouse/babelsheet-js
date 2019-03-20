@@ -1,6 +1,6 @@
 # Babelsheet [![Build Status](https://travis-ci.org/TheSoftwareHouse/babelsheet-js.svg?branch=master)](https://travis-ci.org/TheSoftwareHouse/babelsheet-js)
 
-Babelsheet node service allows you to translate all of the UI / app content to specific language. As a user interface we use google spreadsheets and translations are synchronised every 5 minutes. This service contains a scheduler to synchronise translations, a web server allowing you to fetch them, and a CLI tools which can generate translations in various formats. What's more there is a cache layer for better performance. Babelsheet supports formats:
+Babelsheet node service allows you to translate all of the UI / app content to specific language. As a user interface we use google spreadsheets and translations are synchronised every 5 minutes. This service contains a scheduler to synchronise translations, a web server allowing you to fetch them, and a CLI tools which can generate translations in various formats. What's more there is a cache layer for better performance. Babelsheet supports following formats:
 
 - iOS
 - Android

@@ -3,5 +3,5 @@ import { IFilesCreator } from './files-creator.types';
 export default class FilesCreators {
     private filesCreators;
     constructor(filesCreators: IFilesCreator[]);
-    save(dataToSave: ITranslationsData, path: string, filename: string, extension: string, baseLang: string): void;
+    save(dataToSave: ITranslationsData, path: string, filename: string, extension: string, version: string, baseLang: string): void;
 }

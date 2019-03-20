@@ -1,8 +1,6 @@
 import * as awilix from 'awilix';
 import MaskedTranslations from './masked-translations';
-import JsonToJsonMaskedTransformer from '../transformers/json-to-json-masked.transformer';
 import InMemoryStorage from '../../infrastructure/storage/in-memory';
-import JsonToJsonTransformer from '../transformers/json-to-json.transformer';
 import NotFoundError from '../error/not-found';
 import { minimalPassingObject, multiLocaleDataset } from '../../tests/testData';
 
@@ -76,12 +74,12 @@ describe('Masked translations', () => {
     const maskedTranslations = await container.resolve<MaskedTranslations>('maskedTranslations');
     const storage = await container.resolve<InMemoryStorage>('storage');
 
-    storage.set('translations', {
+    storage.set('translations-version', {
       ...minimalPassingObject,
       result: { en_US: multiLocaleDataset.translations.en_US },
     });
 
-    expect(await maskedTranslations.getTranslations([], { keepLocale: true })).toEqual({
+    expect(await maskedTranslations.getTranslations([], 'version', { keepLocale: true })).toEqual({
       ...minimalPassingObject,
       meta: { ...minimalPassingObject.meta, filters: [], mergeLanguages: true },
       result: { en_US: { value: 'json masked return' } },

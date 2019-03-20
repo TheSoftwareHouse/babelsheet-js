@@ -10,8 +10,4 @@ export function checkAuthParameters(params: { [key: string]: string | undefined 
   if (!params.spreadsheetId) {
     throw new Error('Please provide spreadsheet ID');
   }
-
-  if (!params.spreadsheetName) {
-    throw new Error('Please provide spreadsheet name');
-  }
 }

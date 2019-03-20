@@ -6,6 +6,6 @@ export default class YamlFilesCreator implements IFilesCreator {
     private supportedExtension;
     constructor(fileRepository: IFileRepository);
     supports(extension: string): boolean;
-    save(dataToSave: ITranslationsData, path: string, filename: string): void;
+    save(dataToSave: ITranslationsData, path: string, filename: string, version: string): void;
     private createFolderAndSave;
 }

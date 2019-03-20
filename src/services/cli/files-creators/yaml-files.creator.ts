@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra';
 import IFileRepository from '../../../infrastructure/repository/file-repository.types';
+import { toSuffix } from '../../../shared/get-version-suffix';
 import { ITranslationsData } from '../../../shared/transformers/transformer';
 import { IFilesCreator } from './files-creator.types';
 
@@ -12,7 +13,7 @@ export default class YamlFilesCreator implements IFilesCreator {
     return extension.toLowerCase() === this.supportedExtension;
   }
 
-  public save(dataToSave: ITranslationsData, path: string, filename: string): void {
+  public save(dataToSave: ITranslationsData, path: string, filename: string, version: string): void {
     if (dataToSave.meta && dataToSave.meta.mergeLanguages === true) {
       this.createFolderAndSave(dataToSave.result.merged, path, filename);
       return;
@@ -21,11 +22,13 @@ export default class YamlFilesCreator implements IFilesCreator {
       this.createFolderAndSave(
         dataToSave.result.find((element: any) => element.lang === dataToSave.meta.langCode).content,
         path,
-        filename
+        filename + toSuffix(version)
       );
       return;
     }
-    dataToSave.result.forEach((data: any) => this.createFolderAndSave(data.content, path, `messages.${data.lang}`));
+    dataToSave.result.forEach((data: any) =>
+      this.createFolderAndSave(data.content, path, `messages.${data.lang}${toSuffix(version)}`)
+    );
   }
 
   private createFolderAndSave(data: string, folderName: string, fileName: string) {

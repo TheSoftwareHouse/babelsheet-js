@@ -7,7 +7,7 @@ export default class IosFilesCreator implements IFilesCreator {
     private defaultFileName;
     constructor(fileRepository: IFileRepository);
     supports(extension: string): boolean;
-    save(dataToSave: ITranslationsData, path: string, filename: string, baseLang: string): void;
+    save(dataToSave: ITranslationsData, path: string, filename: string, version: string, baseLang: string): void;
     private transformLangWithRegion;
     private createFolderAndSave;
     private generateBaseTranslations;

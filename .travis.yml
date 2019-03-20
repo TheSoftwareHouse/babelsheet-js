@@ -5,4 +5,5 @@ script:
   - npm test
   - npm run type-check
   - npm run lint
+  - npm set audit-level high
   - npm audit

@@ -81,7 +81,7 @@ export async function generateTranslations(
   );
 
   for (const version of Object.keys(transformedSheets)) {
-    info(`Spreadsheet with version ${version}   formatted.`);
+    info(`Spreadsheet with version ${version} formatted.`);
 
     info(`Saving translations - version ${version}`);
     filesCreators.save(transformedSheets[version], args.path, args.filename, extension, version, args.base);

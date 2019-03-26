@@ -5,10 +5,11 @@ import IFileRepository from '../../../infrastructure/repository/file-repository.
 import InEnvStorage from '../../../infrastructure/storage/in-env';
 import InFileStorage from '../../../infrastructure/storage/in-file';
 import GoogleAuth from '../../../shared/google/auth';
-import GoogleSheets from '../../../shared/google/sheets';
+import { SheetsProviderFactory } from '../../../shared/sheets-provider/sheets-provider.factory';
 import Transformers from '../../../shared/transformers/transformers';
 import { generateConfigFile, generateTranslations } from '../fileGenerators';
 import FilesCreators from '../files-creators/files-creators';
+import { ConfigProviderFactory } from './../spreadsheet-config-providers/config-provider.factory';
 
 export default class Interpreter {
   private getProperStorage: { [key: string]: any } = {
@@ -23,29 +24,46 @@ export default class Interpreter {
     private inFileStorage: InFileStorage,
     private googleAuth: GoogleAuth,
     private fileRepository: IFileRepository,
-    private googleSheets: GoogleSheets,
+    private sheetsProviderFactory: SheetsProviderFactory,
+    private configProviderFactory: ConfigProviderFactory,
     private transformers: Transformers,
     private filesCreators: FilesCreators
   ) {}
 
   public async interpret(overwriteShadowArgs?: string[] | undefined) {
     const args: Arguments = this.configureCli(overwriteShadowArgs);
-    args._[0] === 'init'
-      ? await generateConfigFile(
-          this.logger,
-          this.inEnvStorage,
-          this.googleAuth,
-          args,
-          this.getProperStorage[args['config-format']]
-        )
-      : await generateTranslations(
-          this.logger,
-          this.fileRepository,
-          this.googleSheets,
-          this.transformers,
-          this.filesCreators,
-          args
-        );
+    const { BABELSHEET_SPREADSHEET_SOURCE } = process.env;
+
+    const spreadsheetSource = args['spreadsheet-source'] || BABELSHEET_SPREADSHEET_SOURCE || 'google';
+
+    const sheetsProvider = this.getSpreadsheetProvider(spreadsheetSource);
+    const sheetsConfigProvider = this.getSpreadsheetConfigProvider(spreadsheetSource);
+
+    if (args._[0] === 'init') {
+      if (spreadsheetSource === 'in-file') {
+        this.logger.error('`init` option cannot be used when spreadsheet source is set to `in-file`');
+        process.exit(1);
+      }
+
+      await generateConfigFile(
+        this.logger,
+        this.inEnvStorage,
+        this.googleAuth,
+        args,
+        this.getProperStorage[args['config-format']],
+        sheetsConfigProvider
+      );
+    } else {
+      await generateTranslations(
+        this.logger,
+        this.fileRepository,
+        sheetsProvider,
+        sheetsConfigProvider,
+        this.transformers,
+        this.filesCreators,
+        args
+      );
+    }
   }
   private configureCli(overwriteShadowArgs: undefined | string[]): Arguments {
     let parser = yargs
@@ -91,6 +109,16 @@ export default class Interpreter {
           'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)',
         type: 'array',
       })
+      .option('ss', {
+        alias: 'spreadsheet-source',
+        describe: 'Determines from where the spreadsheet is read',
+        type: 'string',
+      })
+      .options('fp', {
+        alias: 'file-path',
+        describe: 'Spreadsheet file location.',
+        type: 'string',
+      })
       .options('comments', {
         describe: 'Include comments in the outputs',
         type: 'boolean',
@@ -113,5 +141,13 @@ export default class Interpreter {
     }
 
     return parser.parse(this.shadowArgs || (overwriteShadowArgs as any));
+  }
+
+  private getSpreadsheetConfigProvider(spreadsheetSource: string) {
+    return this.configProviderFactory.getProviderFor(spreadsheetSource);
+  }
+
+  private getSpreadsheetProvider(spreadsheetSource: string) {
+    return this.sheetsProviderFactory.getProviderFor(spreadsheetSource);
   }
 }

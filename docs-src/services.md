@@ -145,7 +145,19 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
 <details>
   <summary>--redirect-uri</summary>
   <p>
-    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `BABELSHEET_REDIRECT_URI` value. ([see how to obtain](configuration.md/#how-to-get-spreadsheet-name))
+    Url to which user should be redirected after receiving refresh token. Overwrite .env.babelsheet `BABELSHEET_REDIRECT_URI` value.
+  </p>
+</details>
+<details>
+  <summary>--spreadsheet-source</summary>
+  <p>
+    Determines where the spreadsheet is coming from. Defaults to `google`. Overwrites .env.babelsheet `BABELSHEET_SPREADSHEET_SOURCE value. 
+  </p>
+</details>
+<details>
+  <summary>--file-path</summary>
+  <p>
+     Disk path of a spreadsheet file - used when spreadsheets are obtained from disk rather than from Google Docs. Only used when --spreadsheet-source is set to `in-file`.
   </p>
 </details>
 <details>
@@ -160,6 +172,8 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
 `babelsheet generate -f json -n my-own-en-translations -l en_US -p ./my-folder` - generates english translations in `my-own-en-translations.json` file inside `./my-folder` folder.
 
 `babelsheet generate --format ios --path ./translations` - generates translations in iOS format in `./translations` folder.
+
+`babelsheet generate -p ./translations --ss=in-file --fp=/Users/xyz/Documents/babelsheet-spreadsheet.xlsx` - generate translations in `./translations` folder, read translations from local file on the disk.
 
 ## Producer
 Producer is used to fetch translations file, convert it and then store it in a database. The process is wrapped in a scheduler which repeats the whole operation continuously every 5 minutes by default. Please note that if there are no proper environment variables such as `BABELSHEET_CLIENT_ID`, `BABELSHEET_CLIENT_SECRET` and `BABELSHEET_REFRESH_TOKEN` then producer won't be able to work properly. In such case it runs a command responsible for obtaining those keys.

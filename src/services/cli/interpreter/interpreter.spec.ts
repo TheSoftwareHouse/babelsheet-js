@@ -12,6 +12,7 @@ import * as dircompare from 'dir-compare';
 import FilesCreators from '../files-creators/files-creators';
 import FakeFilesCreators from '../../../tests/fakeFileCreators';
 import { getLoggerMock } from '../../../tests/loggerMock';
+import { SheetsProviderFactory } from '../../../shared/sheets-provider/sheets-provider.factory';
 
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {
@@ -42,6 +43,9 @@ const container = containerTemp.register({
   googleSheets: awilix
     .asClass(FakeGoogleSheets)
     .inject(() => ({ returnData: spreadsheetData.multiRawSpreadsheetData })),
+  sheetsProviderFactory: awilix
+    .asClass(SheetsProviderFactory)
+    .inject(() => ({ providers: [container.resolve('googleSheets')] })),
   logger: awilix.asValue(loggerMock),
 });
 const snapsPath = path.join('src', 'services', 'cli', 'interpreter', 'tests');

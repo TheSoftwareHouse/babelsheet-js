@@ -30,10 +30,16 @@ const args = {
 describe('fileGenerators', async () => {
   it('generateTranslations does run proper functions', async () => {
     const mockGoogleSheets = {
-      fetchSpreadsheet: jest
+      getSpreadsheetValues: jest
         .fn()
         .mockImplementation(() => ({ Sheet1: 'firstSpreadsheet', Sheet2: 'secondSpreadsheet' })),
       googleAuth: jest.fn(),
+    };
+
+    const mockedConfigProvider = {
+      getSpreadsheetConfig: jest.fn(),
+      validateConfig: jest.fn(),
+      supports: jest.fn(),
     };
 
     const mockTransformers: ITransformers = {
@@ -55,12 +61,13 @@ describe('fileGenerators', async () => {
       loggerMock,
       fileRepository,
       mockGoogleSheets as any,
+      mockedConfigProvider as any,
       mockTransformers as any,
       mockFileCreators as any,
       args
     );
 
-    expect(mockGoogleSheets.fetchSpreadsheet).toHaveBeenCalledTimes(1);
+    expect(mockGoogleSheets.getSpreadsheetValues).toHaveBeenCalledTimes(1);
     expect(mockTransformers.transform).toHaveBeenNthCalledWith(
       1,
       {
@@ -112,6 +119,12 @@ describe('fileGenerators', async () => {
       set: jest.fn(),
     };
 
+    const mockedConfigProvider = {
+      getSpreadsheetConfig: jest.fn().mockImplementation(() => ({})),
+      validateConfig: jest.fn(),
+      supports: jest.fn(),
+    };
+
     const container = createContainer().register({
       logger: awilix.asValue(loggerMock),
       inEnvStorage: awilix.asValue(mockInEnvStorage),
@@ -120,7 +133,14 @@ describe('fileGenerators', async () => {
 
     const inEnvStorage = container.resolve<InEnvStorage>('inEnvStorage');
 
-    await generateConfigFile(loggerMock, inEnvStorage, getGoogleAuthMock() as any, args, inEnvStorage);
+    await generateConfigFile(
+      loggerMock,
+      inEnvStorage,
+      getGoogleAuthMock() as any,
+      args,
+      inEnvStorage,
+      mockedConfigProvider
+    );
 
     expect(mockInEnvStorage.set).toBeCalledWith('babelsheet_refresh_token', 'test-token');
   });

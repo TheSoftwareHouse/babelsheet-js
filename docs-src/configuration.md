@@ -42,7 +42,7 @@ LOGGING_LEVEL=debug
   </p>
 </details>
 
-`BABELSHEET_SPREADSHEET_NAME` - sheet name. If it's not provided then all sheets will be obtained.
+`BABELSHEET_SPREADSHEET_NAME` - sheet name. If it's not provided then all the sheets will be obtained.
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>

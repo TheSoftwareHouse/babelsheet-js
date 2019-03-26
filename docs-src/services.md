@@ -151,7 +151,7 @@ Remember to [create .env.babelsheet file](configuration.md#configuration-file) b
 <details>
   <summary>--spreadsheet-source</summary>
   <p>
-    Determines where the spreadsheet is coming from. Defaults to `google`. Overwrites .env.babelsheet `BABELSHEET_SPREADSHEET_SOURCE value. 
+    Determines where the spreadsheet is coming from. Defaults to `google`. Overwrites .env.babelsheet `BABELSHEET_SPREADSHEET_SOURCE` value. 
   </p>
 </details>
 <details>

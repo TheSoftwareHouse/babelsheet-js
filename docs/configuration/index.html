@@ -397,6 +397,14 @@ LOGGING_LEVEL=debug
 </code></pre>
 
 <h3 id="configuration-options">Configuration options</h3>
+<p><code>BABELSHEET_SPREADSHEET_SOURCE</code> - determines where the spreadsheet is coming from. Defaults to <code>google</code>.
+<details>
+  <summary>Possible options:</summary>
+  <ul>
+    <li><code>google</code> - spreadsheet will be obtained from Google Docs. Default value.</li>
+    <li><code>in-file</code> - spreadsheet will be read from local disk.</li>
+  <ul>
+</details></p>
 <p><code>BABELSHEET_CLIENT_ID</code>* - client id received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
 <p><code>BABELSHEET_CLIENT_SECRET</code>* - client secret received from Google (<a href="#configuring-google-spreadsheet-api">see how to config</a>)</p>
 <p><code>BABELSHEET_SPREADSHEET_ID</code>* - spreadsheet ID from spreadsheet URL
@@ -407,7 +415,7 @@ LOGGING_LEVEL=debug
     <code>https://docs.google.com/spreadsheets/d/&lt;spreadsheet-id&gt;/</code>
   </p>
 </details></p>
-<p><code>BABELSHEET_SPREADSHEET_NAME</code>* - sheet name
+<p><code>BABELSHEET_SPREADSHEET_NAME</code> - sheet name. If it's not provided then all the sheets will be obtained.
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>
@@ -416,6 +424,7 @@ LOGGING_LEVEL=debug
   </p>
 </details></p>
 <p><code>BABELSHEET_REFRESH_TOKEN</code>* - refresh token (<a href="#generating-refresh-token">see how to obtain</a>)</p>
+<p><code>BABELSHEET_SPREADSHEET_FILE_PATH</code>** - disk path of a spreadsheet file - used when spreadsheets are obtained from disk rather than from Google Docs.</p>
 <p><code>BABELSHEET_REDIRECT_URI</code> - url to which user should be redirected after receiving refresh token</p>
 <p><code>BABELSHEET_REDIS_HOST</code> - host name of redis store</p>
 <p><code>BABELSHEET_REDIS_PORT</code> - port of redis store</p>
@@ -424,7 +433,8 @@ LOGGING_LEVEL=debug
 <p><code>NODE_ENV</code> - environment type</p>
 <p><code>APP_NAME</code> - name which indentify app</p>
 <p><code>LOGGING_LEVEL</code> - Log level debug/error/info</p>
-<p><small>* - required</small></p>
+<p><small><em> - required when obtaining sheets from Google Docs.</small>
+<small></em>* - required when obtaining sheets from local disk.</small></p>
 <h2 id="configuring-google-spreadsheet-api">Configuring Google Spreadsheet API</h2>
 <ol>
 <li>Create account in Google Cloud Platform.

@@ -20,6 +20,15 @@ LOGGING_LEVEL=debug
 ```
 
 ### Configuration options
+`BABELSHEET_SPREADSHEET_SOURCE` - determines where the spreadsheet is coming from. Defaults to `google`.
+<details>
+  <summary>Possible options:</summary>
+  <ul>
+    <li>`google` - spreadsheet will be obtained from Google Docs. Default value.</li>
+    <li>`in-file` - spreadsheet will be read from local disk.</li>
+  <ul>
+</details>
+
 `BABELSHEET_CLIENT_ID`* - client id received from Google ([see how to config](#configuring-google-spreadsheet-api))
 
 `BABELSHEET_CLIENT_SECRET`* - client secret received from Google ([see how to config](#configuring-google-spreadsheet-api))
@@ -33,7 +42,7 @@ LOGGING_LEVEL=debug
   </p>
 </details>
 
-`BABELSHEET_SPREADSHEET_NAME`* - sheet name
+`BABELSHEET_SPREADSHEET_NAME` - sheet name. If it's not provided then all the sheets will be obtained.
 <details>
   <summary id="how-to-get-spreadsheet-name">How to get spreadsheet name</summary>
   <p>
@@ -43,6 +52,8 @@ LOGGING_LEVEL=debug
 </details>
 
 `BABELSHEET_REFRESH_TOKEN`* - refresh token ([see how to obtain](#generating-refresh-token))
+
+`BABELSHEET_SPREADSHEET_FILE_PATH`** - disk path of a spreadsheet file - used when spreadsheets are obtained from disk rather than from Google Docs.
 
 `BABELSHEET_REDIRECT_URI` - url to which user should be redirected after receiving refresh token
 
@@ -60,8 +71,8 @@ LOGGING_LEVEL=debug
 
 `LOGGING_LEVEL` - Log level debug/error/info
 
-<small>* - required</small>
-
+<small>* - required when obtaining sheets from Google Docs.</small>
+<small>** - required when obtaining sheets from local disk.</small>
 
 ## Configuring Google Spreadsheet API
 

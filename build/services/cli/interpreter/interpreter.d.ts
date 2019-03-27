@@ -3,9 +3,10 @@ import IFileRepository from '../../../infrastructure/repository/file-repository.
 import InEnvStorage from '../../../infrastructure/storage/in-env';
 import InFileStorage from '../../../infrastructure/storage/in-file';
 import GoogleAuth from '../../../shared/google/auth';
-import GoogleSheets from '../../../shared/google/sheets';
+import { SheetsProviderFactory } from '../../../shared/sheets-provider/sheets-provider.factory';
 import Transformers from '../../../shared/transformers/transformers';
 import FilesCreators from '../files-creators/files-creators';
+import { ConfigProviderFactory } from './../spreadsheet-config-providers/config-provider.factory';
 export default class Interpreter {
     private shadowArgs;
     private logger;
@@ -13,11 +14,14 @@ export default class Interpreter {
     private inFileStorage;
     private googleAuth;
     private fileRepository;
-    private googleSheets;
+    private sheetsProviderFactory;
+    private configProviderFactory;
     private transformers;
     private filesCreators;
     private getProperStorage;
-    constructor(shadowArgs: undefined | string | string[], logger: ILogger, inEnvStorage: InEnvStorage, inFileStorage: InFileStorage, googleAuth: GoogleAuth, fileRepository: IFileRepository, googleSheets: GoogleSheets, transformers: Transformers, filesCreators: FilesCreators);
+    constructor(shadowArgs: undefined | string | string[], logger: ILogger, inEnvStorage: InEnvStorage, inFileStorage: InFileStorage, googleAuth: GoogleAuth, fileRepository: IFileRepository, sheetsProviderFactory: SheetsProviderFactory, configProviderFactory: ConfigProviderFactory, transformers: Transformers, filesCreators: FilesCreators);
     interpret(overwriteShadowArgs?: string[] | undefined): Promise<void>;
     private configureCli;
+    private getSpreadsheetConfigProvider;
+    private getSpreadsheetProvider;
 }

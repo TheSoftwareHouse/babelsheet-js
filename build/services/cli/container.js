@@ -6,9 +6,10 @@ const file_repository_1 = require("../../infrastructure/repository/file.reposito
 const in_env_1 = require("../../infrastructure/storage/in-env");
 const in_file_1 = require("../../infrastructure/storage/in-file");
 const auth_1 = require("../../shared/google/auth");
-const sheets_1 = require("../../shared/google/sheets");
 const mask_converter_1 = require("../../shared/mask/mask.converter");
 const mask_input_1 = require("../../shared/mask/mask.input");
+const google_sheets_provider_1 = require("../../shared/sheets-provider/google-sheets.provider");
+const in_file_sheets_provider_1 = require("../../shared/sheets-provider/in-file-sheets.provider");
 const token_provider_1 = require("../../shared/token-provider/token-provider");
 const chain_transformer_1 = require("../../shared/transformers/chain.transformer");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
@@ -20,6 +21,7 @@ const json_to_yaml_transformer_1 = require("../../shared/transformers/json-to-ya
 const spreadsheet_to_json_string_transformer_1 = require("../../shared/transformers/spreadsheet-to-json-string.transformer");
 const spreadsheet_to_json_transformer_1 = require("../../shared/transformers/spreadsheet-to-json.transformer");
 const transformers_1 = require("../../shared/transformers/transformers");
+const sheets_provider_factory_1 = require("./../../shared/sheets-provider/sheets-provider.factory");
 const android_files_creator_1 = require("./files-creators/android-files.creator");
 const files_creators_1 = require("./files-creators/files-creators");
 const ios_files_creator_1 = require("./files-creators/ios-files.creator");
@@ -27,6 +29,9 @@ const json_files_creator_1 = require("./files-creators/json-files.creator");
 const xlf_files_creator_1 = require("./files-creators/xlf-files.creator");
 const yaml_files_creator_1 = require("./files-creators/yaml-files.creator");
 const interpreter_1 = require("./interpreter/interpreter");
+const config_provider_factory_1 = require("./spreadsheet-config-providers/config-provider.factory");
+const google_spreadsheet_config_provider_1 = require("./spreadsheet-config-providers/google-spreadsheet-config.provider");
+const in_file_spreadsheet_config_provider_1 = require("./spreadsheet-config-providers/in-file-spreadsheet-config.provider");
 function createContainer(options) {
     const container = awilix.createContainer({
         injectionMode: awilix.InjectionMode.CLASSIC,
@@ -70,6 +75,26 @@ function createContainer(options) {
                 container.resolve('jsonFilesCreator'),
                 container.resolve('xlfFilesCreator'),
                 container.resolve('yamlFilesCreator'),
+            ],
+        })),
+    };
+    const spreadsheetConfigProviderRegistry = {
+        inFileSpreadsheetConfigProvider: awilix.asClass(in_file_spreadsheet_config_provider_1.InFileSpreadsheetConfigService),
+        googleSpreadsheetConfigProvider: awilix.asClass(google_spreadsheet_config_provider_1.GoogleSpreadsheetConfigService),
+        configProviderFactory: awilix.asClass(config_provider_factory_1.ConfigProviderFactory).inject(() => ({
+            providers: [
+                container.resolve('inFileSpreadsheetConfigProvider'),
+                container.resolve('googleSpreadsheetConfigProvider'),
+            ],
+        })),
+    };
+    const spreadsheetProviderRegistry = {
+        inFileSpreadsheetProvider: awilix.asClass(in_file_sheets_provider_1.default),
+        googleSpreadsheetProvider: awilix.asClass(google_sheets_provider_1.default),
+        sheetsProviderFactory: awilix.asClass(sheets_provider_factory_1.SheetsProviderFactory).inject(() => ({
+            providers: [
+                container.resolve('inFileSpreadsheetProvider'),
+                container.resolve('googleSpreadsheetProvider'),
             ],
         })),
     };
@@ -147,7 +172,6 @@ function createContainer(options) {
         interpreter: awilix.asClass(interpreter_1.default),
         fileRepository: awilix.asClass(file_repository_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         googleAuth: awilix.asClass(auth_1.default),
-        googleSheets: awilix.asClass(sheets_1.default),
         logger: awilix.asValue(tsh_node_common_1.winstonLogger),
         inEnvStorage: awilix.asClass(in_env_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         port: awilix.asValue(process.env.BABELSHEET_PORT || 3000),
@@ -155,6 +179,8 @@ function createContainer(options) {
         ...tokenProviders,
         ...transformersRegistry,
         ...fileCreatorsRegistry,
+        ...spreadsheetConfigProviderRegistry,
+        ...spreadsheetProviderRegistry,
     });
     return container;
 }

@@ -1,16 +1,13 @@
 import { OAuth2Client } from 'google-auth-library';
 import { google } from 'googleapis';
 import * as util from 'util';
-import GoogleAuth from './auth';
+import GoogleAuth from '../google/auth';
+import { ISheetsProvider, ISpreadsheetValues } from './sheets-provider.types';
 
-interface ISheetValues {
-  [key: string]: string[];
-}
-
-export default class GoogleSheets {
+export default class GoogleSheetsProvider implements ISheetsProvider {
   constructor(private googleAuth: GoogleAuth) {}
 
-  public async fetchSpreadsheet(credentials: { [key: string]: string }): Promise<{ [key: string]: ISheetValues }> {
+  public async getSpreadsheetValues(credentials: { [key: string]: string }): Promise<ISpreadsheetValues> {
     const oAuth2Client = await this.googleAuth.getAuthenticatedClient(credentials);
     const sheets = google.sheets('v4');
 
@@ -35,6 +32,10 @@ export default class GoogleSheets {
 
         return valuesBySpreadsheet;
       });
+  }
+
+  public supports(type: string) {
+    return type === 'google';
   }
 
   private getAllSpreadsheetsNames(auth: OAuth2Client, spreadsheetId: string): Promise<string[]> {

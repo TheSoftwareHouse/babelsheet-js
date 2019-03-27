@@ -3,14 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const await_to_js_1 = require("await-to-js");
 const ramda = require("ramda");
 class TranslationsProducer {
-    constructor(logger, googleSheets, transformer, translationsStorage) {
+    constructor(logger, transformer, translationsStorage) {
         this.logger = logger;
-        this.googleSheets = googleSheets;
         this.transformer = transformer;
         this.translationsStorage = translationsStorage;
     }
-    async produce(authData) {
-        const spreadsheetData = await this.googleSheets.fetchSpreadsheet(authData);
+    async produce(config, sheetsProvider) {
+        const spreadsheetData = await sheetsProvider.getSpreadsheetValues(config);
         const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedTranslationsPromise, key) => {
             const values = spreadsheetData[key];
             if (!values) {

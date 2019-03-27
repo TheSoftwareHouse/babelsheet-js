@@ -4,12 +4,12 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import { Permission } from '../../infrastructure/repository/file-repository.types';
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import IStorage from '../../infrastructure/storage/storage';
-import { checkAuthParameters } from '../../shared/checkAuthParams';
 import { getExtension } from '../../shared/formatToExtensions';
 import GoogleAuth from '../../shared/google/auth';
-import GoogleSheets from '../../shared/google/sheets';
+import { ISheetsProvider } from '../../shared/sheets-provider/sheets-provider.types';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
+import { ISpreadsheetConfigService } from './spreadsheet-config-providers/spreadsheet-config-provider.types';
 
 function checkFolderPermissions(logger: ILogger, fileRepository: IFileRepository, path: string): void {
   const canWrite = fileRepository.hasAccess(path, Permission.Write);
@@ -20,30 +20,11 @@ function checkFolderPermissions(logger: ILogger, fileRepository: IFileRepository
   }
 }
 
-function getSpreadsheetAuthData(args: Arguments): { [key: string]: string } {
-  const {
-    BABELSHEET_CLIENT_ID,
-    BABELSHEET_CLIENT_SECRET,
-    BABELSHEET_SPREADSHEET_ID,
-    BABELSHEET_SPREADSHEET_NAME,
-    BABELSHEET_REDIRECT_URI,
-  } = process.env;
-
-  const authData = {
-    clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
-    clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
-    spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
-    spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME,
-    redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
-  };
-
-  return authData;
-}
-
 export async function generateTranslations(
   logger: ILogger,
   fileRepository: IFileRepository,
-  googleSheets: GoogleSheets,
+  sheetsProvider: ISheetsProvider,
+  configProvider: ISpreadsheetConfigService,
   transformers: Transformers,
   filesCreators: FilesCreators,
   args: Arguments
@@ -51,10 +32,10 @@ export async function generateTranslations(
   const { info } = logger;
 
   info('Getting auth variables...');
-  const spreadsheetAuthData = getSpreadsheetAuthData(args);
+  const spreadsheetConfig = configProvider.getSpreadsheetConfig(args);
 
   info('Checking auth variables...');
-  checkAuthParameters(spreadsheetAuthData);
+  configProvider.validateConfig(spreadsheetConfig);
 
   info('Checking formats...');
   const extension = getExtension(args.format);
@@ -62,8 +43,8 @@ export async function generateTranslations(
   info('Checking folder permissions...');
   checkFolderPermissions(logger, fileRepository, args.path);
 
-  info('Fetching spreadsheet...');
-  const spreadsheetData = await googleSheets.fetchSpreadsheet(spreadsheetAuthData);
+  info('Reading spreadsheet...');
+  const spreadsheetData = await sheetsProvider.getSpreadsheetValues(spreadsheetConfig);
   info('Spreadsheet fetched successfully.');
 
   const transformedSheets: { [key: string]: any } = await Object.keys(spreadsheetData).reduce(
@@ -134,14 +115,19 @@ function saveNecessaryEnvToFile(inEnvStorage: InEnvStorage, authData: { [key: st
   }
 }
 
-function getAndSaveAuthData(logger: ILogger, inEnvStorage: InEnvStorage, args: Arguments) {
+function getAndSaveAuthData(
+  logger: ILogger,
+  inEnvStorage: InEnvStorage,
+  args: Arguments,
+  configProvider: ISpreadsheetConfigService
+) {
   logger.info('Getting auth variables...');
-  const spreadsheetAuthData = getSpreadsheetAuthData(args);
+  const spreadsheetAuthData = configProvider.getSpreadsheetConfig(args);
 
   saveNecessaryEnvToFile(inEnvStorage, spreadsheetAuthData);
 
   logger.info('Checking auth variables...');
-  checkAuthParameters(spreadsheetAuthData);
+  configProvider.validateConfig(spreadsheetAuthData);
 
   return spreadsheetAuthData;
 }
@@ -161,9 +147,10 @@ export async function generateConfigFile(
   inEnvStorage: InEnvStorage,
   googleAuth: GoogleAuth,
   args: Arguments,
-  storage: IStorage
+  storage: IStorage,
+  configProvider: ISpreadsheetConfigService
 ) {
-  const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args);
+  const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args, configProvider);
 
   logger.info('Acquiring refresh token...');
   const refreshToken = await getRefreshToken(googleAuth, spreadsheetAuthData);

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const file_repository_types_1 = require("../../infrastructure/repository/file-repository.types");
-const checkAuthParams_1 = require("../../shared/checkAuthParams");
 const formatToExtensions_1 = require("../../shared/formatToExtensions");
 function checkFolderPermissions(logger, fileRepository, path) {
     const canWrite = fileRepository.hasAccess(path, file_repository_types_1.Permission.Write);
@@ -10,29 +9,18 @@ function checkFolderPermissions(logger, fileRepository, path) {
         process.exit(1);
     }
 }
-function getSpreadsheetAuthData(args) {
-    const { BABELSHEET_CLIENT_ID, BABELSHEET_CLIENT_SECRET, BABELSHEET_SPREADSHEET_ID, BABELSHEET_SPREADSHEET_NAME, BABELSHEET_REDIRECT_URI, } = process.env;
-    const authData = {
-        clientId: args['client-id'] || BABELSHEET_CLIENT_ID,
-        clientSecret: args['client-secret'] || BABELSHEET_CLIENT_SECRET,
-        spreadsheetId: args['spreadsheet-id'] || BABELSHEET_SPREADSHEET_ID,
-        spreadsheetName: args['spreadsheet-name'] || BABELSHEET_SPREADSHEET_NAME,
-        redirectUri: args.redirect_uri || BABELSHEET_REDIRECT_URI || 'http://localhost:3000/oauth2callback',
-    };
-    return authData;
-}
-async function generateTranslations(logger, fileRepository, googleSheets, transformers, filesCreators, args) {
+async function generateTranslations(logger, fileRepository, sheetsProvider, configProvider, transformers, filesCreators, args) {
     const { info } = logger;
     info('Getting auth variables...');
-    const spreadsheetAuthData = getSpreadsheetAuthData(args);
+    const spreadsheetConfig = configProvider.getSpreadsheetConfig(args);
     info('Checking auth variables...');
-    checkAuthParams_1.checkAuthParameters(spreadsheetAuthData);
+    configProvider.validateConfig(spreadsheetConfig);
     info('Checking formats...');
     const extension = formatToExtensions_1.getExtension(args.format);
     info('Checking folder permissions...');
     checkFolderPermissions(logger, fileRepository, args.path);
-    info('Fetching spreadsheet...');
-    const spreadsheetData = await googleSheets.fetchSpreadsheet(spreadsheetAuthData);
+    info('Reading spreadsheet...');
+    const spreadsheetData = await sheetsProvider.getSpreadsheetValues(spreadsheetConfig);
     info('Spreadsheet fetched successfully.');
     const transformedSheets = await Object.keys(spreadsheetData).reduce(async (transformedSheetsPromise, key) => {
         info(`Formatting spreadsheet - version ${key}`);
@@ -77,12 +65,12 @@ function saveNecessaryEnvToFile(inEnvStorage, authData) {
         inEnvStorage.set('SPREADSHEET_NAME', authData.spreadsheetName);
     }
 }
-function getAndSaveAuthData(logger, inEnvStorage, args) {
+function getAndSaveAuthData(logger, inEnvStorage, args, configProvider) {
     logger.info('Getting auth variables...');
-    const spreadsheetAuthData = getSpreadsheetAuthData(args);
+    const spreadsheetAuthData = configProvider.getSpreadsheetConfig(args);
     saveNecessaryEnvToFile(inEnvStorage, spreadsheetAuthData);
     logger.info('Checking auth variables...');
-    checkAuthParams_1.checkAuthParameters(spreadsheetAuthData);
+    configProvider.validateConfig(spreadsheetAuthData);
     return spreadsheetAuthData;
 }
 async function getRefreshToken(googleAuth, { clientId, clientSecret, redirectUri }) {
@@ -90,8 +78,8 @@ async function getRefreshToken(googleAuth, { clientId, clientSecret, redirectUri
     const { refresh_token } = await googleAuth.getTokens(oAuth2Client);
     return refresh_token;
 }
-async function generateConfigFile(logger, inEnvStorage, googleAuth, args, storage) {
-    const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args);
+async function generateConfigFile(logger, inEnvStorage, googleAuth, args, storage, configProvider) {
+    const spreadsheetAuthData = getAndSaveAuthData(logger, inEnvStorage, args, configProvider);
     logger.info('Acquiring refresh token...');
     const refreshToken = await getRefreshToken(googleAuth, spreadsheetAuthData);
     logger.info('Saving token...');

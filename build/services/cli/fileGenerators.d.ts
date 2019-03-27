@@ -4,8 +4,9 @@ import IFileRepository from '../../infrastructure/repository/file-repository.typ
 import InEnvStorage from '../../infrastructure/storage/in-env';
 import IStorage from '../../infrastructure/storage/storage';
 import GoogleAuth from '../../shared/google/auth';
-import GoogleSheets from '../../shared/google/sheets';
+import { ISheetsProvider } from '../../shared/sheets-provider/sheets-provider.types';
 import Transformers from '../../shared/transformers/transformers';
 import FilesCreators from './files-creators/files-creators';
-export declare function generateTranslations(logger: ILogger, fileRepository: IFileRepository, googleSheets: GoogleSheets, transformers: Transformers, filesCreators: FilesCreators, args: Arguments): Promise<void>;
-export declare function generateConfigFile(logger: ILogger, inEnvStorage: InEnvStorage, googleAuth: GoogleAuth, args: Arguments, storage: IStorage): Promise<void>;
+import { ISpreadsheetConfigService } from './spreadsheet-config-providers/spreadsheet-config-provider.types';
+export declare function generateTranslations(logger: ILogger, fileRepository: IFileRepository, sheetsProvider: ISheetsProvider, configProvider: ISpreadsheetConfigService, transformers: Transformers, filesCreators: FilesCreators, args: Arguments): Promise<void>;
+export declare function generateConfigFile(logger: ILogger, inEnvStorage: InEnvStorage, googleAuth: GoogleAuth, args: Arguments, storage: IStorage, configProvider: ISpreadsheetConfigService): Promise<void>;

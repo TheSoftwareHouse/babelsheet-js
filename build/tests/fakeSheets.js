@@ -5,8 +5,11 @@ class FakeGoogleSheets {
     constructor(returnData = testData_1.spreadsheetData.multiRawSpreadsheetData) {
         this.returnData = returnData;
     }
-    async fetchSpreadsheet(credentials) {
+    async getSpreadsheetValues(credentials) {
         return this.returnData;
+    }
+    supports(type) {
+        return type === 'google';
     }
 }
 exports.default = FakeGoogleSheets;

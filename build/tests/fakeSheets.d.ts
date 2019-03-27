@@ -3,9 +3,10 @@ export default class FakeGoogleSheets {
     constructor(returnData?: {
         [key: string]: string[][];
     });
-    fetchSpreadsheet(credentials: {
+    getSpreadsheetValues(credentials: {
         [key: string]: string;
     }): Promise<{
         [key: string]: string[][];
     }>;
+    supports(type: string): boolean;
 }

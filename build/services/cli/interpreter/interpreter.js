@@ -3,14 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const yargs = require("yargs");
 const fileGenerators_1 = require("../fileGenerators");
 class Interpreter {
-    constructor(shadowArgs, logger, inEnvStorage, inFileStorage, googleAuth, fileRepository, googleSheets, transformers, filesCreators) {
+    constructor(shadowArgs, logger, inEnvStorage, inFileStorage, googleAuth, fileRepository, sheetsProviderFactory, configProviderFactory, transformers, filesCreators) {
         this.shadowArgs = shadowArgs;
         this.logger = logger;
         this.inEnvStorage = inEnvStorage;
         this.inFileStorage = inFileStorage;
         this.googleAuth = googleAuth;
         this.fileRepository = fileRepository;
-        this.googleSheets = googleSheets;
+        this.sheetsProviderFactory = sheetsProviderFactory;
+        this.configProviderFactory = configProviderFactory;
         this.transformers = transformers;
         this.filesCreators = filesCreators;
         this.getProperStorage = {
@@ -20,9 +21,20 @@ class Interpreter {
     }
     async interpret(overwriteShadowArgs) {
         const args = this.configureCli(overwriteShadowArgs);
-        args._[0] === 'init'
-            ? await fileGenerators_1.generateConfigFile(this.logger, this.inEnvStorage, this.googleAuth, args, this.getProperStorage[args['config-format']])
-            : await fileGenerators_1.generateTranslations(this.logger, this.fileRepository, this.googleSheets, this.transformers, this.filesCreators, args);
+        const { BABELSHEET_SPREADSHEET_SOURCE } = process.env;
+        const spreadsheetSource = args['spreadsheet-source'] || BABELSHEET_SPREADSHEET_SOURCE || 'google';
+        const sheetsProvider = this.getSpreadsheetProvider(spreadsheetSource);
+        const sheetsConfigProvider = this.getSpreadsheetConfigProvider(spreadsheetSource);
+        if (args._[0] === 'init') {
+            if (spreadsheetSource === 'in-file') {
+                this.logger.error('`init` option cannot be used when spreadsheet source is set to `in-file`');
+                process.exit(1);
+            }
+            await fileGenerators_1.generateConfigFile(this.logger, this.inEnvStorage, this.googleAuth, args, this.getProperStorage[args['config-format']], sheetsConfigProvider);
+        }
+        else {
+            await fileGenerators_1.generateTranslations(this.logger, this.fileRepository, sheetsProvider, sheetsConfigProvider, this.transformers, this.filesCreators, args);
+        }
     }
     configureCli(overwriteShadowArgs) {
         let parser = yargs
@@ -67,6 +79,16 @@ class Interpreter {
             describe: 'Filters, separated by spaces, with dots between keys (--filter en_US.CORE.GENERAL en_US.CORE.SPECIFIC)',
             type: 'array',
         })
+            .option('ss', {
+            alias: 'spreadsheet-source',
+            describe: 'Determines from where the spreadsheet is read',
+            type: 'string',
+        })
+            .options('fp', {
+            alias: 'file-path',
+            describe: 'Spreadsheet file location.',
+            type: 'string',
+        })
             .options('comments', {
             describe: 'Include comments in the outputs',
             type: 'boolean',
@@ -85,6 +107,12 @@ class Interpreter {
             });
         }
         return parser.parse(this.shadowArgs || overwriteShadowArgs);
+    }
+    getSpreadsheetConfigProvider(spreadsheetSource) {
+        return this.configProviderFactory.getProviderFor(spreadsheetSource);
+    }
+    getSpreadsheetProvider(spreadsheetSource) {
+        return this.sheetsProviderFactory.getProviderFor(spreadsheetSource);
     }
 }
 exports.default = Interpreter;

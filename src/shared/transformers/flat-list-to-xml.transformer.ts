@@ -35,7 +35,7 @@ export default class FlatListToXmlTransformer implements ITransformer {
 
     translations.forEach(result => {
       const element: { '@name': string; '#text': string } = { '@name': result.name, '#text': result.text };
-      if (result.comment) {
+      if (includeComments && result.comment) {
         return xml.ele({
           string: element,
           '#comment': result.comment,

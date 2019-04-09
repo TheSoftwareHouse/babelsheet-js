@@ -1,8 +1,8 @@
-import * as gettextParser from 'gettext-parser';
+import { po } from 'gettext-parser';
 import ITransformer, { ITranslationsData } from './transformer';
 
 export default class FlatListToPoTransformer implements ITransformer {
-  private readonly supportedType = 'flat-list-xlf';
+  private readonly supportedType = 'flat-list-po';
 
   public supports(type: string): boolean {
     return type.toLowerCase() === this.supportedType;
@@ -10,21 +10,16 @@ export default class FlatListToPoTransformer implements ITransformer {
 
   public transform(source: ITranslationsData): ITranslationsData {
     if (source.meta.mergeLanguages) {
-      return {
-        ...source,
-        result: {
-          merged: this.generatePo('pl', source.result.merged, source.meta.includeComments),
-        },
-      };
-    } else {
-      return {
-        ...source,
-        result: source.result.map(({ lang, content }: { lang: any; content: any }) => ({
-          lang,
-          content: this.generatePo(lang, content, source.meta.includeComments),
-        })),
-      };
+      throw new Error('Not possible to create merge translations for po format');
     }
+
+    return {
+      ...source,
+      result: source.result.map(({ lang, content }: { lang: any; content: any }) => ({
+        lang,
+        content: this.generatePo(lang, content, source.meta.includeComments),
+      })),
+    };
   }
 
   private generatePo(
@@ -40,7 +35,7 @@ export default class FlatListToPoTransformer implements ITransformer {
           msgid: translation.name,
           msgstr: translation.text,
         };
-        if (typeof translation.comment !== 'undefined') {
+        if (includeComments && typeof translation.comment !== 'undefined') {
           (newEntry as any).comments = {
             translator: translation.comment,
           };
@@ -60,6 +55,6 @@ export default class FlatListToPoTransformer implements ITransformer {
       translations: [generatePoTranslate(source)],
     };
 
-    return gettextParser.po.compile(data);
+    return po.compile(data).toString();
   }
 }

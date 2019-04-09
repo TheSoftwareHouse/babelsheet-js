@@ -1,7 +1,7 @@
 import FlatListToXmlTransformer from './flat-list-to-xml.transformer';
 import { multiLocaleDataset, singleLocaleDataset } from '../../tests/testData';
 
-describe('JsonToXmlTransformer', () => {
+describe('FlatListToXmlTransformer', () => {
   const flatListToXmlTransformer = new FlatListToXmlTransformer();
 
   it('does return true if supported type', async () => {
@@ -75,9 +75,9 @@ describe('JsonToXmlTransformer', () => {
 
     expect(result).toEqual(expectedObject);
   });
-  it('does generate xml from proper merged flat list with comments', async () => {
+  it('does generate xml from proper merged flat list without comments', async () => {
     const object = {
-      meta: { ...multiLocaleDataset.meta, mergeLanguages: true, includeComments: true },
+      meta: { ...multiLocaleDataset.meta, mergeLanguages: true, includeComments: false },
       result: multiLocaleDataset.flatList.multiLanguageMergedWithComments,
       translations: multiLocaleDataset.translations,
     };
@@ -89,18 +89,12 @@ describe('JsonToXmlTransformer', () => {
         merged: `<?xml version="1.0"?>
 <resources>
   <string name="en_us_core_labels_yes">yes</string>
-  <!-- Affirmative, give consent -->
   <string name="en_us_core_labels_no">no</string>
-  <!-- Negative, refuse consent -->
   <string name="en_us_core_labels_save">save</string>
-  <!-- Persist, save consent -->
   <string name="en_us_core_labels_cancel">cancel</string>
   <string name="pl_pl_core_labels_yes">tak</string>
-  <!-- Affirmative, give consent -->
   <string name="pl_pl_core_labels_no">nie</string>
-  <!-- Negative, refuse consent -->
   <string name="pl_pl_core_labels_save">zapisz</string>
-  <!-- Persist, save consent -->
 </resources>`,
       },
     };

@@ -1,6 +1,6 @@
 {
   "name": "babelsheet",
-  "version": "1.6.0-2",
+  "version": "1.6.0-3",
   "description": "",
   "homepage": "https://github.com/TheSoftwareHouse/babelsheet-js#readme",
   "main": "build/index.js",

@@ -1,0 +1,49 @@
+msgid ""
+msgstr ""
+"Language: pl\n"
+"Content-Type: text/plain; charset=utf-8\n"
+
+msgid "core_labels_yes"
+msgstr "tak"
+
+msgid "core_labels_no"
+msgstr "nie"
+
+msgid "core_labels_save"
+msgstr "zapisz"
+
+msgid "common_sth1"
+msgstr "Jakaś wiadomość ..."
+
+msgid "common_form_comment"
+msgstr "komentarz"
+
+msgid "front_header_title"
+msgstr "Moja Apka"
+
+msgid "front_header_catch_phrase"
+msgstr "Dołącz do nas!"
+
+msgid "front_pagination_first"
+msgstr "Pierwsza strona"
+
+msgid "front_pagination_next"
+msgstr "Następna strona"
+
+msgid "front_pagination_prev"
+msgstr "Poprzednia strona"
+
+msgid "front_pagination_last"
+msgstr "Ostatnia strona"
+
+msgid "back_mails_register_subject"
+msgstr "Zarejestrowałeś się."
+
+msgid "back_mails_register_greeting"
+msgstr "Cześć %name%"
+
+msgid "back_mails_register_line1"
+msgstr "Dziękujemy za rejestrację"
+
+msgid "back_mails_register_footer"
+msgstr "Ekipa Apki"

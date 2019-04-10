@@ -2,7 +2,7 @@ import JsonToFlatListTransformer from './json-to-flat-list.transformer';
 import ITransformer from './transformer';
 import { multiLocaleDataset, singleLocaleDataset } from '../../tests/testData';
 
-describe('FlatListToIosStringsTransformer', () => {
+describe('JsonToFlatListTransformer', () => {
   const jsonToFlatListTransformer = new JsonToFlatListTransformer();
 
   it('does return true if supported type', async () => {

@@ -12,6 +12,7 @@ import InFileSheetsProvider from '../../shared/sheets-provider/in-file-sheets.pr
 import TokenProvider from '../../shared/token-provider/token-provider';
 import ChainTransformer from '../../shared/transformers/chain.transformer';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
+import FlatListToPoTransformer from '../../shared/transformers/flat-list-to-po.transformer';
 import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
@@ -25,6 +26,7 @@ import AndroidFilesCreator from './files-creators/android-files.creator';
 import FilesCreators from './files-creators/files-creators';
 import IosFilesCreator from './files-creators/ios-files.creator';
 import JsonFilesCreator from './files-creators/json-files.creator';
+import PoFilesCreator from './files-creators/po-files.creator';
 import XlfFilesCreator from './files-creators/xlf-files.creator';
 import YamlFilesCreator from './files-creators/yaml-files.creator';
 import Interpreter from './interpreter/interpreter';
@@ -71,6 +73,9 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     yamlFilesCreator: awilix.asClass(YamlFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       fileRepository: container.resolve<FileRepository>('fileRepository'),
     })),
+    poFilesCreator: awilix.asClass(PoFilesCreator, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      fileRepository: container.resolve<FileRepository>('fileRepository'),
+    })),
     filesCreators: awilix.asClass(FilesCreators, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       filesCreators: [
         container.resolve<AndroidFilesCreator>('androidFilesCreator'),
@@ -78,6 +83,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<JsonFilesCreator>('jsonFilesCreator'),
         container.resolve<XlfFilesCreator>('xlfFilesCreator'),
         container.resolve<YamlFilesCreator>('yamlFilesCreator'),
+        container.resolve<PoFilesCreator>('poFilesCreator'),
       ],
     })),
   };
@@ -110,6 +116,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
       lifetime: awilix.Lifetime.SINGLETON,
     }),
     flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToPoTransformer: awilix.asClass(FlatListToPoTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -142,6 +149,17 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
           container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
         ],
       })),
+    spreadsheetToPoTransformer: awilix
+      .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
+      .inject(() => ({
+        supportedType: 'po',
+        transformers: [
+          container.resolve<SpreadsheetToJsonTransformer>('spreadsheetToJsonTransformer'),
+          container.resolve<JsonToJsonMaskedTransformer>('jsonToJsonMaskedTransformer'),
+          container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+          container.resolve<FlatListToPoTransformer>('flatListToPoTransformer'),
+        ],
+      })),
     spreadsheetToXmlTransformer: awilix
       .asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON })
       .inject(() => ({
@@ -169,6 +187,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<ChainTransformer>('spreadsheetToXmlTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToIosStringsTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToXlfTransformer'),
+        container.resolve<ChainTransformer>('spreadsheetToPoTransformer'),
         container.resolve<ChainTransformer>('spreadsheetToYamlTransformer'),
       ],
     })),

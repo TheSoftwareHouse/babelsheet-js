@@ -1,7 +1,7 @@
 import FlatListToXlfTransformer from './flat-list-to-xlf.transformer';
 import { multiLocaleDataset, singleLocaleDataset } from '../../tests/testData';
 
-describe('JsonToXlfTransformer', () => {
+describe('FlatListToXlfTransformer', () => {
   const flatListToXlfTransformer = new FlatListToXlfTransformer();
 
   it('does return true if supported type', async () => {

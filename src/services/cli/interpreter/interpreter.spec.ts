@@ -49,7 +49,7 @@ const container = containerTemp.register({
   logger: awilix.asValue(loggerMock),
 });
 const snapsPath = path.join('src', 'services', 'cli', 'interpreter', 'tests');
-const supportedFormats = ['yml', 'android', 'ios', 'json', 'xlf'];
+const supportedFormats = ['yml', 'android', 'ios', 'json', 'xlf', 'po'];
 
 // get directories list in /tests
 const directories = fs.readdirSync(snapsPath);

@@ -1,0 +1,19 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"Content-Type: text/plain; charset=utf-8\n"
+
+msgid "core_labels_yes"
+msgstr "yes"
+
+msgid "common_sth1"
+msgstr "Some message ..."
+
+msgid "front_pagination_first"
+msgstr "First page"
+
+msgid "front_pagination_next"
+msgstr "Next page"
+
+msgid "back_mails_register_footer"
+msgstr "The App Team"

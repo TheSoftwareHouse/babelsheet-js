@@ -31,7 +31,7 @@ class FlatListToXmlTransformer {
         const xml = xmlbuilder.create('resources');
         translations.forEach(result => {
             const element = { '@name': result.name, '#text': result.text };
-            if (result.comment) {
+            if (includeComments && result.comment) {
                 return xml.ele({
                     string: element,
                     '#comment': result.comment,

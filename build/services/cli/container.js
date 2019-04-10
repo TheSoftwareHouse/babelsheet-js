@@ -13,6 +13,7 @@ const in_file_sheets_provider_1 = require("../../shared/sheets-provider/in-file-
 const token_provider_1 = require("../../shared/token-provider/token-provider");
 const chain_transformer_1 = require("../../shared/transformers/chain.transformer");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
+const flat_list_to_po_transformer_1 = require("../../shared/transformers/flat-list-to-po.transformer");
 const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-list-to-xlf.transformer");
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
@@ -26,6 +27,7 @@ const android_files_creator_1 = require("./files-creators/android-files.creator"
 const files_creators_1 = require("./files-creators/files-creators");
 const ios_files_creator_1 = require("./files-creators/ios-files.creator");
 const json_files_creator_1 = require("./files-creators/json-files.creator");
+const po_files_creator_1 = require("./files-creators/po-files.creator");
 const xlf_files_creator_1 = require("./files-creators/xlf-files.creator");
 const yaml_files_creator_1 = require("./files-creators/yaml-files.creator");
 const interpreter_1 = require("./interpreter/interpreter");
@@ -68,6 +70,9 @@ function createContainer(options) {
         yamlFilesCreator: awilix.asClass(yaml_files_creator_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             fileRepository: container.resolve('fileRepository'),
         })),
+        poFilesCreator: awilix.asClass(po_files_creator_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            fileRepository: container.resolve('fileRepository'),
+        })),
         filesCreators: awilix.asClass(files_creators_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             filesCreators: [
                 container.resolve('androidFilesCreator'),
@@ -75,6 +80,7 @@ function createContainer(options) {
                 container.resolve('jsonFilesCreator'),
                 container.resolve('xlfFilesCreator'),
                 container.resolve('yamlFilesCreator'),
+                container.resolve('poFilesCreator'),
             ],
         })),
     };
@@ -104,6 +110,7 @@ function createContainer(options) {
             lifetime: awilix.Lifetime.SINGLETON,
         }),
         flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        flatListToPoTransformer: awilix.asClass(flat_list_to_po_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToYamlTransformer: awilix.asClass(json_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -136,6 +143,17 @@ function createContainer(options) {
                 container.resolve('flatListToXlfTransformer'),
             ],
         })),
+        spreadsheetToPoTransformer: awilix
+            .asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
+            .inject(() => ({
+            supportedType: 'po',
+            transformers: [
+                container.resolve('spreadsheetToJsonTransformer'),
+                container.resolve('jsonToJsonMaskedTransformer'),
+                container.resolve('jsonToFlatListTransformer'),
+                container.resolve('flatListToPoTransformer'),
+            ],
+        })),
         spreadsheetToXmlTransformer: awilix
             .asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON })
             .inject(() => ({
@@ -163,6 +181,7 @@ function createContainer(options) {
                 container.resolve('spreadsheetToXmlTransformer'),
                 container.resolve('spreadsheetToIosStringsTransformer'),
                 container.resolve('spreadsheetToXlfTransformer'),
+                container.resolve('spreadsheetToPoTransformer'),
                 container.resolve('spreadsheetToYamlTransformer'),
             ],
         })),

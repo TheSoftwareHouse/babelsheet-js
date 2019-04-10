@@ -1,0 +1,52 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"Content-Type: text/plain; charset=utf-8\n"
+
+msgid "core_labels_yes"
+msgstr "yes"
+
+msgid "core_labels_no"
+msgstr "no"
+
+msgid "core_labels_save"
+msgstr "save"
+
+msgid "core_labels_cancel"
+msgstr "cancel"
+
+msgid "common_sth1"
+msgstr "Some message ..."
+
+msgid "common_form_comment"
+msgstr "comment"
+
+msgid "front_header_title"
+msgstr "My Cool App"
+
+msgid "front_header_catch_phrase"
+msgstr "Join us!"
+
+msgid "front_pagination_first"
+msgstr "First page"
+
+msgid "front_pagination_next"
+msgstr "Next page"
+
+msgid "front_pagination_prev"
+msgstr "Prev page"
+
+msgid "front_pagination_last"
+msgstr "Last page"
+
+msgid "back_mails_register_subject"
+msgstr "You have been registered"
+
+msgid "back_mails_register_greeting"
+msgstr "Hi %name%"
+
+msgid "back_mails_register_line1"
+msgstr "Thank you for signing up with us."
+
+msgid "back_mails_register_footer"
+msgstr "The App Team"

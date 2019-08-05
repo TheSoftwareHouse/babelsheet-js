@@ -10,16 +10,22 @@ export default class FlatListToPoTransformer implements ITransformer {
 
   public transform(source: ITranslationsData): ITranslationsData {
     if (source.meta.mergeLanguages) {
-      throw new Error('Not possible to create merge translations for po format');
+      const result = this.generatePo('', source.result.merged, source.meta.includeComments);
+      return {
+        ...source,
+        result: {
+          merged: result,
+        },
+      };
+    } else {
+      return {
+        ...source,
+        result: source.result.map(({ lang, content }: { lang: any; content: any }) => ({
+          lang,
+          content: this.generatePo(lang, content, source.meta.includeComments),
+        })),
+      };
     }
-
-    return {
-      ...source,
-      result: source.result.map(({ lang, content }: { lang: any; content: any }) => ({
-        lang,
-        content: this.generatePo(lang, content, source.meta.includeComments),
-      })),
-    };
   }
 
   private generatePo(

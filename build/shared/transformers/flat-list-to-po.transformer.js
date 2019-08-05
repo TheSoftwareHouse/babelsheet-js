@@ -10,15 +10,23 @@ class FlatListToPoTransformer {
     }
     transform(source) {
         if (source.meta.mergeLanguages) {
-            throw new Error('Not possible to create merge translations for po format');
+            const result = this.generatePo('', source.result.merged, source.meta.includeComments);
+            return {
+                ...source,
+                result: {
+                    merged: result,
+                },
+            };
         }
-        return {
-            ...source,
-            result: source.result.map(({ lang, content }) => ({
-                lang,
-                content: this.generatePo(lang, content, source.meta.includeComments),
-            })),
-        };
+        else {
+            return {
+                ...source,
+                result: source.result.map(({ lang, content }) => ({
+                    lang,
+                    content: this.generatePo(lang, content, source.meta.includeComments),
+                })),
+            };
+        }
     }
     generatePo(lang, source, includeComments) {
         const generatePoTranslate = (translations) => {

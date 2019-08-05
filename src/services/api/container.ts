@@ -7,6 +7,7 @@ import MaskConverter from '../../shared/mask/mask.converter';
 import MaskInput from '../../shared/mask/mask.input';
 import ChainTransformer from '../../shared/transformers/chain.transformer';
 import FlatListToIosStringsTransformer from '../../shared/transformers/flat-list-to-ios-strings.transformer';
+import FlatListToPoTransformer from '../../shared/transformers/flat-list-to-po.transformer';
 import FlatListToXlfTransformer from '../../shared/transformers/flat-list-to-xlf.transformer';
 import FlatListToXmlTransformer from '../../shared/transformers/flat-list-to-xml.transformer';
 import JsonToFlatListTransformer from '../../shared/transformers/json-to-flat-list.transformer';
@@ -33,6 +34,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
     }),
     flatListToXlfTransformer: awilix.asClass(FlatListToXlfTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     flatListToXmlTransformer: awilix.asClass(FlatListToXmlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
+    flatListToPoTransformer: awilix.asClass(FlatListToPoTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonMaskedTransformer: awilix.asClass(JsonToJsonMaskedTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToFlatListTransformer: awilix.asClass(JsonToFlatListTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     jsonToJsonTransformer: awilix.asClass(JsonToJsonTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -57,6 +59,13 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<FlatListToXlfTransformer>('flatListToXlfTransformer'),
       ],
     })),
+    jsonToPoTransformer: awilix.asClass(ChainTransformer, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+      supportedType: 'json-po',
+      transformers: [
+        container.resolve<JsonToFlatListTransformer>('jsonToFlatListTransformer'),
+        container.resolve<FlatListToPoTransformer>('flatListToPoTransformer'),
+      ],
+    })),
     jsonToYamlTransformer: awilix.asClass(JsonToYamlTransformer, { lifetime: awilix.Lifetime.SINGLETON }),
     transformers: awilix.asClass(Transformers, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
       transformers: [
@@ -64,6 +73,7 @@ export default function createContainer(options?: ContainerOptions): AwilixConta
         container.resolve<ChainTransformer>('jsonToIosStringsTransformer'),
         container.resolve<JsonToJsonTransformer>('jsonToJsonTransformer'),
         container.resolve<ChainTransformer>('jsonToXlfTransformer'),
+        container.resolve<ChainTransformer>('jsonToPoTransformer'),
         container.resolve<JsonToYamlTransformer>('jsonToYamlTransformer'),
       ],
     })),

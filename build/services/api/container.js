@@ -8,6 +8,7 @@ const mask_converter_1 = require("../../shared/mask/mask.converter");
 const mask_input_1 = require("../../shared/mask/mask.input");
 const chain_transformer_1 = require("../../shared/transformers/chain.transformer");
 const flat_list_to_ios_strings_transformer_1 = require("../../shared/transformers/flat-list-to-ios-strings.transformer");
+const flat_list_to_po_transformer_1 = require("../../shared/transformers/flat-list-to-po.transformer");
 const flat_list_to_xlf_transformer_1 = require("../../shared/transformers/flat-list-to-xlf.transformer");
 const flat_list_to_xml_transformer_1 = require("../../shared/transformers/flat-list-to-xml.transformer");
 const json_to_flat_list_transformer_1 = require("../../shared/transformers/json-to-flat-list.transformer");
@@ -32,6 +33,7 @@ function createContainer(options) {
         }),
         flatListToXlfTransformer: awilix.asClass(flat_list_to_xlf_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         flatListToXmlTransformer: awilix.asClass(flat_list_to_xml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
+        flatListToPoTransformer: awilix.asClass(flat_list_to_po_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToJsonMaskedTransformer: awilix.asClass(json_to_json_masked_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToFlatListTransformer: awilix.asClass(json_to_flat_list_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         jsonToJsonTransformer: awilix.asClass(json_to_json_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
@@ -56,6 +58,13 @@ function createContainer(options) {
                 container.resolve('flatListToXlfTransformer'),
             ],
         })),
+        jsonToPoTransformer: awilix.asClass(chain_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
+            supportedType: 'json-po',
+            transformers: [
+                container.resolve('jsonToFlatListTransformer'),
+                container.resolve('flatListToPoTransformer'),
+            ],
+        })),
         jsonToYamlTransformer: awilix.asClass(json_to_yaml_transformer_1.default, { lifetime: awilix.Lifetime.SINGLETON }),
         transformers: awilix.asClass(transformers_1.default, { lifetime: awilix.Lifetime.SINGLETON }).inject(() => ({
             transformers: [
@@ -63,6 +72,7 @@ function createContainer(options) {
                 container.resolve('jsonToIosStringsTransformer'),
                 container.resolve('jsonToJsonTransformer'),
                 container.resolve('jsonToXlfTransformer'),
+                container.resolve('jsonToPoTransformer'),
                 container.resolve('jsonToYamlTransformer'),
             ],
         })),

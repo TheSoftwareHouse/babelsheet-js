@@ -5,20 +5,40 @@ class FlatListToPoTransformer {
     constructor() {
         this.supportedType = 'flat-list-po';
     }
+    static checkIfSingleLanguageRequested(meta) {
+        if (!meta.filters || !meta.locales) {
+            return true;
+        }
+        const filtersPrefixes = meta.filters.map((filter) => filter.split('.')[0]);
+        const filtersLangPrefixes = filtersPrefixes.filter((prefix) => meta.locales && meta.locales.includes(prefix));
+        const filtersHasSameLangPrefix = filtersLangPrefixes.every((code, i, list) => code === list[0]);
+        return filtersLangPrefixes.length > 0 && filtersHasSameLangPrefix;
+    }
     supports(type) {
         return type.toLowerCase() === this.supportedType;
     }
     transform(source) {
-        if (source.meta.mergeLanguages) {
-            throw new Error('Not possible to create merge translations for po format');
+        if (!FlatListToPoTransformer.checkIfSingleLanguageRequested(source.meta)) {
+            throw Error("PO files support only single language. Please use filters with one lang code");
         }
-        return {
-            ...source,
-            result: source.result.map(({ lang, content }) => ({
-                lang,
-                content: this.generatePo(lang, content, source.meta.includeComments),
-            })),
-        };
+        if (source.meta.mergeLanguages) {
+            const result = this.generatePo('', source.result.merged, source.meta.includeComments);
+            return {
+                ...source,
+                result: {
+                    merged: result,
+                },
+            };
+        }
+        else {
+            return {
+                ...source,
+                result: source.result.map(({ lang, content }) => ({
+                    lang,
+                    content: this.generatePo(lang, content, source.meta.includeComments),
+                })),
+            };
+        }
     }
     generatePo(lang, source, includeComments) {
         const generatePoTranslate = (translations) => {

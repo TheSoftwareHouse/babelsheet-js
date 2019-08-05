@@ -16,12 +16,46 @@ describe('FlatListToPoTransformer', () => {
     expect(result).toBeFalsy();
   });
 
-  it('throws error when generating merged flat list', async () => {
-    const object = { meta: { mergeLanguages: true }, result: null, translations: null };
+  it('does generate proper po from merged flat list', async () => {
+    const object = {
+      meta: { ...multiLocaleDataset.meta, mergeLanguages: true },
+      result: multiLocaleDataset.flatList.multiLanguageMergedWithComments,
+      translations: multiLocaleDataset.translations,
+    };
 
-    expect(() => {
-      flatListToPoTransformer.transform(object);
-    }).toThrow('Not possible to create merge translations for po format');
+    const result = flatListToPoTransformer.transform(object);
+    const expectedObject = {
+      ...object,
+      result: {
+        merged: `msgid ""
+msgstr ""
+"Language: \\n"
+"Content-Type: text/plain; charset=utf-8\\n"
+
+msgid "en_us_core_labels_yes"
+msgstr "yes"
+
+msgid "en_us_core_labels_no"
+msgstr "no"
+
+msgid "en_us_core_labels_save"
+msgstr "save"
+
+msgid "en_us_core_labels_cancel"
+msgstr "cancel"
+
+msgid "pl_pl_core_labels_yes"
+msgstr "tak"
+
+msgid "pl_pl_core_labels_no"
+msgstr "nie"
+
+msgid "pl_pl_core_labels_save"
+msgstr "zapisz"`,
+      },
+    };
+
+    expect(result).toEqual(expectedObject);
   });
 
   it('does generate proper po from flat list with comments', async () => {

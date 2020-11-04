@@ -6,7 +6,7 @@ To proprely run API, you need to run redis storage and producer as well. It can 
 version: '3'
 services:
   babelsheet-api:
-    image: tsh/babelsheet-api
+    image: tshio/babelsheet-api
     env_file:
       - .env
       - .env.babelsheet
@@ -15,7 +15,7 @@ services:
     depends_on:
       - redis
   babelsheet-producer:
-    image: tsh/babelsheet-producer
+    image: tshio/babelsheet-producer
     env_file:
       - .env
       - .env.babelsheet
